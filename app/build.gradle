@@ -4,8 +4,9 @@ android {
     compileSdkVersion 19
     buildToolsVersion "19.0.3"
 
+
     defaultConfig {
-        minSdkVersion 8
+        minSdkVersion 14
         targetSdkVersion 18
         versionCode 1
         versionName "1.0"
@@ -20,6 +21,6 @@ android {
 
 dependencies {
     compile 'com.android.support:appcompat-v7:+'
-    compile group: 'com.jcabi', name: 'jcabi-github', version: '1.0-SNAPSHOT'
+    compile group: 'org.eclipse.mylyn.github', name: 'org.eclipse.egit.github.core', version: '2.1.5'
     compile fileTree(dir: 'libs', include: ['*.jar'])
 }
