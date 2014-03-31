@@ -5,5 +5,11 @@
     <string name="title_activity_main">MainActivity</string>
     <string name="hello_world">Hello world!</string>
     <string name="action_settings">Settings</string>
+    <string name="introduce_user_name">Username</string>
+    <string name="password">Password</string>
+    <string name="login">Login</string>
+    <string name="login_error">Wrong credentials</string>
+    <string name="connection_problem">There was a connection problem</string>
+    <string name="empty_input">Please, fill the input.</string>
 
 </resources>
