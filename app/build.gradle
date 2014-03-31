@@ -20,5 +20,6 @@ android {
 
 dependencies {
     compile 'com.android.support:appcompat-v7:+'
+    compile group: 'com.jcabi', name: 'jcabi-github', version: '1.0-SNAPSHOT'
     compile fileTree(dir: 'libs', include: ['*.jar'])
 }
