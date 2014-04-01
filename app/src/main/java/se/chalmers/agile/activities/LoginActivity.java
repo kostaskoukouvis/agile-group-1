@@ -75,6 +75,7 @@ public class LoginActivity extends ActionBarActivity {
      */
     private boolean correctInput() {
         return !userName.getText().toString().isEmpty() && !password.getText().toString().isEmpty();
+
     }
 
 
