@@ -11,5 +11,9 @@
     <string name="login_error">Wrong credentials</string>
     <string name="connection_problem">There was a connection problem</string>
     <string name="empty_input">Please, fill the input.</string>
+    <string name="title_activity_container">ContainerActivity</string>
+    <string name="title_section1">Section 1</string>
+    <string name="title_section2">Section 2</string>
+    <string name="title_section3">Section 3</string>
 
 </resources>

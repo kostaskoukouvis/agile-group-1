@@ -56,6 +56,6 @@
             android:id="@+id/loginButton"
             android:onClick="tryToLogIn"
             android:layout_gravity="center_horizontal"
-            style="@style/AppTheme"/>
+            style="@style/ButtonStyle"/>
     </LinearLayout>
 </LinearLayout>
