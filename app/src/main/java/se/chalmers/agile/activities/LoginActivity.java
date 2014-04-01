@@ -71,6 +71,7 @@ public class LoginActivity extends ActionBarActivity {
     /**
      * Checks that the user introduced something.
      *
+     *
      * @return <code>true</code> if it is OK.
      *
      */
