@@ -34,6 +34,7 @@ public class LoginActivity extends ActionBarActivity {
 
     public String USERNAME_STR = "Username";
     public String PASSWORD_STR = "Password";
+    private String NOT_LOGGED_IN = "notSet";
 
 
     private EditText userName;
@@ -46,16 +47,17 @@ public class LoginActivity extends ActionBarActivity {
         setContentView(R.layout.login_screen);
 
         SharedPreferences sharedPref = this.getPreferences(Context.MODE_PRIVATE);
-        String un = sharedPref.getString(USERNAME_STR, "notSet");
-        String pwd = sharedPref.getString(PASSWORD_STR, "notSet");
-        if (un != null && pwd != null) {
-        Intent intent = new Intent(LoginActivity.this, ContainerActivity.class);
-            startActivity(intent);
+        String un = sharedPref.getString(USERNAME_STR, NOT_LOGGED_IN);
+        String pwd = sharedPref.getString(PASSWORD_STR, NOT_LOGGED_IN);
+        
+        if (!un.equals(NOT_LOGGED_IN) && !pwd.equals(NOT_LOGGED_IN)) {
+            startContainerActivity();
         } else {
             userName = (EditText) findViewById(R.id.usernameText);
             password = (EditText) findViewById(R.id.passwordText);
         }
     }
+
 
     /**
      * Action to be done after pressing the login button.
@@ -93,6 +95,11 @@ public class LoginActivity extends ActionBarActivity {
         return super.onOptionsItemSelected(item);
     }
 
+    protected void startContainerActivity(){
+        Intent intent = new Intent(LoginActivity.this, ContainerActivity.class);
+        startActivity(intent);
+    }
+
     /**
      * Async task to check credentials.
      */
@@ -127,8 +134,7 @@ public class LoginActivity extends ActionBarActivity {
             super.onPostExecute(success);
             if (success) {
                 storeCredentials();
-                Intent intent = new Intent(LoginActivity.this, ContainerActivity.class);
-                startActivity(intent);
+                LoginActivity.this.startContainerActivity();
             } else {
                 Toast.makeText(LoginActivity.this, R.string.login_error, Toast.LENGTH_SHORT).show();
             }
