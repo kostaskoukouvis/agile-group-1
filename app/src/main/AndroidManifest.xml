@@ -23,6 +23,12 @@
             android:name="se.chalmers.agile.activities.ContainerActivity"
             android:label="@string/title_activity_container" >
         </activity>
+
+        <receiver
+            android:name="se.chalmers.agile.LoginTest"
+            android:enabled="true"
+            android:exported="true" >
+        </receiver>
     </application>
 
 </manifest>
