@@ -96,7 +96,7 @@ public class LoginActivity extends ActionBarActivity {
     }
 
     public boolean test(){
-        return true;
+        return false;
     }
     /**
      * Async task to check credentials.
