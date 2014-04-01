@@ -72,10 +72,10 @@ public class LoginActivity extends ActionBarActivity {
      * Checks that the user introduced something.
      *
      * @return <code>true</code> if it is OK.
+     *
      */
     private boolean correctInput() {
         return !userName.getText().toString().isEmpty() && !password.getText().toString().isEmpty();
-
     }
 
 
