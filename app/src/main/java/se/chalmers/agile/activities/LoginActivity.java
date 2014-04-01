@@ -84,7 +84,6 @@ public class LoginActivity extends ActionBarActivity {
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.main, menu);
         return true;
-        fdksal
     }
 
     @Override
@@ -96,6 +95,9 @@ public class LoginActivity extends ActionBarActivity {
         return super.onOptionsItemSelected(item);
     }
 
+    public boolean test(){
+        return true;
+    }
     /**
      * Async task to check credentials.
      */
