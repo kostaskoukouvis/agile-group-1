@@ -44,12 +44,15 @@ public class LoginActivity extends ActionBarActivity {
         setContentView(R.layout.login_screen);
 
         SharedPreferences sharedPref = this.getPreferences(Context.MODE_PRIVATE);
-        String un = sharedPref.getString(USERNAME_STR, "notSet" );
-        String pwd = sharedPref.getString(PASSWORD_STR, "notSet" );
-        //TODO if case for the above in order to go to the login page if they are not set
-
-        userName = (EditText) findViewById(R.id.usernameText);
-        password = (EditText) findViewById(R.id.passwordText);
+        String un = sharedPref.getString(USERNAME_STR, "notSet");
+        String pwd = sharedPref.getString(PASSWORD_STR, "notSet");
+        if (un != null && pwd != null) {
+        Intent intent = new Intent(LoginActivity.this, ContainerActivity.class);
+            startActivity(intent);
+        } else {
+            userName = (EditText) findViewById(R.id.usernameText);
+            password = (EditText) findViewById(R.id.passwordText);
+        }
     }
 
     /**
