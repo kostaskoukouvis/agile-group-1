@@ -3,23 +3,26 @@
     package="se.chalmers.agile" >
 
     <uses-permission android:name="android.permission.INTERNET" />
+
     <application
         android:allowBackup="true"
         android:icon="@drawable/ic_launcher"
         android:label="@string/app_name"
         android:theme="@style/AppTheme" >
         <activity
-            android:name=".activities.LoginActivity"
+            android:name="se.chalmers.agile.activities.LoginActivity"
             android:label="@string/login"
-            android:screenOrientation="landscape"
-            >
+            android:screenOrientation="landscape" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-
-
+        <activity
+            android:name="se.chalmers.agile.activities.ContainerActivity"
+            android:label="@string/title_activity_container" >
+        </activity>
     </application>
 
 </manifest>

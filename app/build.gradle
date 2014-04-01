@@ -30,6 +30,7 @@ android {
 
 dependencies {
     compile 'com.android.support:appcompat-v7:+'
+    compile 'com.android.support:support-v13:19.+'
     compile group: 'org.kohsuke', name: 'github-api', version: '1.49'
     compile fileTree(dir: 'libs', include: ['*.jar'])
 }

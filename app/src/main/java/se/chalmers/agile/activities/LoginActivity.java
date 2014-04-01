@@ -1,5 +1,6 @@
 package se.chalmers.agile.activities;
 
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
@@ -109,8 +110,8 @@ public class LoginActivity extends ActionBarActivity {
             super.onPostExecute(success);
             if (success) {
                 storeCredentials();
-                //TODO go to overview
-                Toast.makeText(LoginActivity.this, "Yay!", Toast.LENGTH_SHORT).show();
+                Intent intent = new Intent(LoginActivity.this, ContainerActivity.class);
+                startActivity(intent);
             } else {
                 Toast.makeText(LoginActivity.this, R.string.login_error, Toast.LENGTH_SHORT).show();
             }
