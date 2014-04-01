@@ -32,9 +32,9 @@ import se.chalmers.agile.R;
  */
 public class LoginActivity extends ActionBarActivity {
 
-    public String USERNAME_STR = "Username";
-    public String PASSWORD_STR = "Password";
-    private String NOT_LOGGED_IN = "notSet";
+    public static String USERNAME_STR = "Username";
+    public static String PASSWORD_STR = "Password";
+    public static String NOT_LOGGED_IN = "notSet";
 
 
     private EditText userName;
@@ -46,9 +46,11 @@ public class LoginActivity extends ActionBarActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.login_screen);
 
-        SharedPreferences sharedPref = this.getPreferences(Context.MODE_PRIVATE);
+        SharedPreferences sharedPref = getApplication().getBaseContext().getSharedPreferences("Application",Context.MODE_PRIVATE);
         String un = sharedPref.getString(USERNAME_STR, NOT_LOGGED_IN);
         String pwd = sharedPref.getString(PASSWORD_STR, NOT_LOGGED_IN);
+
+        Log.d("Preferences", getPreferences(Context.MODE_PRIVATE).toString());
         
         if (!un.equals(NOT_LOGGED_IN) && !pwd.equals(NOT_LOGGED_IN)) {
             startContainerActivity();
@@ -142,7 +144,7 @@ public class LoginActivity extends ActionBarActivity {
 
         private void storeCredentials() {
             //TODO
-            SharedPreferences sharedPref = getPreferences(Context.MODE_PRIVATE);
+            SharedPreferences sharedPref = getApplication().getBaseContext().getSharedPreferences("Application",Context.MODE_PRIVATE);
             SharedPreferences.Editor editor = sharedPref.edit();
             editor.putString(USERNAME_STR, userName.getText().toString());
             editor.putString(PASSWORD_STR, password.getText().toString());
