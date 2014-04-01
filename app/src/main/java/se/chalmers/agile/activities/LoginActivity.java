@@ -1,10 +1,14 @@
 package se.chalmers.agile.activities;
 
+
 import android.content.Intent;
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
 
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -28,6 +32,10 @@ import se.chalmers.agile.R;
  */
 public class LoginActivity extends ActionBarActivity {
 
+    public String USERNAME_STR = "Username";
+    public String PASSWORD_STR = "Password";
+
+
     private EditText userName;
     private EditText password;
 
@@ -36,8 +44,17 @@ public class LoginActivity extends ActionBarActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.login_screen);
-        userName = (EditText) findViewById(R.id.usernameText);
-        password = (EditText) findViewById(R.id.passwordText);
+
+        SharedPreferences sharedPref = this.getPreferences(Context.MODE_PRIVATE);
+        String un = sharedPref.getString(USERNAME_STR, "notSet");
+        String pwd = sharedPref.getString(PASSWORD_STR, "notSet");
+        if (un != null && pwd != null) {
+        Intent intent = new Intent(LoginActivity.this, ContainerActivity.class);
+            startActivity(intent);
+        } else {
+            userName = (EditText) findViewById(R.id.usernameText);
+            password = (EditText) findViewById(R.id.passwordText);
+        }
     }
 
     /**
@@ -119,7 +136,12 @@ public class LoginActivity extends ActionBarActivity {
 
         private void storeCredentials() {
             //TODO
-            //Hint: SharedPreferences class.
+            SharedPreferences sharedPref = getPreferences(Context.MODE_PRIVATE);
+            SharedPreferences.Editor editor = sharedPref.edit();
+            editor.putString(USERNAME_STR, userName.getText().toString());
+            editor.putString(PASSWORD_STR, password.getText().toString());
+            editor.commit();
+
         }
     }
 }
