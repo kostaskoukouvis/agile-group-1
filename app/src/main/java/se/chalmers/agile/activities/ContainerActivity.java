@@ -15,12 +15,14 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import org.kohsuke.github.GHBranch;
 import org.kohsuke.github.GHRepository;
 
 import se.chalmers.agile.R;
+import se.chalmers.agile.fragments.BranchFragment;
 import se.chalmers.agile.fragments.RepositoryFragment;
 
-public class ContainerActivity extends Activity implements ActionBar.TabListener, RepositoryFragment.OnFragmentInteractionListener {
+public class ContainerActivity extends Activity implements ActionBar.TabListener, RepositoryFragment.OnRepositoryFragmentInteractionListener, BranchFragment.OnBranchFragmentInteractionListener {
 
     /**
      * The {@link android.support.v4.view.PagerAdapter} that will provide
@@ -114,8 +116,16 @@ public class ContainerActivity extends Activity implements ActionBar.TabListener
     }
 
     @Override
-    public void onFragmentInteraction(GHRepository repo) {
-        Log.d("onFragmentInteraction", repo.toString());
+    public void onRepositoryInteraction(GHRepository repo) {
+        BranchFragment bf = BranchFragment.newInstance(repo);
+        FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
+        fragmentTransaction.replace(R.id.pager, bf);
+        fragmentTransaction.commit();
+    }
+
+    @Override
+    public void onBranchInteraction(GHBranch branch) {
+        Log.d("OnBranchInteraction", branch.getName());
     }
 
     /**

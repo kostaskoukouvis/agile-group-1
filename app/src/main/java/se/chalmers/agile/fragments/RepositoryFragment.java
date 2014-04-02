@@ -38,7 +38,7 @@ public class RepositoryFragment extends ListFragment {
     private String mParam1;
     private String mParam2;
 
-    private OnFragmentInteractionListener mListener;
+    private OnRepositoryFragmentInteractionListener mListener;
 
     /**
      * Mandatory empty constructor for the fragment manager to instantiate the
@@ -77,7 +77,7 @@ public class RepositoryFragment extends ListFragment {
     public void onAttach(Activity activity) {
         super.onAttach(activity);
         try {
-            mListener = (OnFragmentInteractionListener) activity;
+            mListener = (OnRepositoryFragmentInteractionListener) activity;
         } catch (ClassCastException e) {
             throw new ClassCastException(activity.toString()
                     + " must implement OnFragmentInteractionListener");
@@ -94,7 +94,9 @@ public class RepositoryFragment extends ListFragment {
     @Override
     public void onListItemClick(ListView l, View v, int position, long id) {
         super.onListItemClick(l, v, position, id);
-        //TODO: Add the callback
+        ArrayAdapter<GHRepository> adapter = (ArrayAdapter<GHRepository>)l.getAdapter();
+        GHRepository selected = adapter.getItem(position);
+        mListener.onRepositoryInteraction(selected);
     }
 
     /**
@@ -107,9 +109,9 @@ public class RepositoryFragment extends ListFragment {
      * "http://developer.android.com/training/basics/fragments/communicating.html"
      * >Communicating with Other Fragments</a> for more information.
      */
-    public interface OnFragmentInteractionListener {
+    public interface OnRepositoryFragmentInteractionListener {
         // TODO: Update argument type and name
-        public void onFragmentInteraction(GHRepository repo);
+        public void onRepositoryInteraction(GHRepository repo);
     }
 
 
@@ -191,6 +193,11 @@ public class RepositoryFragment extends ListFragment {
             textView.setText(repos.get(position).getName());
             return convertView;
 
+        }
+
+        @Override
+        public GHRepository getItem(int position) {
+            return repos.get(position);
         }
     }
 
