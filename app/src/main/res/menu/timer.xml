@@ -5,6 +5,18 @@
 
     <item android:id="@+id/timer_button"
         android:title="@string/title_timer"
-        android:showAsAction="ifRoom" />
+        android:orderInCategory="0"
+        android:showAsAction="ifRoom">
+
+    <menu xmlns:android="http://schemas.android.com/apk/res/android">
+        <item
+            android:id="@+id/timerReset"
+            android:title="timerReset"/>
+
+        <item
+            android:id="@+id/timerStart"
+            android:title="timerStart"/>
+    </menu>
+    </item>
 
 </menu>
