@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:compatibility="http://schemas.android.com/apk/res-auto">
+
+    <item android:id="@+id/timer_button"
+        android:title="@string/title_timer"
+        android:showAsAction="ifRoom" />
+
+</menu>
