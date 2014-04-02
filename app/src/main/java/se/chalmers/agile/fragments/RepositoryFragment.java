@@ -20,7 +20,6 @@ import org.kohsuke.github.GitHub;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Collection;
 
 import se.chalmers.agile.R;
 import se.chalmers.agile.activities.LoginActivity;
@@ -29,14 +28,6 @@ import se.chalmers.agile.activities.LoginActivity;
  */
 public class RepositoryFragment extends ListFragment {
 
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
-
-    // TODO: Rename and change types of parameters
-    private String mParam1;
-    private String mParam2;
 
     private OnRepositoryFragmentInteractionListener mListener;
 
@@ -50,21 +41,12 @@ public class RepositoryFragment extends ListFragment {
     // TODO: Rename and change types of parameters
     public static RepositoryFragment createInstance() {
         RepositoryFragment fragment = new RepositoryFragment();
-        /*Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
-        fragment.setArguments();*/
         return fragment;
     }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-        if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
-        }
 
         //Call the async task
         new RepositoryTask().execute();
@@ -92,7 +74,7 @@ public class RepositoryFragment extends ListFragment {
     @Override
     public void onListItemClick(ListView l, View v, int position, long id) {
         super.onListItemClick(l, v, position, id);
-        ArrayAdapter<GHRepository> adapter = (ArrayAdapter<GHRepository>)l.getAdapter();
+        ArrayAdapter<GHRepository> adapter = (ArrayAdapter<GHRepository>) l.getAdapter();
         GHRepository selected = adapter.getItem(position);
         mListener.onRepositoryInteraction(selected);
     }
@@ -121,7 +103,7 @@ public class RepositoryFragment extends ListFragment {
         @Override
         protected ArrayList<GHRepository> doInBackground(Void... voids) {
             ArrayList<GHRepository> result = new ArrayList<GHRepository>();
-            SharedPreferences sharedPref = getActivity().getApplication().getBaseContext().getSharedPreferences("Application",Context.MODE_PRIVATE);
+            SharedPreferences sharedPref = getActivity().getApplication().getBaseContext().getSharedPreferences("Application", Context.MODE_PRIVATE);
 
             String un = sharedPref.getString(LoginActivity.USERNAME_STR, LoginActivity.NOT_LOGGED_IN);
             String pwd = sharedPref.getString(LoginActivity.PASSWORD_STR, LoginActivity.NOT_LOGGED_IN);
@@ -165,7 +147,7 @@ public class RepositoryFragment extends ListFragment {
         }
     }
 
-    private class RepositoryArrayAdapter extends ArrayAdapter<GHRepository>{
+    private class RepositoryArrayAdapter extends ArrayAdapter<GHRepository> {
 
         private ArrayList<GHRepository> repos = null;
         private Context context = null;
@@ -183,7 +165,7 @@ public class RepositoryFragment extends ListFragment {
 
         @Override
         public View getView(int position, View convertView, ViewGroup parent) {
-            if(convertView == null){
+            if (convertView == null) {
                 LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
                 convertView = inflater.inflate(R.layout.rows_repository, null);
             }

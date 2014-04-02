@@ -1,11 +1,11 @@
 package se.chalmers.agile.fragments;
 
 import android.app.Activity;
+import android.app.ListFragment;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.app.ListFragment;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -15,12 +15,12 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import org.kohsuke.github.GHBranch;
-import org.kohsuke.github.GHMyself;
 import org.kohsuke.github.GHRepository;
 import org.kohsuke.github.GitHub;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Map;
 
 import se.chalmers.agile.R;
 import se.chalmers.agile.activities.LoginActivity;
@@ -40,13 +40,14 @@ public class BranchFragment extends ListFragment {
     public BranchFragment() {
     }
 
-    public static BranchFragment createInstance(GHRepository repo){
+    public static BranchFragment createInstance(GHRepository repo) {
         Bundle args = new Bundle();
         args.putString(REPO_STR, repo.getName());
         BranchFragment fragment = new BranchFragment();
         fragment.setArguments(args);
         return fragment;
     }
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -54,12 +55,8 @@ public class BranchFragment extends ListFragment {
         if (getArguments() != null) {
             repositoryName = getArguments().getString(REPO_STR);
         }
-        Log.d("Rname", repositoryName);
         //Call the async task
         new BranchTask().execute();
-        // TODO: Change Adapter to display your content
-        /*setListAdapter(new ArrayAdapter<DummyContent.DummyItem>(getActivity(),
-                android.R.layout.simple_list_item_1, android.R.id.text1, DummyContent.ITEMS));*/
     }
 
 
@@ -70,7 +67,7 @@ public class BranchFragment extends ListFragment {
             mListener = (OnBranchFragmentInteractionListener) activity;
         } catch (ClassCastException e) {
             throw new ClassCastException(activity.toString()
-                + " must implement OnFragmentInteractionListener");
+                    + " must implement OnFragmentInteractionListener");
         }
     }
 
@@ -84,7 +81,7 @@ public class BranchFragment extends ListFragment {
     @Override
     public void onListItemClick(ListView l, View v, int position, long id) {
         super.onListItemClick(l, v, position, id);
-        ArrayAdapter<GHBranch> adapter = (ArrayAdapter<GHBranch>)l.getAdapter();
+        ArrayAdapter<GHBranch> adapter = (ArrayAdapter<GHBranch>) l.getAdapter();
         GHBranch selected = adapter.getItem(position);
         mListener.onBranchInteraction(selected);
     }
@@ -94,7 +91,7 @@ public class BranchFragment extends ListFragment {
      * fragment to allow an interaction in this fragment to be communicated
      * to the activity and potentially other fragments contained in that
      * activity.
-     * <p>
+     * <p/>
      * See the Android Training lesson <a href=
      * "http://developer.android.com/training/basics/fragments/communicating.html"
      * >Communicating with Other Fragments</a> for more information.
@@ -104,92 +101,93 @@ public class BranchFragment extends ListFragment {
     }
 
 
-
-private class BranchTask extends AsyncTask<Void, Void, ArrayList<GHBranch>> {
-    public BranchTask() {
-        super();
-    }
-
-    @Override
-    protected ArrayList<GHBranch> doInBackground(Void... voids) {
-        ArrayList<GHBranch> result = new ArrayList<GHBranch>();
-        SharedPreferences sharedPref = getActivity().getApplication().getBaseContext().getSharedPreferences("Application",Context.MODE_PRIVATE);
-
-        String un = sharedPref.getString(LoginActivity.USERNAME_STR, LoginActivity.NOT_LOGGED_IN);
-        String pwd = sharedPref.getString(LoginActivity.PASSWORD_STR, LoginActivity.NOT_LOGGED_IN);
-
-        GitHub conn = null;
-
-        try {
-            conn = GitHub.connectUsingPassword(un, pwd);
-            GHMyself myself = conn.getMyself();
-            result.addAll(conn.getRepository(repositoryName).getBranches().values());
-        } catch (IOException e) {
-            Log.e("Error", e.getMessage());
-            this.cancel(true);
+    private class BranchTask extends AsyncTask<Void, Void, ArrayList<GHBranch>> {
+        public BranchTask() {
+            super();
         }
-        return result;
-    }
 
-    @Override
-    protected void onPreExecute() {
-        super.onPreExecute();
-    }
+        @Override
+        protected ArrayList<GHBranch> doInBackground(Void... voids) {
+            ArrayList<GHBranch> result = new ArrayList<GHBranch>();
+            SharedPreferences sharedPref = getActivity().getApplication().getBaseContext().getSharedPreferences("Application", Context.MODE_PRIVATE);
 
-    @Override
-    protected void onPostExecute(ArrayList<GHBranch> ghBranches) {
-        //TODO: change R.layout.simple_list_item
-        setListAdapter(new BranchArrayAdapter(getActivity(), R.id.branchName, ghBranches));
-    }
+            String un = sharedPref.getString(LoginActivity.USERNAME_STR, LoginActivity.NOT_LOGGED_IN);
+            String pwd = sharedPref.getString(LoginActivity.PASSWORD_STR, LoginActivity.NOT_LOGGED_IN);
 
-    @Override
-    protected void onProgressUpdate(Void... values) {
-        super.onProgressUpdate(values);
-    }
+            GitHub conn = null;
 
-    @Override
-    protected void onCancelled(ArrayList<GHBranch> ghBranches) {
-        super.onCancelled(ghBranches);
-    }
-
-    @Override
-    protected void onCancelled() {
-        super.onCancelled();
-    }
-    }
-
-private class BranchArrayAdapter extends ArrayAdapter<GHBranch>{
-
-    private ArrayList<GHBranch> branches = null;
-    private Context context = null;
-
-    public BranchArrayAdapter(Context context, int resource, ArrayList<GHBranch> branches) {
-        super(context, resource);
-        this.context = context;
-        this.branches = branches;
-    }
-
-    @Override
-    public int getCount() {
-        return branches.size();
-    }
-
-    @Override
-    public View getView(int position, View convertView, ViewGroup parent) {
-        if(convertView == null){
-            LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-            convertView = inflater.inflate(R.layout.rows_branch, null);
+            try {
+                conn = GitHub.connectUsingPassword(un, pwd);
+                GHRepository repo = conn.getMyself().getAllRepositories().get(repositoryName);
+                Map<String, GHBranch> branches = repo.getBranches();
+                result.addAll(branches.values());
+            } catch (IOException e) {
+                Log.e("Error", e.getMessage());
+                this.cancel(true);
+            }
+            return result;
         }
-        TextView textView = (TextView) convertView.findViewById(R.id.branchName);
-        textView.setText(branches.get(position).getName());
-        return convertView;
 
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+        }
+
+        @Override
+        protected void onPostExecute(ArrayList<GHBranch> ghBranches) {
+            setListAdapter(new BranchArrayAdapter(getActivity(), R.id.branchName, ghBranches));
+        }
+
+        @Override
+        protected void onProgressUpdate(Void... values) {
+            super.onProgressUpdate(values);
+        }
+
+        @Override
+        protected void onCancelled(ArrayList<GHBranch> ghBranches) {
+            super.onCancelled(ghBranches);
+        }
+
+        @Override
+        protected void onCancelled() {
+            super.onCancelled();
+        }
     }
 
-    @Override
-    public GHBranch getItem(int position) {
-        return branches.get(position);
+    private class BranchArrayAdapter extends ArrayAdapter<GHBranch> {
+
+        private ArrayList<GHBranch> branches = null;
+        private Context context = null;
+
+        public BranchArrayAdapter(Context context, int resource, ArrayList<GHBranch> branches) {
+            super(context, resource);
+            this.context = context;
+            this.branches = branches;
+        }
+
+        @Override
+        public int getCount() {
+            Log.d("GETCOUNT", branches.size()+"");
+            return branches.size();
+        }
+
+        @Override
+        public View getView(int position, View convertView, ViewGroup parent) {
+            if (convertView == null) {
+                LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+                convertView = inflater.inflate(R.layout.rows_branch, parent);
+            }
+            Log.d("Branch", branches.get(position).getName());
+            TextView textView = (TextView) convertView.findViewById(R.id.branchName);
+            textView.setText(branches.get(position).getName());
+            return convertView;
+
+        }
+
+        @Override
+        public GHBranch getItem(int position) {
+            return branches.get(position);
+        }
     }
-}
 
 }
