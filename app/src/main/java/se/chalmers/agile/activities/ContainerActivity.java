@@ -1,5 +1,7 @@
 package se.chalmers.agile.activities;
 
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Locale;
 
 import android.app.Activity;
@@ -33,11 +35,15 @@ public class ContainerActivity extends Activity implements ActionBar.TabListener
      * {@link android.support.v13.app.FragmentStatePagerAdapter}.
      */
     SectionsPagerAdapter mSectionsPagerAdapter;
+    ActionBar actionBar;
+
 
     /**
      * The {@link ViewPager} that will host the section contents.
      */
     ViewPager mViewPager;
+
+    private boolean isRepoChosen = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,12 +51,14 @@ public class ContainerActivity extends Activity implements ActionBar.TabListener
         setContentView(R.layout.activity_container);
 
         // Set up the action bar.
-        final ActionBar actionBar = getActionBar();
+        actionBar = getActionBar();
         actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
 
         // Create the adapter that will return a fragment for each of the three
         // primary sections of the activity.
-        mSectionsPagerAdapter = new SectionsPagerAdapter(getFragmentManager());
+        ArrayList<Fragment> tmp = new ArrayList<Fragment>();
+        tmp.add(RepositoryFragment.createInstance());
+        mSectionsPagerAdapter = new SectionsPagerAdapter(getFragmentManager(),tmp);
 
         // Set up the ViewPager with the sections adapter.
         mViewPager = (ViewPager) findViewById(R.id.pager);
@@ -118,9 +126,7 @@ public class ContainerActivity extends Activity implements ActionBar.TabListener
     @Override
     public void onRepositoryInteraction(GHRepository repo) {
         BranchFragment bf = BranchFragment.createInstance(repo);
-        FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
-        fragmentTransaction.replace(R.id.pager, bf);
-        fragmentTransaction.commit();
+        mSectionsPagerAdapter.addFragment(bf,1);
     }
 
     @Override
@@ -134,26 +140,32 @@ public class ContainerActivity extends Activity implements ActionBar.TabListener
      */
     public class SectionsPagerAdapter extends FragmentPagerAdapter {
 
-        public SectionsPagerAdapter(FragmentManager fm) {
+        private ArrayList<Fragment> fragments;
+
+        public SectionsPagerAdapter(FragmentManager fm, ArrayList<Fragment> fragments) {
             super(fm);
+            this.fragments = fragments;
         }
 
         @Override
         public Fragment getItem(int position) {
-            // getItem is called to instantiate the fragment for the given page.
-            // Return a PlaceholderFragment (defined as a static inner class below).
-           // return PlaceholderFragment.newInstance(position + 1);
-            switch (position){
-                case 0:
-                    return RepositoryFragment.createInstance();
-            }
-            return null;
+            return fragments.get(position);
         }
 
         @Override
         public int getCount() {
-            // Show 3 total pages.
-            return 1;
+            return fragments.size();
+        }
+
+        public void addFragment(Fragment f, int position){
+            fragments.add(position,f);
+            notifyDataSetChanged();
+            ActionBar.Tab t = actionBar.newTab()
+                    .setText("something")
+                    .setTabListener(ContainerActivity.this);
+            actionBar.addTab(t);
+            actionBar.selectTab(t);
+
         }
 
         @Override

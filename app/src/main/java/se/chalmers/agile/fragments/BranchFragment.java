@@ -175,7 +175,7 @@ public class BranchFragment extends ListFragment {
         public View getView(int position, View convertView, ViewGroup parent) {
             if (convertView == null) {
                 LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-                convertView = inflater.inflate(R.layout.rows_branch, parent);
+                convertView = inflater.inflate(R.layout.rows_branch, null);
             }
             Log.d("Branch", branches.get(position).getName());
             TextView textView = (TextView) convertView.findViewById(R.id.branchName);
