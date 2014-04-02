@@ -7,9 +7,12 @@ import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
+import android.widget.TextView;
 
 import org.kohsuke.github.GHMyself;
 import org.kohsuke.github.GHRepository;
@@ -19,8 +22,8 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
 
+import se.chalmers.agile.R;
 import se.chalmers.agile.activities.LoginActivity;
-import se.chalmers.agile.fragments.dummy.DummyContent;
 
 /**
  */
@@ -91,12 +94,7 @@ public class RepositoryFragment extends ListFragment {
     @Override
     public void onListItemClick(ListView l, View v, int position, long id) {
         super.onListItemClick(l, v, position, id);
-
-        if (null != mListener) {
-            // Notify the active callbacks interface (the activity, if the
-            // fragment is attached to one) that an item has been selected.
-            mListener.onFragmentInteraction(DummyContent.ITEMS.get(position).id);
-        }
+        //TODO: Add the callback
     }
 
     /**
@@ -111,23 +109,23 @@ public class RepositoryFragment extends ListFragment {
      */
     public interface OnFragmentInteractionListener {
         // TODO: Update argument type and name
-        public void onFragmentInteraction(String id);
+        public void onFragmentInteraction(GHRepository repo);
     }
 
 
-    private class RepositoryTask extends AsyncTask<Void, Void, Collection<GHRepository>> {
+    private class RepositoryTask extends AsyncTask<Void, Void, ArrayList<GHRepository>> {
         public RepositoryTask() {
             super();
         }
 
         @Override
-        protected Collection<GHRepository> doInBackground(Void... voids) {
+        protected ArrayList<GHRepository> doInBackground(Void... voids) {
             ArrayList<GHRepository> result = new ArrayList<GHRepository>();
             SharedPreferences sharedPref = getActivity().getApplication().getBaseContext().getSharedPreferences("Application",Context.MODE_PRIVATE);
-            Log.d("preferencies", sharedPref.toString());
+
             String un = sharedPref.getString(LoginActivity.USERNAME_STR, LoginActivity.NOT_LOGGED_IN);
             String pwd = sharedPref.getString(LoginActivity.PASSWORD_STR, LoginActivity.NOT_LOGGED_IN);
-            Log.d("user", un+" "+pwd);
+
             GitHub conn = null;
             try {
                 conn = GitHub.connectUsingPassword(un, pwd);
@@ -146,10 +144,9 @@ public class RepositoryFragment extends ListFragment {
         }
 
         @Override
-        protected void onPostExecute(Collection<GHRepository> ghRepositories) {
+        protected void onPostExecute(ArrayList<GHRepository> ghRepositories) {
             //TODO: change R.layout.simple_list_item
-            setListAdapter(new ArrayAdapter<GHRepository>(getActivity(),
-                    android.R.layout.simple_list_item_1, android.R.id.text1, (ArrayList<GHRepository>) ghRepositories));
+            setListAdapter(new RepositoryArrayAdapter(getActivity(), R.id.repoName, ghRepositories));
         }
 
         @Override
@@ -158,7 +155,7 @@ public class RepositoryFragment extends ListFragment {
         }
 
         @Override
-        protected void onCancelled(Collection<GHRepository> ghRepositories) {
+        protected void onCancelled(ArrayList<GHRepository> ghRepositories) {
             super.onCancelled(ghRepositories);
         }
 
@@ -170,8 +167,30 @@ public class RepositoryFragment extends ListFragment {
 
     private class RepositoryArrayAdapter extends ArrayAdapter<GHRepository>{
 
-        public RepositoryArrayAdapter(Context context, int resource) {
+        private ArrayList<GHRepository> repos = null;
+        private Context context = null;
+
+        public RepositoryArrayAdapter(Context context, int resource, ArrayList<GHRepository> repos) {
             super(context, resource);
+            this.context = context;
+            this.repos = repos;
+        }
+
+        @Override
+        public int getCount() {
+            return repos.size();
+        }
+
+        @Override
+        public View getView(int position, View convertView, ViewGroup parent) {
+            if(convertView == null){
+                LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+                convertView = inflater.inflate(R.layout.rows_repository, null);
+            }
+            TextView textView = (TextView) convertView.findViewById(R.id.repoName);
+            textView.setText(repos.get(position).getName());
+            return convertView;
+
         }
     }
 

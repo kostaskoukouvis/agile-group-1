@@ -15,6 +15,8 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import org.kohsuke.github.GHRepository;
+
 import se.chalmers.agile.R;
 import se.chalmers.agile.fragments.RepositoryFragment;
 
@@ -112,8 +114,8 @@ public class ContainerActivity extends Activity implements ActionBar.TabListener
     }
 
     @Override
-    public void onFragmentInteraction(String id) {
-        Log.d("onFragmentInteraction", id);
+    public void onFragmentInteraction(GHRepository repo) {
+        Log.d("onFragmentInteraction", repo.toString());
     }
 
     /**
