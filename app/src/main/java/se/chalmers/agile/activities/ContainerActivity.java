@@ -117,7 +117,7 @@ public class ContainerActivity extends Activity implements ActionBar.TabListener
 
     @Override
     public void onRepositoryInteraction(GHRepository repo) {
-        BranchFragment bf = BranchFragment.newInstance(repo);
+        BranchFragment bf = BranchFragment.createInstance(repo);
         FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
         fragmentTransaction.replace(R.id.pager, bf);
         fragmentTransaction.commit();

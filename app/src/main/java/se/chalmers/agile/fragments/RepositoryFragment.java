@@ -68,8 +68,6 @@ public class RepositoryFragment extends ListFragment {
 
         //Call the async task
         new RepositoryTask().execute();
-        // TODO: Change Adapter to display your content
-
     }
 
 
