@@ -145,6 +145,7 @@ public class ContainerActivity extends Activity implements ActionBar.TabListener
         }
 
         @Override
+        //TODO change names for fragments
         public CharSequence getPageTitle(int position) {
             Locale l = Locale.getDefault();
             switch (position) {
