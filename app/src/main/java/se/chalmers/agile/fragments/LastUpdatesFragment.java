@@ -2,6 +2,7 @@ package se.chalmers.agile.fragments;
 
 import android.app.Activity;
 import android.content.Context;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.ListFragment;
 import android.view.LayoutInflater;
@@ -10,45 +11,70 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
-import java.util.Date;
+import org.eclipse.egit.github.core.Commit;
+import org.eclipse.egit.github.core.IRepositoryIdProvider;
+import org.eclipse.egit.github.core.Repository;
+import org.eclipse.egit.github.core.RepositoryCommit;
+import org.eclipse.egit.github.core.RepositoryId;
+import org.eclipse.egit.github.core.client.PageIterator;
+import org.eclipse.egit.github.core.service.CommitService;
+
+import java.text.DateFormat;
+import java.util.Collection;
+
+
 import java.util.LinkedList;
 import java.util.List;
 
 import se.chalmers.agile.R;
-import se.chalmers.agile.core.Commit;
 
 /**
  * Displays the last updates from the selected repositories.
  */
 public class LastUpdatesFragment extends ListFragment {
 
+    private static final DateFormat dateFormat = DateFormat.getDateTimeInstance();
+
+    /**
+     * Builds a instance once provided the correct parameters.
+     * @param projectName
+     * @param branchName
+     * @return
+     */
+    public static LastUpdatesFragment createInstance(String projectName, String branchName) {
+        Bundle bundle = new Bundle();
+        bundle.putString("project", projectName);
+        bundle.putString("branch", branchName);
+        LastUpdatesFragment fragment = new LastUpdatesFragment();
+        fragment.setArguments(bundle);
+        return fragment;
+    }
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+    }
 
-        //1. Get the list of project/branches
-        //List<ProjectBranch> branches = ...;
-        //2. Fetch data from GitHub
-        List<Commit> commits = new LinkedList<Commit>();
-        commits.add(new Commit("agile", "master", new Date(), "john doe", "Hello world"));
-        //3. Filtering
 
-        //4. Display results
-        // TODO: Change Adapter to display your content
-        setListAdapter(new UpdatesAdapter(getActivity(),
-                R.layout.updates_list_item_layout, commits.toArray(new Commit[commits.size()])));
+    @Override
+    public void onResume() {
+        super.onResume();
+        Bundle extras = this.getArguments();
+        String projectName = extras.getString("project");
+        String branchName = extras.getString("branch");
+        new GetUpdatesTasks().execute(projectName, branchName);
     }
 
     /**
      * Adapter to show updates.
      */
-    public class UpdatesAdapter extends ArrayAdapter<Commit> {
+    public class UpdatesAdapter extends ArrayAdapter<RepositoryCommit> {
 
         Context context;
         int layoutResourceId;
-        Commit data[] = null;
+        RepositoryCommit data[] = null;
 
-        public UpdatesAdapter(Context context, int layoutResourceId, Commit[] data) {
+        public UpdatesAdapter(Context context, int layoutResourceId, RepositoryCommit[] data) {
             super(context, layoutResourceId, data);
             this.layoutResourceId = layoutResourceId;
             this.context = context;
@@ -63,23 +89,42 @@ public class LastUpdatesFragment extends ListFragment {
                 LayoutInflater inflater = ((Activity) context).getLayoutInflater();
                 row = inflater.inflate(layoutResourceId, parent, false);
             }
-            Commit c = data[position];
+            Commit commit = data[position].getCommit();
 
             TextView branch = (TextView) row.findViewById(R.id.commit_branch);
-            branch.setText(c.getBranch());
+            branch.setText("~");
 
             TextView date = (TextView) row.findViewById(R.id.commit_date);
-            if (c.getTime()!=null) {
-                date.setText(c.getTime().toGMTString());
-            }
+            date.setText(dateFormat.format(commit.getCommitter().getDate()));
 
             TextView message = (TextView) row.findViewById(R.id.commit_message);
-            message.setText(c.getCommitMsg());
+            message.setText(commit.getMessage());
 
             TextView author = (TextView) row.findViewById(R.id.commit_user);
-            author.setText(c.getCommitter());
+            author.setText(commit.getCommitter().getName());
 
             return row;
+        }
+    }
+
+    /**
+     * Performs the commit fetching in background.
+     */
+    private class GetUpdatesTasks extends AsyncTask<String, Void, Collection<RepositoryCommit>> {
+        @Override
+        protected Collection<RepositoryCommit> doInBackground(String... args) {
+            CommitService cs = new CommitService();
+            String[] project = args[0].split("/");
+            IRepositoryIdProvider repositoryId = RepositoryId.create(project[0], project[1]);
+            PageIterator<RepositoryCommit> commitPages = cs.pageCommits(repositoryId, args[1], null, 10);
+            return commitPages.next();
+        }
+
+        @Override
+        protected void onPostExecute(Collection<RepositoryCommit> commits) {
+            super.onPostExecute(commits);
+            setListAdapter(new UpdatesAdapter(getActivity(),
+                    R.layout.updates_list_item_layout, commits.toArray(new RepositoryCommit[commits.size()])));
         }
     }
 }
