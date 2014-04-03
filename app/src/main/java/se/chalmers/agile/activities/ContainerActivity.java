@@ -10,6 +10,8 @@ import android.app.Fragment;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.app.ListFragment;
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.support.v13.app.FragmentPagerAdapter;
 import android.os.Bundle;
 import android.support.v13.app.FragmentStatePagerAdapter;
@@ -155,7 +157,7 @@ public class ContainerActivity extends Activity implements ActionBar.TabListener
      */
     @Override
     public void onBranchInteraction(GHBranch branch) {
-        Log.d("OnBranchInteraction", branch.getName());
+        //TODO: integrate with santi and pavel
     }
 
     /**
@@ -209,6 +211,7 @@ public class ContainerActivity extends Activity implements ActionBar.TabListener
                 actionBar.selectTab(branchTab);
                 return;
             }
+
 
         }
 
