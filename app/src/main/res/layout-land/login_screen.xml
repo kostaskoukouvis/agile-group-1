@@ -55,7 +55,8 @@
             android:text="@string/login"
             android:id="@+id/loginButton"
             android:onClick="tryToLogIn"
+            android:drawableLeft="@drawable/switchuser"
             android:layout_gravity="center_horizontal"
-            style="@style/ButtonStyle"/>
+            style="?android:attr/borderlessButtonStyle"/>
     </LinearLayout>
 </LinearLayout>
