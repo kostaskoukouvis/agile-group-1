@@ -3,5 +3,4 @@
     android:id="@+id/pager"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="se.chalmers.agile.activities.ContainerActivity"
-    android:background="#cbff4d" />
+    tools:context="se.chalmers.agile.activities.ContainerActivity" />

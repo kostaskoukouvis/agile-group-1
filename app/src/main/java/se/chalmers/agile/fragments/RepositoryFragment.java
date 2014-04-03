@@ -31,6 +31,8 @@ public class RepositoryFragment extends ListFragment {
 
     private OnRepositoryFragmentInteractionListener mListener;
 
+    private final static String REPOSITORY_STR = "project";
+
     /**
      * Mandatory empty constructor for the fragment manager to instantiate the
      * fragment (e.g. upon screen orientation changes).
@@ -94,7 +96,9 @@ public class RepositoryFragment extends ListFragment {
         public void onRepositoryInteraction(GHRepository repo);
     }
 
-
+    /**
+     * Asynch task to fetch the repositories
+     */
     private class RepositoryTask extends AsyncTask<Void, Void, ArrayList<GHRepository>> {
         public RepositoryTask() {
             super();
@@ -147,6 +151,9 @@ public class RepositoryFragment extends ListFragment {
         }
     }
 
+    /**
+     * Custom adapter for the repository list
+     */
     private class RepositoryArrayAdapter extends ArrayAdapter<GHRepository> {
 
         private ArrayList<GHRepository> repos = null;
@@ -162,6 +169,7 @@ public class RepositoryFragment extends ListFragment {
         public int getCount() {
             return repos.size();
         }
+
 
         @Override
         public View getView(int position, View convertView, ViewGroup parent) {

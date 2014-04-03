@@ -10,8 +10,11 @@ import android.app.Fragment;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.app.ListFragment;
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.support.v13.app.FragmentPagerAdapter;
 import android.os.Bundle;
+import android.support.v13.app.FragmentStatePagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.util.Log;
 import android.view.Menu;
@@ -123,24 +126,49 @@ public class ContainerActivity extends Activity implements ActionBar.TabListener
     public void onTabReselected(ActionBar.Tab tab, FragmentTransaction fragmentTransaction) {
     }
 
+
+    /**
+     *  The method called when a repository is clicked in the repository fragment
+     *  @param repo The repository clicked
+     */
     @Override
     public void onRepositoryInteraction(GHRepository repo) {
-        BranchFragment bf = BranchFragment.createInstance(repo);
-        mSectionsPagerAdapter.addFragment(bf,1);
+        BranchFragment bf = null;
+        try{
+            bf = (BranchFragment)mSectionsPagerAdapter.getItem(1);
+        } catch (IndexOutOfBoundsException e ){
+            bf = BranchFragment.createInstance(repo);
+            mSectionsPagerAdapter.addFragment(bf,1, "branches");
+            return;
+        } catch (ClassCastException e){
+            bf = BranchFragment.createInstance(repo);
+            mSectionsPagerAdapter.addFragment(bf,1, "branches");
+            return;
+        }
+
+        bf.updateBranch(repo.getName());
+        mViewPager.setCurrentItem(1);
+
     }
 
+    /**
+     *  The method called when the a branch is called
+     * @param branch
+     */
     @Override
     public void onBranchInteraction(GHBranch branch) {
-        Log.d("OnBranchInteraction", branch.getName());
+        //TODO: integrate with santi and pavel
     }
 
     /**
      * A {@link FragmentPagerAdapter} that returns a fragment corresponding to
      * one of the sections/tabs/pages.
      */
-    public class SectionsPagerAdapter extends FragmentPagerAdapter {
+    public class SectionsPagerAdapter extends FragmentStatePagerAdapter {
 
         private ArrayList<Fragment> fragments;
+
+        private ActionBar.Tab branchTab;
 
         public SectionsPagerAdapter(FragmentManager fm, ArrayList<Fragment> fragments) {
             super(fm);
@@ -157,14 +185,33 @@ public class ContainerActivity extends Activity implements ActionBar.TabListener
             return fragments.size();
         }
 
-        public void addFragment(Fragment f, int position){
-            fragments.add(position,f);
-            notifyDataSetChanged();
-            ActionBar.Tab t = actionBar.newTab()
-                    .setText("something")
-                    .setTabListener(ContainerActivity.this);
-            actionBar.addTab(t);
-            actionBar.selectTab(t);
+        /**
+         * Add a fragment to the Page viewer
+         * @param f the fragment to be added
+         * @param position the position in the 0-indexed tab list (it moves the other tab on the right)
+         * @param tabName the title of the tab
+         */
+        public void addFragment(Fragment f, int position, String tabName){
+            if(f instanceof BranchFragment){
+                if(branchTab == null){
+                    branchTab = actionBar.newTab()
+                            .setText(tabName)
+                            .setTabListener(ContainerActivity.this);
+                    actionBar.addTab(branchTab);
+                }
+                if(fragments.size() > 1 && fragments.get(position) instanceof BranchFragment) {
+                    Fragment tmp = fragments.remove(position);
+                    ContainerActivity.this.getFragmentManager()
+                            .beginTransaction()
+                            .remove(tmp)
+                            .commit();
+                }
+                fragments.add(position, f);
+                notifyDataSetChanged();
+                actionBar.selectTab(branchTab);
+                return;
+            }
+
 
         }
 
