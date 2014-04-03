@@ -13,6 +13,7 @@ import android.widget.TextView;
 
 import org.eclipse.egit.github.core.Commit;
 import org.eclipse.egit.github.core.IRepositoryIdProvider;
+import org.eclipse.egit.github.core.Repository;
 import org.eclipse.egit.github.core.RepositoryCommit;
 import org.eclipse.egit.github.core.RepositoryId;
 import org.eclipse.egit.github.core.client.PageIterator;
@@ -34,6 +35,21 @@ public class LastUpdatesFragment extends ListFragment {
 
     private static final DateFormat dateFormat = DateFormat.getDateTimeInstance();
 
+    /**
+     * Builds a instance once provided the correct parameters.
+     * @param projectName
+     * @param branchName
+     * @return
+     */
+    public static LastUpdatesFragment createInstance(String projectName, String branchName) {
+        Bundle bundle = new Bundle();
+        bundle.putString("project", projectName);
+        bundle.putString("branch", branchName);
+        LastUpdatesFragment fragment = new LastUpdatesFragment();
+        fragment.setArguments(bundle);
+        return fragment;
+    }
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -44,12 +60,9 @@ public class LastUpdatesFragment extends ListFragment {
     public void onResume() {
         super.onResume();
         Bundle extras = this.getArguments();
-        //String projectName = extras.getString("project");
-        String projectName = "SantiMunin/MyWallet";
-        //String branchName = extras.getString("branch");
-        String branchName = "master";
+        String projectName = extras.getString("project");
+        String branchName = extras.getString("branch");
         new GetUpdatesTasks().execute(projectName, branchName);
-
     }
 
     /**
@@ -100,7 +113,6 @@ public class LastUpdatesFragment extends ListFragment {
     private class GetUpdatesTasks extends AsyncTask<String, Void, Collection<RepositoryCommit>> {
         @Override
         protected Collection<RepositoryCommit> doInBackground(String... args) {
-            List<RepositoryCommit> commits = new LinkedList<RepositoryCommit>();
             CommitService cs = new CommitService();
             String[] project = args[0].split("/");
             IRepositoryIdProvider repositoryId = RepositoryId.create(project[0], project[1]);
