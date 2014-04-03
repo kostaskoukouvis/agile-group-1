@@ -25,6 +25,7 @@ import org.kohsuke.github.GHRepository;
 
 import se.chalmers.agile.R;
 import se.chalmers.agile.fragments.BranchFragment;
+import se.chalmers.agile.fragments.LastUpdatesFragment;
 import se.chalmers.agile.fragments.RepositoryFragment;
 
 public class ContainerActivity extends Activity implements ActionBar.TabListener, RepositoryFragment.OnRepositoryFragmentInteractionListener, BranchFragment.OnBranchFragmentInteractionListener {
@@ -133,6 +134,7 @@ public class ContainerActivity extends Activity implements ActionBar.TabListener
      */
     @Override
     public void onRepositoryInteraction(GHRepository repo) {
+
         BranchFragment bf = null;
         try{
             bf = (BranchFragment)mSectionsPagerAdapter.getItem(1);
@@ -157,7 +159,14 @@ public class ContainerActivity extends Activity implements ActionBar.TabListener
      */
     @Override
     public void onBranchInteraction(GHBranch branch) {
-        //TODO: integrate with santi and pavel
+
+        SharedPreferences sharedPref = getApplication().getBaseContext().getSharedPreferences("Application", Context.MODE_PRIVATE);
+
+        String un = sharedPref.getString(LoginActivity.USERNAME_STR, LoginActivity.NOT_LOGGED_IN);
+
+        Fragment luf = (Fragment) LastUpdatesFragment.createInstance(un+"/"+branch.getOwner().getName(), branch.getName());
+        mSectionsPagerAdapter.addFragment(luf, 2, "Last commits");
+
     }
 
     /**
@@ -169,6 +178,7 @@ public class ContainerActivity extends Activity implements ActionBar.TabListener
         private ArrayList<Fragment> fragments;
 
         private ActionBar.Tab branchTab;
+        private ActionBar.Tab commitsTab;
 
         public SectionsPagerAdapter(FragmentManager fm, ArrayList<Fragment> fragments) {
             super(fm);
@@ -209,6 +219,25 @@ public class ContainerActivity extends Activity implements ActionBar.TabListener
                 fragments.add(position, f);
                 notifyDataSetChanged();
                 actionBar.selectTab(branchTab);
+                return;
+            }
+            if(f instanceof LastUpdatesFragment){
+                if(commitsTab == null){
+                    commitsTab = actionBar.newTab()
+                            .setText(tabName)
+                            .setTabListener(ContainerActivity.this);
+                    actionBar.addTab(commitsTab);
+                }
+                if(fragments.size() > 2 && fragments.get(position) instanceof LastUpdatesFragment){
+                    Fragment tmp = fragments.remove(position);
+                    ContainerActivity.this.getFragmentManager()
+                            .beginTransaction()
+                            .remove(tmp)
+                            .commit();
+                }
+                fragments.add(position,f);
+                notifyDataSetChanged();
+                actionBar.selectTab(commitsTab);
                 return;
             }
 
