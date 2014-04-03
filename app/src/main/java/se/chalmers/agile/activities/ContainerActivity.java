@@ -91,8 +91,9 @@ public class ContainerActivity extends Activity implements ActionBar.TabListener
 
         this.menu = menu;
         this.timer = menu.getItem(0);
-        this.countdownTimer = AppCountDownTimer.getInstance(30000, 1000, timer);
+        this.countdownTimer = AppCountDownTimer.getInstance(60000 * 30 , 1000, timer);
         countdownTimer.start();
+
         return true;
     }
 
@@ -104,6 +105,15 @@ public class ContainerActivity extends Activity implements ActionBar.TabListener
         int id = item.getItemId();
         if (id == R.id.action_settings) {
             return true;
+        }
+        else if(id == R.id.timerPause){
+            countdownTimer.pause();
+        }
+        else if(id == R.id.timerStart){
+            countdownTimer.resume();
+        }
+        else if(id == R.id.timerReset){
+            countdownTimer.reset();
         }
         return super.onOptionsItemSelected(item);
     }
