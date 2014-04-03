@@ -10,7 +10,6 @@ import android.app.FragmentTransaction;
 import android.support.v13.app.FragmentPagerAdapter;
 import android.os.Bundle;
 import android.support.v4.view.ViewPager;
-import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -18,6 +17,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 import se.chalmers.agile.R;
+import timer.AppCountDownTimer;
 
 public class ContainerActivity extends Activity implements ActionBar.TabListener {
 
@@ -35,6 +35,9 @@ public class ContainerActivity extends Activity implements ActionBar.TabListener
      * The {@link ViewPager} that will host the section contents.
      */
     ViewPager mViewPager;
+    Menu menu;
+    private MenuItem timer;
+    private AppCountDownTimer countdownTimer;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,10 +51,10 @@ public class ContainerActivity extends Activity implements ActionBar.TabListener
         // Create the adapter that will return a fragment for each of the three
         // primary sections of the activity.
         mSectionsPagerAdapter = new SectionsPagerAdapter(getFragmentManager());
-
         // Set up the ViewPager with the sections adapter.
         mViewPager = (ViewPager) findViewById(R.id.pager);
         mViewPager.setAdapter(mSectionsPagerAdapter);
+
 
         // When swiping between different sections, select the corresponding
         // tab. We can also use ActionBar.Tab#select() to do this if we have
@@ -74,14 +77,23 @@ public class ContainerActivity extends Activity implements ActionBar.TabListener
                             .setText(mSectionsPagerAdapter.getPageTitle(i))
                             .setTabListener(this));
         }
+
     }
 
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        
+
+
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.container, menu);
+        getMenuInflater().inflate(R.menu.timer,menu);
+
+        this.menu = menu;
+        this.timer = menu.getItem(0);
+        this.countdownTimer = AppCountDownTimer.getInstance(60000 * 30 , 1000, timer);
+        countdownTimer.start();
+
         return true;
     }
 
@@ -93,6 +105,15 @@ public class ContainerActivity extends Activity implements ActionBar.TabListener
         int id = item.getItemId();
         if (id == R.id.action_settings) {
             return true;
+        }
+        else if(id == R.id.timerPause){
+            countdownTimer.pause();
+        }
+        else if(id == R.id.timerStart){
+            countdownTimer.resume();
+        }
+        else if(id == R.id.timerReset){
+            countdownTimer.reset();
         }
         return super.onOptionsItemSelected(item);
     }
@@ -160,6 +181,9 @@ public class ContainerActivity extends Activity implements ActionBar.TabListener
          */
         private static final String ARG_SECTION_NUMBER = "section_number";
 
+
+
+
         /**
          * Returns a new instance of this fragment for the given section
          * number.
@@ -172,17 +196,18 @@ public class ContainerActivity extends Activity implements ActionBar.TabListener
             return fragment;
         }
 
-        public PlaceholderFragment() {
+        private PlaceholderFragment() {
         }
 
         @Override
         public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                Bundle savedInstanceState) {
+                                 Bundle savedInstanceState) {
             View rootView = inflater.inflate(R.layout.fragment_container, container, false);
             TextView textView = (TextView) rootView.findViewById(R.id.section_label);
             textView.setText(Integer.toString(getArguments().getInt(ARG_SECTION_NUMBER)));
+
             return rootView;
         }
     }
-
 }
+
