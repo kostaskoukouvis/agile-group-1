@@ -1,38 +1,29 @@
 package se.chalmers.agile.activities;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Locale;
-
-import android.app.Activity;
 import android.app.ActionBar;
+import android.app.Activity;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
-import android.app.ListFragment;
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.support.v13.app.FragmentPagerAdapter;
 import android.os.Bundle;
-import android.support.v13.app.FragmentStatePagerAdapter;
+import android.support.v13.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
-
-import android.view.LayoutInflater;
-
-import android.util.Log;
-
 import android.view.Menu;
 import android.view.MenuItem;
 
 import org.kohsuke.github.GHBranch;
 import org.kohsuke.github.GHRepository;
 
-import se.chalmers.agile.R;
-import timer.AppCountDownTimer;
+import java.util.ArrayList;
+import java.util.Locale;
 
+import se.chalmers.agile.R;
 import se.chalmers.agile.fragments.BranchFragment;
 import se.chalmers.agile.fragments.LastUpdatesFragment;
 import se.chalmers.agile.fragments.RepositoryFragment;
+import timer.AppCountDownTimer;
 
 
 public class ContainerActivity extends Activity implements ActionBar.TabListener, RepositoryFragment.OnRepositoryFragmentInteractionListener, BranchFragment.OnBranchFragmentInteractionListener {
@@ -73,7 +64,7 @@ public class ContainerActivity extends Activity implements ActionBar.TabListener
 
         ArrayList<Fragment> tmp = new ArrayList<Fragment>();
         tmp.add(RepositoryFragment.createInstance());
-        mSectionsPagerAdapter = new SectionsPagerAdapter(getFragmentManager(),tmp);
+        mSectionsPagerAdapter = new SectionsPagerAdapter(getFragmentManager(), tmp);
 
         // Set up the ViewPager with the sections adapter.
         mViewPager = (ViewPager) findViewById(R.id.pager);
@@ -99,7 +90,8 @@ public class ContainerActivity extends Activity implements ActionBar.TabListener
             actionBar.addTab(
                     actionBar.newTab()
                             .setText(mSectionsPagerAdapter.getPageTitle(i))
-                            .setTabListener(this));
+                            .setTabListener(this)
+            );
         }
 
     }
@@ -111,11 +103,11 @@ public class ContainerActivity extends Activity implements ActionBar.TabListener
 
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.container, menu);
-        getMenuInflater().inflate(R.menu.timer,menu);
+        getMenuInflater().inflate(R.menu.timer, menu);
 
         this.menu = menu;
         this.timer = menu.getItem(0);
-        this.countdownTimer = AppCountDownTimer.getInstance(60000 * 30 , 1000, timer);
+        this.countdownTimer = AppCountDownTimer.getInstance(60000 * 30, 1000, timer);
         countdownTimer.start();
 
         return true;
@@ -129,14 +121,11 @@ public class ContainerActivity extends Activity implements ActionBar.TabListener
         int id = item.getItemId();
         if (id == R.id.action_settings) {
             return true;
-        }
-        else if(id == R.id.timerPause){
+        } else if (id == R.id.timerPause) {
             countdownTimer.pause();
-        }
-        else if(id == R.id.timerStart){
+        } else if (id == R.id.timerStart) {
             countdownTimer.resume();
-        }
-        else if(id == R.id.timerReset){
+        } else if (id == R.id.timerReset) {
             countdownTimer.reset();
         }
         return super.onOptionsItemSelected(item);
@@ -159,22 +148,23 @@ public class ContainerActivity extends Activity implements ActionBar.TabListener
 
 
     /**
-     *  The method called when a repository is clicked in the repository fragment
-     *  @param repo The repository clicked
+     * The method called when a repository is clicked in the repository fragment
+     *
+     * @param repo The repository clicked
      */
     @Override
     public void onRepositoryInteraction(GHRepository repo) {
 
         BranchFragment bf = null;
-        try{
-            bf = (BranchFragment)mSectionsPagerAdapter.getItem(1);
-        } catch (IndexOutOfBoundsException e ){
+        try {
+            bf = (BranchFragment) mSectionsPagerAdapter.getItem(1);
+        } catch (IndexOutOfBoundsException e) {
             bf = BranchFragment.createInstance(repo);
-            mSectionsPagerAdapter.addFragment(bf,1, "branches");
+            mSectionsPagerAdapter.addFragment(bf, 1, "branches");
             return;
-        } catch (ClassCastException e){
+        } catch (ClassCastException e) {
             bf = BranchFragment.createInstance(repo);
-            mSectionsPagerAdapter.addFragment(bf,1, "branches");
+            mSectionsPagerAdapter.addFragment(bf, 1, "branches");
             return;
         }
 
@@ -184,7 +174,8 @@ public class ContainerActivity extends Activity implements ActionBar.TabListener
     }
 
     /**
-     *  The method called when the a branch is called
+     * The method called when the a branch is called
+     *
      * @param branch
      */
     @Override
@@ -194,7 +185,7 @@ public class ContainerActivity extends Activity implements ActionBar.TabListener
 
         String un = sharedPref.getString(LoginActivity.USERNAME_STR, LoginActivity.NOT_LOGGED_IN);
 
-        Fragment luf = (Fragment) LastUpdatesFragment.createInstance(un+"/"+branch.getOwner().getName(), branch.getName());
+        Fragment luf = (Fragment) LastUpdatesFragment.createInstance(un + "/" + branch.getOwner().getName(), branch.getName());
         mSectionsPagerAdapter.addFragment(luf, 2, "Last commits");
 
     }
@@ -203,7 +194,7 @@ public class ContainerActivity extends Activity implements ActionBar.TabListener
      * A {@link FragmentPagerAdapter} that returns a fragment corresponding to
      * one of the sections/tabs/pages.
      */
-    public class SectionsPagerAdapter extends FragmentStatePagerAdapter {
+    public class SectionsPagerAdapter extends FragmentPagerAdapter {
 
         private ArrayList<Fragment> fragments;
 
@@ -227,19 +218,20 @@ public class ContainerActivity extends Activity implements ActionBar.TabListener
 
         /**
          * Add a fragment to the Page viewer
-         * @param f the fragment to be added
+         *
+         * @param f        the fragment to be added
          * @param position the position in the 0-indexed tab list (it moves the other tab on the right)
-         * @param tabName the title of the tab
+         * @param tabName  the title of the tab
          */
-        public void addFragment(Fragment f, int position, String tabName){
-            if(f instanceof BranchFragment){
-                if(branchTab == null){
+        public void addFragment(Fragment f, int position, String tabName) {
+            if (f instanceof BranchFragment) {
+                if (branchTab == null) {
                     branchTab = actionBar.newTab()
                             .setText(tabName)
                             .setTabListener(ContainerActivity.this);
                     actionBar.addTab(branchTab);
                 }
-                if(fragments.size() > 1 && fragments.get(position) instanceof BranchFragment) {
+                if (fragments.size() > 1 && fragments.get(position) instanceof BranchFragment) {
                     Fragment tmp = fragments.remove(position);
                     ContainerActivity.this.getFragmentManager()
                             .beginTransaction()
@@ -251,21 +243,21 @@ public class ContainerActivity extends Activity implements ActionBar.TabListener
                 actionBar.selectTab(branchTab);
                 return;
             }
-            if(f instanceof LastUpdatesFragment){
-                if(commitsTab == null){
+            if (f instanceof LastUpdatesFragment) {
+                if (commitsTab == null) {
                     commitsTab = actionBar.newTab()
                             .setText(tabName)
                             .setTabListener(ContainerActivity.this);
                     actionBar.addTab(commitsTab);
                 }
-                if(fragments.size() > 2 && fragments.get(position) instanceof LastUpdatesFragment){
+                if (fragments.size() > 2 && fragments.get(position) instanceof LastUpdatesFragment) {
                     Fragment tmp = fragments.remove(position);
                     ContainerActivity.this.getFragmentManager()
                             .beginTransaction()
                             .remove(tmp)
                             .commit();
                 }
-                fragments.add(position,f);
+                fragments.add(position, f);
                 notifyDataSetChanged();
                 actionBar.selectTab(commitsTab);
                 return;
