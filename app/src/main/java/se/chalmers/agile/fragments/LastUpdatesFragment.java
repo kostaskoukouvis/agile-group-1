@@ -2,6 +2,7 @@ package se.chalmers.agile.fragments;
 
 import android.app.Activity;
 import android.content.Context;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.ListFragment;
 import android.view.LayoutInflater;
@@ -17,8 +18,12 @@ import org.eclipse.egit.github.core.RepositoryId;
 import org.eclipse.egit.github.core.client.PageIterator;
 import org.eclipse.egit.github.core.service.CommitService;
 
-import java.text.SimpleDateFormat;
+import java.text.DateFormat;
 import java.util.Collection;
+
+
+import java.util.LinkedList;
+import java.util.List;
 
 import se.chalmers.agile.R;
 
@@ -27,28 +32,24 @@ import se.chalmers.agile.R;
  */
 public class LastUpdatesFragment extends ListFragment {
 
-    private SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+    private static final DateFormat dateFormat = DateFormat.getDateTimeInstance();
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+    }
 
-        //1. Get the list of project/branches
-        //List<ProjectBranch> branches = ...;
-        //2. Fetch data from GitHub
 
-        CommitService cs = new CommitService();
-        IRepositoryIdProvider repositoryId = RepositoryId.create("marcyb5st", "agile-group-1");
-        PageIterator<RepositoryCommit> commitPages = cs.pageCommits(repositoryId, "testingEnvironment", null, 10);
-        Collection<RepositoryCommit> commits = commitPages.next();
+    @Override
+    public void onResume() {
+        super.onResume();
+        Bundle extras = this.getArguments();
+        //String projectName = extras.getString("project");
+        String projectName = "SantiMunin/MyWallet";
+        //String branchName = extras.getString("branch");
+        String branchName = "master";
+        new GetUpdatesTasks().execute(projectName, branchName);
 
-        //3. Filtering
-
-        //4. Display results
-        // TODO: Change Adapter to display your content
-        RepositoryCommit[] commitArray = new RepositoryCommit[commits.size()];
-        commits.toArray(commitArray);
-        setListAdapter(new UpdatesAdapter(getActivity(),R.layout.updates_list_item_layout, commitArray));
     }
 
     /**
@@ -90,6 +91,28 @@ public class LastUpdatesFragment extends ListFragment {
             author.setText(commit.getCommitter().getName());
 
             return row;
+        }
+    }
+
+    /**
+     * Performs the commit fetching in background.
+     */
+    private class GetUpdatesTasks extends AsyncTask<String, Void, Collection<RepositoryCommit>> {
+        @Override
+        protected Collection<RepositoryCommit> doInBackground(String... args) {
+            List<RepositoryCommit> commits = new LinkedList<RepositoryCommit>();
+            CommitService cs = new CommitService();
+            String[] project = args[0].split("/");
+            IRepositoryIdProvider repositoryId = RepositoryId.create(project[0], project[1]);
+            PageIterator<RepositoryCommit> commitPages = cs.pageCommits(repositoryId, args[1], null, 10);
+            return commitPages.next();
+        }
+
+        @Override
+        protected void onPostExecute(Collection<RepositoryCommit> commits) {
+            super.onPostExecute(commits);
+            setListAdapter(new UpdatesAdapter(getActivity(),
+                    R.layout.updates_list_item_layout, commits.toArray(new RepositoryCommit[commits.size()])));
         }
     }
 }

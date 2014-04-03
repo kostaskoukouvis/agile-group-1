@@ -20,6 +20,7 @@
             android:layout_height="wrap_content"
             android:textAppearance="?android:attr/textAppearanceSmall"
             android:text="Message"
+            android:layout_marginTop="10dp"
             android:id="@+id/commit_message"
             android:layout_below="@id/commit_branch" />
 
@@ -36,6 +37,7 @@
             android:layout_height="wrap_content"
             android:textAppearance="?android:attr/textAppearanceSmall"
             android:text="Who"
+            android:layout_marginTop="10dp"
             android:id="@+id/commit_user"
             android:layout_below="@id/commit_date"
             android:layout_alignParentRight="true"
