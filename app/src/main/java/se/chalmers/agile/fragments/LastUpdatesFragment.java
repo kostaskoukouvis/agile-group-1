@@ -1,10 +1,10 @@
 package se.chalmers.agile.fragments;
 
 import android.app.Activity;
+import android.app.ListFragment;
 import android.content.Context;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.app.ListFragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,7 +13,6 @@ import android.widget.TextView;
 
 import org.eclipse.egit.github.core.Commit;
 import org.eclipse.egit.github.core.IRepositoryIdProvider;
-import org.eclipse.egit.github.core.Repository;
 import org.eclipse.egit.github.core.RepositoryCommit;
 import org.eclipse.egit.github.core.RepositoryId;
 import org.eclipse.egit.github.core.client.PageIterator;
@@ -21,10 +20,6 @@ import org.eclipse.egit.github.core.service.CommitService;
 
 import java.text.DateFormat;
 import java.util.Collection;
-
-
-import java.util.LinkedList;
-import java.util.List;
 
 import se.chalmers.agile.R;
 
@@ -37,6 +32,7 @@ public class LastUpdatesFragment extends ListFragment {
 
     /**
      * Builds a instance once provided the correct parameters.
+     *
      * @param projectName
      * @param branchName
      * @return

@@ -41,7 +41,6 @@ public class BranchFragment extends ListFragment {
     }
 
     /**
-     *
      * @param repo Repository instance needed to instantiate the branch fragments
      * @return The Instance of the BranchFregment
      */
@@ -91,6 +90,13 @@ public class BranchFragment extends ListFragment {
         mListener.onBranchInteraction(selected);
     }
 
+    public void updateBranch(String repositoryName) {
+        this.repositoryName = repositoryName;
+        setListAdapter(null);
+        new BranchTask().execute();
+
+    }
+
     /**
      * This interface must be implemented by activities that contain this
      * fragment to allow an interaction in this fragment to be communicated
@@ -105,17 +111,8 @@ public class BranchFragment extends ListFragment {
         public void onBranchInteraction(GHBranch branch);
     }
 
-    public void updateBranch(String repositoryName){
-        this.repositoryName = repositoryName;
-        setListAdapter(null);
-        new BranchTask().execute();
-
-    }
-
     /**
-     *
-     *  Asynch task to getting the branches
-     *
+     * Asynch task to getting the branches
      */
     private class BranchTask extends AsyncTask<Void, Void, ArrayList<GHBranch>> {
         public BranchTask() {
@@ -183,7 +180,7 @@ public class BranchFragment extends ListFragment {
 
         @Override
         public int getCount() {
-            Log.d("GETCOUNT", branches.size()+"");
+            Log.d("GETCOUNT", branches.size() + "");
             return branches.size();
         }
 

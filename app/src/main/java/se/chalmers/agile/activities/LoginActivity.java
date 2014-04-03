@@ -1,21 +1,18 @@
 package se.chalmers.agile.activities;
 
 
-import android.content.Intent;
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
-
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-
 import android.widget.EditText;
 import android.widget.Toast;
-
 
 import org.kohsuke.github.GitHub;
 
@@ -46,12 +43,12 @@ public class LoginActivity extends ActionBarActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.login_screen);
 
-        SharedPreferences sharedPref = getApplication().getBaseContext().getSharedPreferences("Application",Context.MODE_PRIVATE);
+        SharedPreferences sharedPref = getApplication().getBaseContext().getSharedPreferences("Application", Context.MODE_PRIVATE);
         String un = sharedPref.getString(USERNAME_STR, NOT_LOGGED_IN);
         String pwd = sharedPref.getString(PASSWORD_STR, NOT_LOGGED_IN);
 
         Log.d("Preferences", getPreferences(Context.MODE_PRIVATE).toString());
-        
+
         if (!un.equals(NOT_LOGGED_IN) && !pwd.equals(NOT_LOGGED_IN)) {
             startContainerActivity();
         } else {
@@ -75,9 +72,7 @@ public class LoginActivity extends ActionBarActivity {
     /**
      * Checks that the user introduced something.
      *
-     *
      * @return <code>true</code> if it is OK.
-     *
      */
     private boolean correctInput() {
         return !userName.getText().toString().isEmpty() && !password.getText().toString().isEmpty();
@@ -99,7 +94,7 @@ public class LoginActivity extends ActionBarActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    protected void startContainerActivity(){
+    protected void startContainerActivity() {
         Intent intent = new Intent(LoginActivity.this, ContainerActivity.class);
         startActivity(intent);
     }
@@ -146,7 +141,7 @@ public class LoginActivity extends ActionBarActivity {
 
         private void storeCredentials() {
             //TODO
-            SharedPreferences sharedPref = getApplication().getBaseContext().getSharedPreferences("Application",Context.MODE_PRIVATE);
+            SharedPreferences sharedPref = getApplication().getBaseContext().getSharedPreferences("Application", Context.MODE_PRIVATE);
             SharedPreferences.Editor editor = sharedPref.edit();
             editor.putString(USERNAME_STR, userName.getText().toString());
             editor.putString(PASSWORD_STR, password.getText().toString());

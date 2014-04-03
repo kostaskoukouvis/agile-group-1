@@ -29,9 +29,8 @@ import se.chalmers.agile.activities.LoginActivity;
 public class RepositoryFragment extends ListFragment {
 
 
-    private OnRepositoryFragmentInteractionListener mListener;
-
     private final static String REPOSITORY_STR = "project";
+    private OnRepositoryFragmentInteractionListener mListener;
 
     /**
      * Mandatory empty constructor for the fragment manager to instantiate the
