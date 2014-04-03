@@ -15,12 +15,9 @@
     <string name="title_section1">Repositories</string>
     <string name="title_section2">Section 2</string>
     <string name="title_section3">Section 3</string>
-<<<<<<< HEAD
     <string name="title_timer">Timer</string>
     <string name="timerStart">Start</string>
     <string name="titleReset">Reset</string>
-=======
     <string name="title_activity_updates">UpdatesActivity</string>
->>>>>>> branch-status
 
 </resources>
