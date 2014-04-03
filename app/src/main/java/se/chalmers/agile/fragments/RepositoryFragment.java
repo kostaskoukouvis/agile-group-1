@@ -31,6 +31,8 @@ public class RepositoryFragment extends ListFragment {
 
     private OnRepositoryFragmentInteractionListener mListener;
 
+    private final static String REPOSITORY_STR = "project";
+
     /**
      * Mandatory empty constructor for the fragment manager to instantiate the
      * fragment (e.g. upon screen orientation changes).

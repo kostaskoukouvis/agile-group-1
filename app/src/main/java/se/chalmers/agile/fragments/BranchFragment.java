@@ -28,7 +28,7 @@ import se.chalmers.agile.activities.LoginActivity;
 
 public class BranchFragment extends ListFragment {
 
-    private final static String REPO_STR = "repo";
+    private final static String BRANCH_STR = "branch";
     private String repositoryName;
 
     private OnBranchFragmentInteractionListener mListener;
@@ -40,9 +40,14 @@ public class BranchFragment extends ListFragment {
     public BranchFragment() {
     }
 
+    /**
+     *
+     * @param repo Repository instance needed to instantiate the branch fragments
+     * @return The Instance of the BranchFregment
+     */
     public static BranchFragment createInstance(GHRepository repo) {
         Bundle args = new Bundle();
-        args.putString(REPO_STR, repo.getName());
+        args.putString(BRANCH_STR, repo.getName());
         BranchFragment fragment = new BranchFragment();
         fragment.setArguments(args);
         return fragment;
@@ -53,7 +58,7 @@ public class BranchFragment extends ListFragment {
         super.onCreate(savedInstanceState);
 
         if (getArguments() != null) {
-            repositoryName = getArguments().getString(REPO_STR);
+            repositoryName = getArguments().getString(BRANCH_STR);
         }
         //Call the async task
         new BranchTask().execute();
@@ -100,7 +105,18 @@ public class BranchFragment extends ListFragment {
         public void onBranchInteraction(GHBranch branch);
     }
 
+    public void updateBranch(String repositoryName){
+        this.repositoryName = repositoryName;
+        setListAdapter(null);
+        new BranchTask().execute();
 
+    }
+
+    /**
+     *
+     *  Asynch task to getting the branches
+     *
+     */
     private class BranchTask extends AsyncTask<Void, Void, ArrayList<GHBranch>> {
         public BranchTask() {
             super();
