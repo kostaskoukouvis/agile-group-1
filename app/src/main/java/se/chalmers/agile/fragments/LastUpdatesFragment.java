@@ -19,9 +19,6 @@ import org.eclipse.egit.github.core.service.CommitService;
 
 import java.text.SimpleDateFormat;
 import java.util.Collection;
-import java.util.Date;
-import java.util.LinkedList;
-import java.util.List;
 
 import se.chalmers.agile.R;
 
@@ -40,31 +37,30 @@ public class LastUpdatesFragment extends ListFragment {
         //List<ProjectBranch> branches = ...;
         //2. Fetch data from GitHub
 
-        List<Commit> commits = new LinkedList<Commit>();
-
         CommitService cs = new CommitService();
         IRepositoryIdProvider repositoryId = RepositoryId.create("marcyb5st", "agile-group-1");
         PageIterator<RepositoryCommit> commitPages = cs.pageCommits(repositoryId, "testingEnvironment", null, 10);
-        Collection<RepositoryCommit> lastTenCommits = commitPages.next();
+        Collection<RepositoryCommit> commits = commitPages.next();
 
         //3. Filtering
 
         //4. Display results
         // TODO: Change Adapter to display your content
-        setListAdapter(new UpdatesAdapter(getActivity(),
-                R.layout.updates_list_item_layout, commits.toArray(new Commit[commits.size()])));
+        RepositoryCommit[] commitArray = new RepositoryCommit[commits.size()];
+        commits.toArray(commitArray);
+        setListAdapter(new UpdatesAdapter(getActivity(),R.layout.updates_list_item_layout, commitArray));
     }
 
     /**
      * Adapter to show updates.
      */
-    public class UpdatesAdapter extends ArrayAdapter<Commit> {
+    public class UpdatesAdapter extends ArrayAdapter<RepositoryCommit> {
 
         Context context;
         int layoutResourceId;
-        Commit data[] = null;
+        RepositoryCommit data[] = null;
 
-        public UpdatesAdapter(Context context, int layoutResourceId, Commit[] data) {
+        public UpdatesAdapter(Context context, int layoutResourceId, RepositoryCommit[] data) {
             super(context, layoutResourceId, data);
             this.layoutResourceId = layoutResourceId;
             this.context = context;
@@ -79,7 +75,7 @@ public class LastUpdatesFragment extends ListFragment {
                 LayoutInflater inflater = ((Activity) context).getLayoutInflater();
                 row = inflater.inflate(layoutResourceId, parent, false);
             }
-            Commit commit = data[position];
+            Commit commit = data[position].getCommit();
 
             TextView branch = (TextView) row.findViewById(R.id.commit_branch);
             branch.setText("~");
