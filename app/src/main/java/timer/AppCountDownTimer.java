@@ -6,7 +6,7 @@ import android.view.MenuItem;
 import se.chalmers.agile.R;
 
 /**
- * Created by Daniel on 2014-04-02.
+ * Class that represents a countdown timer
  */
 public class AppCountDownTimer extends CountDownTimer {
 
@@ -16,6 +16,9 @@ public class AppCountDownTimer extends CountDownTimer {
     private long temp_interval;
     private long millis;
     private long interval;
+    private MenuItem subPause;
+    private MenuItem subStart;
+    private MenuItem subReset;
 
     private AppCountDownTimer(long millisInFuture, long countDownInterval, MenuItem timer) {
         super(millisInFuture, countDownInterval);
@@ -24,9 +27,13 @@ public class AppCountDownTimer extends CountDownTimer {
         this.temp_interval = this.interval;
         this.temp_millis = this.millis;
         this.timer = timer;
-        timer.getSubMenu().getItem(0).setVisible(false);
-        timer.getSubMenu().getItem(1).setVisible(true);
-        timer.getSubMenu().getItem(2).setVisible(true);
+        this.subPause = timer.getSubMenu().findItem(R.id.timerPause);
+        this.subStart = timer.getSubMenu().findItem(R.id.timerStart);
+        this.subReset = timer.getSubMenu().findItem(R.id.timerReset);
+
+        subStart.setVisible(false);
+        subPause.setVisible(true);
+        subReset.setVisible(true);
     }
 
     public static AppCountDownTimer getInstance(long millisInFuture, long countDownInterval, MenuItem timer){
@@ -45,29 +52,29 @@ public class AppCountDownTimer extends CountDownTimer {
 
     @Override
     public void onFinish() {
-        timer.getSubMenu().getItem(1).setVisible(false);
+        subPause.setVisible(false);
         timer.setTitle("Time's up!");
     }
 
     public void pause(){
         instance.cancel();
-        timer.getSubMenu().getItem(1).setVisible(false);
-        timer.getSubMenu().getItem(0).setVisible(true);
+        subPause.setVisible(false);
+        subStart.setVisible(true);
     }
 
     public void resume(){
         instance.cancel();
         instance = new AppCountDownTimer(instance.temp_millis, instance.temp_interval, instance.timer);
         instance.start();
-        timer.getSubMenu().getItem(0).setVisible(false);
-        timer.getSubMenu().getItem(1).setVisible(true);
+        subStart.setVisible(false);
+        subPause.setVisible(true);
     }
 
     public void reset(){
         instance.cancel();
         instance = new AppCountDownTimer(millis, interval, instance.timer);
         instance.start();
-        timer.getSubMenu().getItem(1).setVisible(true);
+        subPause.setVisible(true);
     }
 
 }
