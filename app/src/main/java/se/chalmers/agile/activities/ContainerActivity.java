@@ -8,6 +8,7 @@ import android.app.FragmentTransaction;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v13.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.view.Menu;
@@ -24,7 +25,7 @@ import se.chalmers.agile.R;
 import se.chalmers.agile.fragments.BranchFragment;
 import se.chalmers.agile.fragments.LastUpdatesFragment;
 import se.chalmers.agile.fragments.RepositoryFragment;
-import timer.AppCountDownTimer;
+import timer.CountDownTimer;
 
 
 public class ContainerActivity extends Activity implements ActionBar.TabListener, RepositoryFragment.OnRepositoryFragmentInteractionListener, BranchFragment.OnBranchFragmentInteractionListener {
@@ -45,9 +46,8 @@ public class ContainerActivity extends Activity implements ActionBar.TabListener
      * The {@link ViewPager} that will host the section contents.
      */
     ViewPager mViewPager;
-    Menu menu;
-    private MenuItem timer;
-    private AppCountDownTimer countdownTimer;
+    private CountDownTimer countdownTimer;
+    final Handler handler = new Handler();
 
     private boolean isRepoChosen = false;
 
@@ -106,11 +106,8 @@ public class ContainerActivity extends Activity implements ActionBar.TabListener
         getMenuInflater().inflate(R.menu.container, menu);
         getMenuInflater().inflate(R.menu.timer, menu);
 
-        this.menu = menu;
-        this.timer = menu.getItem(0);
-        this.countdownTimer = AppCountDownTimer.getInstance(60000 * 30, 1000, timer);
-        countdownTimer.start();
-
+        this.countdownTimer = CountDownTimer.getInstance(60000 * 30, 1000, handler);
+        this.countdownTimer.startTimer(menu.findItem(R.id.timer_button));
         return true;
     }
 
@@ -123,11 +120,11 @@ public class ContainerActivity extends Activity implements ActionBar.TabListener
         if (id == R.id.action_settings) {
             return true;
         } else if (id == R.id.timerPause) {
-            countdownTimer.pause();
+            countdownTimer.pauseTimer();
         } else if (id == R.id.timerStart) {
-            countdownTimer.resume();
+            countdownTimer.resumeTimer();
         } else if (id == R.id.timerReset) {
-            countdownTimer.reset();
+            countdownTimer.resetTimer();
         }
         return super.onOptionsItemSelected(item);
     }

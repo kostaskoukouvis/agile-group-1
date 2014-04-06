@@ -12,7 +12,7 @@
 
                 <item
                     android:id="@+id/timerStart"
-                    android:title="Start"
+                    android:title="Resume"
                     android:icon="@android:drawable/ic_media_play"
                 />
 
