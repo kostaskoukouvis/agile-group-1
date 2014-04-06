@@ -20,7 +20,6 @@ public class CountDownTimer extends Thread {
     //Menu items which are to be manipulated
     private MenuItem subPause;
     private MenuItem subStart;
-    private MenuItem subReset;
     private static MenuItem timer;
 
     //States of the timer
@@ -90,7 +89,6 @@ public class CountDownTimer extends Thread {
         this.timer = timer;
         subPause = timer.getSubMenu().findItem(R.id.timerPause);
         subStart = timer.getSubMenu().findItem(R.id.timerStart);
-        subReset = timer.getSubMenu().findItem(R.id.timerReset);
 
         if(!this.isAlive()) {
             running = true;

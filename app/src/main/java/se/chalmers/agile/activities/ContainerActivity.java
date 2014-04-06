@@ -21,6 +21,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
+import constants.Constants;
 import se.chalmers.agile.R;
 import se.chalmers.agile.fragments.BranchFragment;
 import se.chalmers.agile.fragments.LastUpdatesFragment;
@@ -106,7 +107,7 @@ public class ContainerActivity extends Activity implements ActionBar.TabListener
         getMenuInflater().inflate(R.menu.container, menu);
         getMenuInflater().inflate(R.menu.timer, menu);
 
-        this.countdownTimer = CountDownTimer.getInstance(60000 * 30, 1000, handler);
+        this.countdownTimer = CountDownTimer.getInstance(Constants.TIMER_START_TIME, Constants.SECOND, handler);
         this.countdownTimer.startTimer(menu.findItem(R.id.timer_button));
         return true;
     }
