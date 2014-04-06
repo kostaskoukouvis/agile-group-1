@@ -14,12 +14,12 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 
-import org.kohsuke.github.GHMyself;
-import org.kohsuke.github.GHRepository;
-import org.kohsuke.github.GitHub;
+import org.eclipse.egit.github.core.Repository;
+import org.eclipse.egit.github.core.service.RepositoryService;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.List;
 
 import se.chalmers.agile.R;
 import se.chalmers.agile.activities.LoginActivity;
@@ -75,8 +75,8 @@ public class RepositoryFragment extends ListFragment {
     @Override
     public void onListItemClick(ListView l, View v, int position, long id) {
         super.onListItemClick(l, v, position, id);
-        ArrayAdapter<GHRepository> adapter = (ArrayAdapter<GHRepository>) l.getAdapter();
-        GHRepository selected = adapter.getItem(position);
+        ArrayAdapter<Repository> adapter = (ArrayAdapter<Repository>) l.getAdapter();
+        Repository selected = adapter.getItem(position);
         mListener.onRepositoryInteraction(selected);
     }
 
@@ -92,30 +92,29 @@ public class RepositoryFragment extends ListFragment {
      */
     public interface OnRepositoryFragmentInteractionListener {
         // TODO: Update argument type and name
-        public void onRepositoryInteraction(GHRepository repo);
+        public void onRepositoryInteraction(Repository repo);
     }
 
     /**
      * Asynch task to fetch the repositories
      */
-    private class RepositoryTask extends AsyncTask<Void, Void, ArrayList<GHRepository>> {
+    private class RepositoryTask extends AsyncTask<Void, Void, List<Repository>> {
         public RepositoryTask() {
             super();
         }
 
         @Override
-        protected ArrayList<GHRepository> doInBackground(Void... voids) {
-            ArrayList<GHRepository> result = new ArrayList<GHRepository>();
+        protected List<Repository> doInBackground(Void... voids) {
+            List<Repository> result = new ArrayList<Repository>();
             SharedPreferences sharedPref = getActivity().getApplication().getBaseContext().getSharedPreferences("Application", Context.MODE_PRIVATE);
 
             String un = sharedPref.getString(LoginActivity.USERNAME_STR, LoginActivity.NOT_LOGGED_IN);
             String pwd = sharedPref.getString(LoginActivity.PASSWORD_STR, LoginActivity.NOT_LOGGED_IN);
 
-            GitHub conn = null;
+            RepositoryService service = new RepositoryService();
+            service.getClient().setCredentials(un, pwd);
             try {
-                conn = GitHub.connectUsingPassword(un, pwd);
-                GHMyself myself = conn.getMyself();
-                result.addAll(myself.getAllRepositories().values());
+                result = service.getRepositories(un);
             } catch (IOException e) {
                 Log.e("Error", e.getMessage());
                 this.cancel(true);
@@ -129,9 +128,9 @@ public class RepositoryFragment extends ListFragment {
         }
 
         @Override
-        protected void onPostExecute(ArrayList<GHRepository> ghRepositories) {
+        protected void onPostExecute(List<Repository> repositories) {
             //TODO: change R.layout.simple_list_item
-            setListAdapter(new RepositoryArrayAdapter(getActivity(), R.id.repoName, ghRepositories));
+            setListAdapter(new RepositoryArrayAdapter(getActivity(), R.id.repoName, repositories));
         }
 
         @Override
@@ -140,8 +139,8 @@ public class RepositoryFragment extends ListFragment {
         }
 
         @Override
-        protected void onCancelled(ArrayList<GHRepository> ghRepositories) {
-            super.onCancelled(ghRepositories);
+        protected void onCancelled(List<Repository> repositories) {
+            super.onCancelled(repositories);
         }
 
         @Override
@@ -153,12 +152,12 @@ public class RepositoryFragment extends ListFragment {
     /**
      * Custom adapter for the repository list
      */
-    private class RepositoryArrayAdapter extends ArrayAdapter<GHRepository> {
+    private class RepositoryArrayAdapter extends ArrayAdapter<Repository> {
 
-        private ArrayList<GHRepository> repos = null;
+        private List<Repository> repos = null;
         private Context context = null;
 
-        public RepositoryArrayAdapter(Context context, int resource, ArrayList<GHRepository> repos) {
+        public RepositoryArrayAdapter(Context context, int resource, List<Repository> repos) {
             super(context, resource);
             this.context = context;
             this.repos = repos;
@@ -183,7 +182,7 @@ public class RepositoryFragment extends ListFragment {
         }
 
         @Override
-        public GHRepository getItem(int position) {
+        public Repository getItem(int position) {
             return repos.get(position);
         }
     }

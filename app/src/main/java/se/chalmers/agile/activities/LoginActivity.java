@@ -14,13 +14,14 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.Toast;
 
-import org.kohsuke.github.GitHub;
+import org.eclipse.egit.github.core.client.RequestException;
+import org.eclipse.egit.github.core.service.OAuthService;
 
 import java.io.IOException;
 
 import se.chalmers.agile.R;
 
-//TODO s
+//TODO
 // 1. Loading screen while checking the credentials.
 // 2. Store the credentials.
 
@@ -106,8 +107,13 @@ public class LoginActivity extends ActionBarActivity {
 
         @Override
         protected Boolean doInBackground(String... args) {
+            OAuthService os = new OAuthService();
+            os.getClient().setCredentials(args[0], args[1]);
             try {
-                return GitHub.connectUsingPassword(args[0], args[1]).isCredentialValid();
+                os.getAuthorizations();
+                return true;
+            } catch (RequestException e){
+                return false;
             } catch (IOException exp) {
                 this.cancel(true);
             }

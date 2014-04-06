@@ -14,13 +14,15 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 
-import org.kohsuke.github.GHBranch;
-import org.kohsuke.github.GHRepository;
-import org.kohsuke.github.GitHub;
+import org.eclipse.egit.github.core.IRepositoryIdProvider;
+import org.eclipse.egit.github.core.Repository;
+import org.eclipse.egit.github.core.RepositoryBranch;
+import org.eclipse.egit.github.core.RepositoryId;
+import org.eclipse.egit.github.core.service.RepositoryService;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Map;
+import java.util.List;
 
 import se.chalmers.agile.R;
 import se.chalmers.agile.activities.LoginActivity;
@@ -44,7 +46,7 @@ public class BranchFragment extends ListFragment {
      * @param repo Repository instance needed to instantiate the branch fragments
      * @return The Instance of the BranchFregment
      */
-    public static BranchFragment createInstance(GHRepository repo) {
+    public static BranchFragment createInstance(Repository repo) {
         Bundle args = new Bundle();
         args.putString(BRANCH_STR, repo.getName());
         BranchFragment fragment = new BranchFragment();
@@ -85,9 +87,9 @@ public class BranchFragment extends ListFragment {
     @Override
     public void onListItemClick(ListView l, View v, int position, long id) {
         super.onListItemClick(l, v, position, id);
-        ArrayAdapter<GHBranch> adapter = (ArrayAdapter<GHBranch>) l.getAdapter();
-        GHBranch selected = adapter.getItem(position);
-        mListener.onBranchInteraction(selected);
+        ArrayAdapter<RepositoryBranch> adapter = (ArrayAdapter<RepositoryBranch>) l.getAdapter();
+        RepositoryBranch selected = adapter.getItem(position);
+        mListener.onBranchInteraction(repositoryName,selected);
     }
 
     public void updateBranch(String repositoryName) {
@@ -108,32 +110,31 @@ public class BranchFragment extends ListFragment {
      * >Communicating with Other Fragments</a> for more information.
      */
     public interface OnBranchFragmentInteractionListener {
-        public void onBranchInteraction(GHBranch branch);
+        public void onBranchInteraction(String repoName, RepositoryBranch branch);
     }
 
     /**
      * Asynch task to getting the branches
      */
-    private class BranchTask extends AsyncTask<Void, Void, ArrayList<GHBranch>> {
+    private class BranchTask extends AsyncTask<Void, Void, List<RepositoryBranch>> {
         public BranchTask() {
             super();
         }
 
         @Override
-        protected ArrayList<GHBranch> doInBackground(Void... voids) {
-            ArrayList<GHBranch> result = new ArrayList<GHBranch>();
+        protected List<RepositoryBranch> doInBackground(Void... voids) {
+            List<RepositoryBranch> result = new ArrayList<RepositoryBranch>();
             SharedPreferences sharedPref = getActivity().getApplication().getBaseContext().getSharedPreferences("Application", Context.MODE_PRIVATE);
 
             String un = sharedPref.getString(LoginActivity.USERNAME_STR, LoginActivity.NOT_LOGGED_IN);
             String pwd = sharedPref.getString(LoginActivity.PASSWORD_STR, LoginActivity.NOT_LOGGED_IN);
 
-            GitHub conn = null;
+            RepositoryService rs = new RepositoryService();
+            rs.getClient().setCredentials(un, pwd);
+            IRepositoryIdProvider repositoryId = RepositoryId.create(un, repositoryName);
 
             try {
-                conn = GitHub.connectUsingPassword(un, pwd);
-                GHRepository repo = conn.getMyself().getAllRepositories().get(repositoryName);
-                Map<String, GHBranch> branches = repo.getBranches();
-                result.addAll(branches.values());
+                result = rs.getBranches(repositoryId);
             } catch (IOException e) {
                 Log.e("Error", e.getMessage());
                 this.cancel(true);
@@ -147,8 +148,8 @@ public class BranchFragment extends ListFragment {
         }
 
         @Override
-        protected void onPostExecute(ArrayList<GHBranch> ghBranches) {
-            setListAdapter(new BranchArrayAdapter(getActivity(), R.id.branchName, ghBranches));
+        protected void onPostExecute(List<RepositoryBranch> branches) {
+            setListAdapter(new BranchArrayAdapter(getActivity(), R.id.branchName, branches));
         }
 
         @Override
@@ -157,8 +158,8 @@ public class BranchFragment extends ListFragment {
         }
 
         @Override
-        protected void onCancelled(ArrayList<GHBranch> ghBranches) {
-            super.onCancelled(ghBranches);
+        protected void onCancelled(List<RepositoryBranch> branches) {
+            super.onCancelled(branches);
         }
 
         @Override
@@ -167,12 +168,12 @@ public class BranchFragment extends ListFragment {
         }
     }
 
-    private class BranchArrayAdapter extends ArrayAdapter<GHBranch> {
+    private class BranchArrayAdapter extends ArrayAdapter<RepositoryBranch> {
 
-        private ArrayList<GHBranch> branches = null;
+        private List<RepositoryBranch> branches = null;
         private Context context = null;
 
-        public BranchArrayAdapter(Context context, int resource, ArrayList<GHBranch> branches) {
+        public BranchArrayAdapter(Context context, int resource, List<RepositoryBranch> branches) {
             super(context, resource);
             this.context = context;
             this.branches = branches;
@@ -198,7 +199,7 @@ public class BranchFragment extends ListFragment {
         }
 
         @Override
-        public GHBranch getItem(int position) {
+        public RepositoryBranch getItem(int position) {
             return branches.get(position);
         }
     }

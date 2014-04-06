@@ -13,10 +13,11 @@ import android.support.v4.view.ViewPager;
 import android.view.Menu;
 import android.view.MenuItem;
 
-import org.kohsuke.github.GHBranch;
-import org.kohsuke.github.GHRepository;
+import org.eclipse.egit.github.core.Repository;
+import org.eclipse.egit.github.core.RepositoryBranch;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Locale;
 
 import se.chalmers.agile.R;
@@ -62,7 +63,7 @@ public class ContainerActivity extends Activity implements ActionBar.TabListener
         // Create the adapter that will return a fragment for each of the three
         // primary sections of the activity.
 
-        ArrayList<Fragment> tmp = new ArrayList<Fragment>();
+        List<Fragment> tmp = new ArrayList<Fragment>();
         tmp.add(RepositoryFragment.createInstance());
         mSectionsPagerAdapter = new SectionsPagerAdapter(getFragmentManager(), tmp);
 
@@ -153,7 +154,7 @@ public class ContainerActivity extends Activity implements ActionBar.TabListener
      * @param repo The repository clicked
      */
     @Override
-    public void onRepositoryInteraction(GHRepository repo) {
+    public void onRepositoryInteraction(Repository repo) {
 
         BranchFragment bf = null;
         try {
@@ -179,13 +180,13 @@ public class ContainerActivity extends Activity implements ActionBar.TabListener
      * @param branch
      */
     @Override
-    public void onBranchInteraction(GHBranch branch) {
+    public void onBranchInteraction(String repoName, RepositoryBranch branch) {
 
         SharedPreferences sharedPref = getApplication().getBaseContext().getSharedPreferences("Application", Context.MODE_PRIVATE);
 
         String un = sharedPref.getString(LoginActivity.USERNAME_STR, LoginActivity.NOT_LOGGED_IN);
 
-        Fragment luf = (Fragment) LastUpdatesFragment.createInstance(un + "/" + branch.getOwner().getName(), branch.getName());
+        Fragment luf = (Fragment) LastUpdatesFragment.createInstance(un + "/" + repoName, branch.getName());
         mSectionsPagerAdapter.addFragment(luf, 2, "Last commits");
 
     }
@@ -196,12 +197,12 @@ public class ContainerActivity extends Activity implements ActionBar.TabListener
      */
     public class SectionsPagerAdapter extends FragmentPagerAdapter {
 
-        private ArrayList<Fragment> fragments;
+        private List<Fragment> fragments;
 
         private ActionBar.Tab branchTab;
         private ActionBar.Tab commitsTab;
 
-        public SectionsPagerAdapter(FragmentManager fm, ArrayList<Fragment> fragments) {
+        public SectionsPagerAdapter(FragmentManager fm, List<Fragment> fragments) {
             super(fm);
             this.fragments = fragments;
         }
