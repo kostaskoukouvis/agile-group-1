@@ -22,7 +22,7 @@ public class CountDownTimer extends Thread {
     //Menu items which are to be manipulated
     private MenuItem subPause;
     private MenuItem subStart;
-    private static MenuItem timer;
+    private MenuItem timer;
 
     //States of the timer
     private boolean running;
