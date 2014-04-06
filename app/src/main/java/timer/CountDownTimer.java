@@ -2,6 +2,8 @@ package timer;
 
 import android.os.Handler;
 import android.view.MenuItem;
+
+import constants.Constants;
 import se.chalmers.agile.R;
 
 /**
@@ -28,6 +30,12 @@ public class CountDownTimer extends Thread {
 
     //Handler to pass information from the timer thread to the UI thread
     private Handler handler;
+
+    //Constant to represent when the time is out
+    private static final long TIME_OUT = 0;
+
+    //Constant to represent how many seconds there are per minute
+    private static final long SECONDS_MINUTE = 60;
 
 
     /**
@@ -64,7 +72,7 @@ public class CountDownTimer extends Thread {
         while(true){
             if(running && !finished){
                 millisUntilFinished -= interval;
-                if (millisUntilFinished > 0) {
+                if (millisUntilFinished > TIME_OUT) {
                     onTick(millisUntilFinished);
                 }
                 else{
@@ -139,18 +147,19 @@ public class CountDownTimer extends Thread {
     /**
      *Check if the timer is running
      */
-    public boolean isRunning(){
+    private boolean isRunning(){
         return running;
     }
 
     /**
      *Updates the timer text. Sends information to the handler to forward information to the UI thread.
      */
-    public void onTick(final long millisUntilFinished) {
+    private void onTick(final long millisUntilFinished) {
         final Runnable myRunnable = new Runnable() {
             public void run() {
-                timer.setTitle("Navigator swap in: " + (millisUntilFinished / 1000) / 60 +
-                        ":" + String.format("%02d", (int) millisUntilFinished / 1000 % 60));
+                timer.setTitle("Swap in: " + (millisUntilFinished / Constants.SECOND) / SECONDS_MINUTE +
+                        ":" + String.format("%02d", (int) millisUntilFinished /
+                        Constants.SECOND % SECONDS_MINUTE));
             }
         };
         handler.post(myRunnable);
@@ -160,10 +169,11 @@ public class CountDownTimer extends Thread {
     /**
      * Runs when the time is up
      */
-    public void onFinish(){
+    private void onFinish(){
         subPause.setVisible(false);
         running = false;
         finished = true;
+
         final Runnable myRunnable = new Runnable() {
             public void run() {
                 timer.setTitle("Time's up!");

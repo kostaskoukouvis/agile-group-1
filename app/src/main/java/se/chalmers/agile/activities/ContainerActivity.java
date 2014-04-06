@@ -102,13 +102,14 @@ public class ContainerActivity extends Activity implements ActionBar.TabListener
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
 
-
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.container, menu);
         getMenuInflater().inflate(R.menu.timer, menu);
 
-        this.countdownTimer = CountDownTimer.getInstance(Constants.TIMER_START_TIME, Constants.SECOND, handler);
-        this.countdownTimer.startTimer(menu.findItem(R.id.timer_button));
+        //Get the countdown timer and start it
+        countdownTimer = CountDownTimer.getInstance(Constants.TIMER_START_TIME, Constants.SECOND, handler);
+        countdownTimer.startTimer(menu.findItem(R.id.timer_button));
+
         return true;
     }
 
