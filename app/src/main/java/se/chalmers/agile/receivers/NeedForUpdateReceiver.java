@@ -32,6 +32,7 @@ public class NeedForUpdateReceiver extends BroadcastReceiver
         implements OnPostExecuteCallback<Collection<RepositoryCommit>> {
     public Context context;
     private SharedPreferences prefs;
+    public static final int NOTIFICATION_ID = 10;
 
 
     @Override
@@ -39,7 +40,6 @@ public class NeedForUpdateReceiver extends BroadcastReceiver
         this.context = context;
         this.prefs = context.getSharedPreferences("Application",
                 Context.MODE_PRIVATE);
-        Log.d("TESTRECEIVER", "LAUNCHED!");
 
         new UpdatesFetcher(context, this).execute("SantiMunin/mockrepo", "master");
     }
@@ -61,8 +61,6 @@ public class NeedForUpdateReceiver extends BroadcastReceiver
         long from = prefs.getLong(LastUpdatesFragment.LAST_UPDATE_TIME, 0);
         Date fromTime = new Date();
         fromTime.setTime(from);
-        Log.d("NEWEST_COMMIT_TIME", "long: " + data.iterator().next().getCommit().getCommitter().getDate().getTime());
-        Log.d("NEWEST_UPDATE_TIME", "long: " + from);
         for (RepositoryCommit rc : data) {
             if (rc.getCommit().getCommitter().getDate().after(fromTime)) {
                 result.add(rc);
@@ -80,12 +78,13 @@ public class NeedForUpdateReceiver extends BroadcastReceiver
     private void buildAndLaunchNotification(Collection<RepositoryCommit> updates) {
         Collection<RepositoryCommit> news = filterData(updates);
         if (news.size() == 0) return;
+        //TODO this has to be done on the commit list activity
         setLastUpdateDate(news.iterator().next());
         NotificationCompat.Builder mBuilder =
                 new NotificationCompat.Builder(context)
                         .setSmallIcon(R.drawable.dogen)
                         .setContentTitle("New updates on X repository/branch blabla")
-                        .setContentText(news.size() + " new commits!");
+                        .setContentText(news.size() + " new commits!").setAutoCancel(true);
 
         //TODO and select the correct tab!
         Intent resultIntent = new Intent(context, ContainerActivity.class);
@@ -100,7 +99,7 @@ public class NeedForUpdateReceiver extends BroadcastReceiver
         mBuilder.setContentIntent(resultPendingIntent);
         NotificationManager mNotificationManager =
                 (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
-        mNotificationManager.notify(1, mBuilder.build());
+        mNotificationManager.notify(NOTIFICATION_ID, mBuilder.build());
     }
 
     /**
