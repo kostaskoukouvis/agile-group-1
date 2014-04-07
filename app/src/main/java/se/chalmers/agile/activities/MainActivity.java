@@ -120,7 +120,7 @@ public class MainActivity extends Activity
 
     @Override
     public void onRepositoryInteraction(Repository repo) {
-        SharedPreferences getRepoName = this.getPreferences(Context.MODE_PRIVATE);
+        SharedPreferences getRepoName = getApplication().getApplicationContext().getSharedPreferences("Application",Context.MODE_PRIVATE);
         String repoName = getRepoName.getString(RepositoryFragment.REPOSITORY_STR, "");
         if (repoName.equals(""))
             repoName = repo.getName();
