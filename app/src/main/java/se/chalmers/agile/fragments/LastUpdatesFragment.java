@@ -23,9 +23,11 @@ import se.chalmers.agile.tasks.UpdatesFetcher;
 /**
  * Displays the last updates from the selected repositories.
  */
-public class LastUpdatesFragment extends ListFragment implements OnPostExecuteCallback<Collection<RepositoryCommit>> {
+public class LastUpdatesFragment extends ListFragment
+        implements OnPostExecuteCallback<Collection<RepositoryCommit>> {
 
     private static final DateFormat dateFormat = DateFormat.getDateTimeInstance();
+    public static final String LAST_UPDATE_TIME = "last_update";
 
     /**
      * Builds a instance once provided the correct parameters.
@@ -55,7 +57,7 @@ public class LastUpdatesFragment extends ListFragment implements OnPostExecuteCa
         Bundle extras = this.getArguments();
         String projectName = extras.getString("project");
         String branchName = extras.getString("branch");
-        new UpdatesFetcher(this).execute(projectName, branchName);
+        new UpdatesFetcher(getActivity().getApplicationContext(), this).execute(projectName, branchName);
     }
 
     /**
@@ -100,6 +102,11 @@ public class LastUpdatesFragment extends ListFragment implements OnPostExecuteCa
         }
     }
 
+    /**
+     * Just adapts the adapter.
+     *
+     * @param commits Items of the list.
+     */
     @Override
     public void performAction(Collection<RepositoryCommit> commits) {
         setListAdapter(new UpdatesAdapter(getActivity(),

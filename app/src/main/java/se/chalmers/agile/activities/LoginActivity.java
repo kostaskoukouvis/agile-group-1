@@ -1,6 +1,8 @@
 package se.chalmers.agile.activities;
 
 
+import android.app.AlarmManager;
+import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -18,8 +20,10 @@ import org.eclipse.egit.github.core.client.RequestException;
 import org.eclipse.egit.github.core.service.OAuthService;
 
 import java.io.IOException;
+import java.util.Date;
 
 import se.chalmers.agile.R;
+import se.chalmers.agile.receivers.NeedForUpdateReceiver;
 
 //TODO
 // 1. Loading screen while checking the credentials.
@@ -43,6 +47,7 @@ public class LoginActivity extends ActionBarActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.login_screen);
+        startUpdatesService();
 
         SharedPreferences sharedPref = getApplication().getBaseContext().getSharedPreferences("Application", Context.MODE_PRIVATE);
         String un = sharedPref.getString(USERNAME_STR, NOT_LOGGED_IN);
@@ -56,6 +61,16 @@ public class LoginActivity extends ActionBarActivity {
         if (!un.equals(NOT_LOGGED_IN) && !pwd.equals(NOT_LOGGED_IN)) {
             startContainerActivity();
         }
+    }
+
+    /**
+     * Starts the periodic updates fetching.
+     */
+    private void startUpdatesService() {
+        Intent alarmIntent = new Intent(this, NeedForUpdateReceiver.class);
+        PendingIntent pendingIntent = PendingIntent.getBroadcast(this, 0, alarmIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+        AlarmManager alarmManager = (AlarmManager) this.getSystemService(Context.ALARM_SERVICE);
+        alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, new Date().getTime(), 30*1000, pendingIntent);
     }
 
 
@@ -112,7 +127,7 @@ public class LoginActivity extends ActionBarActivity {
             try {
                 os.getAuthorizations();
                 return true;
-            } catch (RequestException e){
+            } catch (RequestException e) {
                 return false;
             } catch (IOException exp) {
                 this.cancel(true);
