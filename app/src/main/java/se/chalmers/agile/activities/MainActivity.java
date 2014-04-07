@@ -1,23 +1,16 @@
 package se.chalmers.agile.activities;
 
-import android.app.Activity;
-
 import android.app.ActionBar;
+import android.app.Activity;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.content.Context;
-import android.os.Build;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.support.v4.widget.DrawerLayout;
 import android.util.Log;
-import android.view.Gravity;
-import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
-import android.view.ViewGroup;
-import android.support.v4.widget.DrawerLayout;
-import android.widget.ArrayAdapter;
-import android.widget.TextView;
 
 import org.eclipse.egit.github.core.Repository;
 
@@ -56,7 +49,7 @@ public class MainActivity extends Activity
     public void onNavigationDrawerItemSelected(int position) {
         // update the main content by replacing fragments
         Fragment f = null;
-        switch (position){
+        switch (position) {
             case 0:
                 f = RepositoryFragment.createInstance();
                 break;
@@ -121,5 +114,14 @@ public class MainActivity extends Activity
     @Override
     public void onRepositoryInteraction(Repository repo) {
         Log.d("FragmentInteraction", repo.getName());
+        SharedPreferences getRepoName = this.getPreferences(Context.MODE_PRIVATE);
+        String repoName = getRepoName.getString(RepositoryFragment.REPOSITORY_STR, "");
+        if (repoName.equals(""))
+            repoName = repo.getName();
+        else
+            repoName += RepositoryFragment.REPOSITORY_SEPARATOR+repo.getName();
+        SharedPreferences.Editor editor = getRepoName.edit();
+        editor.putString(RepositoryFragment.REPOSITORY_STR, repoName);
+        editor.commit();
     }
 }

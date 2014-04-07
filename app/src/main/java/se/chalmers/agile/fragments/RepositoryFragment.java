@@ -29,9 +29,10 @@ import se.chalmers.agile.activities.LoginActivity;
 public class RepositoryFragment extends ListFragment {
 
 
-    private final static String REPOSITORY_STR = "project";
+    public final static String REPOSITORY_STR = "project";
     private OnRepositoryFragmentInteractionListener mListener;
 
+    public final static String REPOSITORY_SEPARATOR = "###";
     /**
      * Mandatory empty constructor for the fragment manager to instantiate the
      * fragment (e.g. upon screen orientation changes).
@@ -114,7 +115,7 @@ public class RepositoryFragment extends ListFragment {
             RepositoryService service = new RepositoryService();
             service.getClient().setCredentials(un, pwd);
             try {
-                result = service.getRepositories(un);
+                result = service.getRepositories();
             } catch (IOException e) {
                 Log.e("Error", e.getMessage());
                 this.cancel(true);
