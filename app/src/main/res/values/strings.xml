@@ -19,5 +19,6 @@
     <string name="timerStart">Start</string>
     <string name="titleReset">Reset</string>
     <string name="title_activity_updates">UpdatesActivity</string>
+    <string name="api_key">e01be97648f84ce72522bb58b69dbe95af5cb94d</string>
 
 </resources>
