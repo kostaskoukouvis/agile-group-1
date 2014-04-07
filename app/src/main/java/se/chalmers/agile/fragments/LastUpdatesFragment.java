@@ -14,21 +14,23 @@ import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
 import org.eclipse.egit.github.core.Commit;
-import org.eclipse.egit.github.core.IRepositoryIdProvider;
 import org.eclipse.egit.github.core.RepositoryCommit;
-import org.eclipse.egit.github.core.RepositoryId;
-import org.eclipse.egit.github.core.client.PageIterator;
-import org.eclipse.egit.github.core.service.CommitService;
 
 import java.text.DateFormat;
 import java.util.Collection;
 
 import se.chalmers.agile.R;
+import se.chalmers.agile.tasks.OnPostExecuteCallback;
+import se.chalmers.agile.tasks.UpdatesFetcher;
 
 /**
  * Displays the last updates from the selected repositories.
  */
-public class LastUpdatesFragment extends ListFragment {
+public class LastUpdatesFragment extends ListFragment
+        implements OnPostExecuteCallback<Collection<RepositoryCommit>> {
+
+
+    public static final String LAST_UPDATE_TIME = "last_update";
 
 
     private static final DateFormat dateFormat = DateFormat.getDateTimeInstance();
@@ -55,7 +57,7 @@ public class LastUpdatesFragment extends ListFragment {
         repositoryName = getRepoFromPreferences();
 
         //Call the async task
-        new GetUpdatesTasks().execute(repositoryName, branchName);
+        new UpdatesFetcher(getActivity().getApplicationContext(),this).execute(repositoryName, branchName);
 
     }
 
@@ -63,12 +65,9 @@ public class LastUpdatesFragment extends ListFragment {
     @Override
     public void onResume() {
         super.onResume();
-        branchName = getBranchFromPreferences();
-        repositoryName = getRepoFromPreferences();
-       // Bundle extras = this.getArguments();
-      //  String projectName = extras.getString("project");
-     //   String branchName = extras.getString("branch");
-        new GetUpdatesTasks().execute(repositoryName, branchName);
+        String projectName = getRepoFromPreferences();
+        String branchName = getBranchFromPreferences();
+        new UpdatesFetcher(getActivity().getApplicationContext(), this).execute(projectName, branchName);
     }
 
 
@@ -86,6 +85,7 @@ public class LastUpdatesFragment extends ListFragment {
         String [] arr = str.split(RepositoryFragment.REPOSITORY_SEPARATOR);
         Log.d("RepoFtched",arr[arr.length - 1] );
         return arr[arr.length - 1];
+
     }
 
     /**
@@ -131,24 +131,15 @@ public class LastUpdatesFragment extends ListFragment {
     }
 
     /**
-     * Performs the commit fetching in background.
+     * Just adapts the adapter.
+     *
+     * @param commits Items of the list.
      */
-    private class GetUpdatesTasks extends AsyncTask<String, Void, Collection<RepositoryCommit>> {
-        @Override
-        protected Collection<RepositoryCommit> doInBackground(String... args) {
-            CommitService cs = new CommitService();
-            String[] project = args[0].split("/");
-            IRepositoryIdProvider repositoryId = RepositoryId.create(project[0], project[1]);
-            Log.d("ArgumentsProject",project[0] + " " + project[1]+ " "+ args[1]);
-            PageIterator<RepositoryCommit> commitPages = cs.pageCommits(repositoryId, args[1], null, 10);
-            return commitPages.next();
-        }
+    @Override
+    public void performAction(Collection<RepositoryCommit> commits) {
+        setListAdapter(new UpdatesAdapter(getActivity(),
+                R.layout.updates_list_item_layout,
+                commits.toArray(new RepositoryCommit[commits.size()])));
 
-        @Override
-        protected void onPostExecute(Collection<RepositoryCommit> commits) {
-            super.onPostExecute(commits);
-            setListAdapter(new UpdatesAdapter(getActivity(),
-                    R.layout.updates_list_item_layout, commits.toArray(new RepositoryCommit[commits.size()])));
-        }
     }
 }
