@@ -142,5 +142,21 @@ public class MainActivity extends Activity
     @Override
     public void onBranchInteraction(String repoName, RepositoryBranch branch) {
         Log.d("REPONAME", repoName + " " + branch.getName());
+        SharedPreferences getBranchName = this.getPreferences(Context.MODE_PRIVATE);
+        String branchName = getBranchName.getString(BranchFragment.BRANCH_STR, "");
+        if (branchName.equals(""))
+            branchName = branch.getName();
+        else {
+            String[] arr = branchName.split(BranchFragment.BRANCH_SEPARATOR);
+            boolean itExists = false;
+          
+
+            if (!itExists)
+                branchName += BranchFragment.BRANCH_SEPARATOR + branch.getName();
+        }
+        SharedPreferences.Editor editor = getBranchName.edit();
+        editor.putString(BranchFragment.BRANCH_STR, branchName);
+        editor.commit();
+
     }
 }

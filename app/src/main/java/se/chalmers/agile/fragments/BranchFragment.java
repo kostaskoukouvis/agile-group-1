@@ -30,8 +30,10 @@ import se.chalmers.agile.activities.LoginActivity;
 
 public class BranchFragment extends ListFragment {
 
-    private final static String BRANCH_STR = "branch";
+    public final static String BRANCH_STR = "branch";
     private String repositoryName;
+
+    public final static String BRANCH_SEPARATOR = "###";
 
     private OnBranchFragmentInteractionListener mListener;
 
