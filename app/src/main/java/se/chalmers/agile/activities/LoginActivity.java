@@ -50,11 +50,11 @@ public class LoginActivity extends ActionBarActivity {
 
         Log.d("Preferences", getPreferences(Context.MODE_PRIVATE).toString());
 
+        userName = (EditText) findViewById(R.id.usernameText);
+        password = (EditText) findViewById(R.id.passwordText);
+
         if (!un.equals(NOT_LOGGED_IN) && !pwd.equals(NOT_LOGGED_IN)) {
             startContainerActivity();
-        } else {
-            userName = (EditText) findViewById(R.id.usernameText);
-            password = (EditText) findViewById(R.id.passwordText);
         }
     }
 
