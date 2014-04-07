@@ -32,6 +32,8 @@ import se.chalmers.agile.R;
  */
 public class NavigationDrawerFragment extends Fragment {
 
+    //03e5ced6c8d2d5298dbeca3a861128eb59d6aa0f
+
     /**
      * Remember the position of the selected item.
      */

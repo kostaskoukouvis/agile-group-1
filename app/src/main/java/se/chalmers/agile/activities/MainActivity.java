@@ -99,9 +99,6 @@ public class MainActivity extends Activity
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         if (!mNavigationDrawerFragment.isDrawerOpen()) {
-            // Only show items in the action bar relevant to this screen
-            // if the drawer is not showing. Otherwise, let the drawer
-            // decide what to show in the action bar.
             getMenuInflater().inflate(R.menu.main, menu);
             restoreActionBar();
             return true;
@@ -127,7 +124,7 @@ public class MainActivity extends Activity
         SharedPreferences getRepoName = getApplication().getApplicationContext().getSharedPreferences("Application", Context.MODE_PRIVATE);
         String repoName = getRepoName.getString(RepositoryFragment.REPOSITORY_STR, "");
         if (repoName.equals(""))
-            repoName = repo.getName();
+            repoName = repo.generateId();
         else {
             String[] arr = repoName.split(RepositoryFragment.REPOSITORY_SEPARATOR);
             boolean itExists = false;
@@ -137,7 +134,7 @@ public class MainActivity extends Activity
             }*/
 
             if (!itExists)
-                repoName += RepositoryFragment.REPOSITORY_SEPARATOR + repo.getName();
+                repoName += RepositoryFragment.REPOSITORY_SEPARATOR + repo.generateId();
         }
         SharedPreferences.Editor editor = getRepoName.edit();
         editor.putString(RepositoryFragment.REPOSITORY_STR, repoName);

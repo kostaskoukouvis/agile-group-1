@@ -140,7 +140,7 @@ public class BranchFragment extends ListFragment {
 
             RepositoryService rs = new RepositoryService();
             rs.getClient().setCredentials(un, pwd);
-            IRepositoryIdProvider repositoryId = RepositoryId.create(un, repositoryName);
+            IRepositoryIdProvider repositoryId = RepositoryId.createFromId(repositoryName);
             Log.d("BRANCHTASK", repositoryId.generateId());
 
             try {

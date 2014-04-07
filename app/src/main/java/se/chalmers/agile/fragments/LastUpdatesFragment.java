@@ -137,10 +137,9 @@ public class LastUpdatesFragment extends ListFragment {
         @Override
         protected Collection<RepositoryCommit> doInBackground(String... args) {
             CommitService cs = new CommitService();
-            Log.d("Arguments",args[0] + " " + args[1]);
             String[] project = args[0].split("/");
             IRepositoryIdProvider repositoryId = RepositoryId.create(project[0], project[1]);
-            //Log.d("ArgumentsProject",project[0] + " " + project[1]);
+            Log.d("ArgumentsProject",project[0] + " " + project[1]+ " "+ args[1]);
             PageIterator<RepositoryCommit> commitPages = cs.pageCommits(repositoryId, args[1], null, 10);
             return commitPages.next();
         }
