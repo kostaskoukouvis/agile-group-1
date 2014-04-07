@@ -3,8 +3,10 @@ package se.chalmers.agile.fragments;
 import android.app.Activity;
 import android.app.ListFragment;
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -28,37 +30,62 @@ import se.chalmers.agile.R;
  */
 public class LastUpdatesFragment extends ListFragment {
 
-    private static final DateFormat dateFormat = DateFormat.getDateTimeInstance();
 
+    private static final DateFormat dateFormat = DateFormat.getDateTimeInstance();
+    private String branchName;
+    private String repositoryName;
     /**
      * Builds a instance once provided the correct parameters.
      *
-     * @param projectName
-     * @param branchName
      * @return
      */
-    public static LastUpdatesFragment createInstance(String projectName, String branchName) {
-        Bundle bundle = new Bundle();
-        bundle.putString("project", projectName);
-        bundle.putString("branch", branchName);
+    public static LastUpdatesFragment createInstance() {
+
+
         LastUpdatesFragment fragment = new LastUpdatesFragment();
-        fragment.setArguments(bundle);
+
         return fragment;
     }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        branchName = getBranchFromPreferences();
+        repositoryName = getRepoFromPreferences();
+
+        //Call the async task
+        new GetUpdatesTasks().execute(repositoryName, branchName);
+
     }
 
 
     @Override
     public void onResume() {
         super.onResume();
-        Bundle extras = this.getArguments();
-        String projectName = extras.getString("project");
-        String branchName = extras.getString("branch");
-        new GetUpdatesTasks().execute(projectName, branchName);
+        branchName = getBranchFromPreferences();
+        repositoryName = getRepoFromPreferences();
+       // Bundle extras = this.getArguments();
+      //  String projectName = extras.getString("project");
+     //   String branchName = extras.getString("branch");
+        new GetUpdatesTasks().execute(repositoryName, branchName);
+    }
+
+
+    private String getBranchFromPreferences(){
+        SharedPreferences sp = getActivity().getApplication().getApplicationContext().getSharedPreferences("Application",Context.MODE_PRIVATE);
+        String str = sp.getString(BranchFragment.BRANCH_STR, "");
+        String [] arr = str.split(BranchFragment.BRANCH_SEPARATOR);
+        Log.d("BranchFtched", arr[arr.length - 1]);
+        return arr[arr.length - 1];
+    }
+
+    private String getRepoFromPreferences(){
+        SharedPreferences sp = getActivity().getApplication().getApplicationContext().getSharedPreferences("Application",Context.MODE_PRIVATE);
+        String str = sp.getString(RepositoryFragment.REPOSITORY_STR, "");
+        String [] arr = str.split(RepositoryFragment.REPOSITORY_SEPARATOR);
+        Log.d("RepoFtched",arr[arr.length - 1] );
+        return arr[arr.length - 1];
     }
 
     /**
@@ -110,8 +137,10 @@ public class LastUpdatesFragment extends ListFragment {
         @Override
         protected Collection<RepositoryCommit> doInBackground(String... args) {
             CommitService cs = new CommitService();
+            Log.d("Arguments",args[0] + " " + args[1]);
             String[] project = args[0].split("/");
             IRepositoryIdProvider repositoryId = RepositoryId.create(project[0], project[1]);
+            //Log.d("ArgumentsProject",project[0] + " " + project[1]);
             PageIterator<RepositoryCommit> commitPages = cs.pageCommits(repositoryId, args[1], null, 10);
             return commitPages.next();
         }

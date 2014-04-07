@@ -185,8 +185,8 @@ public class ContainerActivity extends Activity implements ActionBar.TabListener
 
         String un = sharedPref.getString(LoginActivity.USERNAME_STR, LoginActivity.NOT_LOGGED_IN);
 
-        Fragment luf = (Fragment) LastUpdatesFragment.createInstance(un + "/" + repoName, branch.getName());
-        mSectionsPagerAdapter.addFragment(luf, 2, "Last commits");
+     //  Fragment luf = (Fragment) LastUpdatesFragment.createInstance(un + "/" + repoName, branch.getName());
+     //   mSectionsPagerAdapter.addFragment(luf, 2, "Last commits");
 
     }
 

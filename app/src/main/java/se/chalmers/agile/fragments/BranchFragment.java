@@ -60,6 +60,7 @@ public class BranchFragment extends ListFragment {
 
         if (getArguments() != null) {
             repositoryName = getArguments().getString(BRANCH_STR);
+
         }
         //Call the async task
         new BranchTask().execute();

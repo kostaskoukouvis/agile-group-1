@@ -17,6 +17,7 @@ import org.eclipse.egit.github.core.RepositoryBranch;
 
 import se.chalmers.agile.R;
 import se.chalmers.agile.fragments.BranchFragment;
+import se.chalmers.agile.fragments.LastUpdatesFragment;
 import se.chalmers.agile.fragments.RepositoryFragment;
 
 public class MainActivity extends Activity
@@ -59,6 +60,9 @@ public class MainActivity extends Activity
                 break;
             case 1:
                 f = BranchFragment.createInstance();
+                break;
+            case 2:
+                f = LastUpdatesFragment.createInstance();
                 break;
             default:
                 f = RepositoryFragment.createInstance();
@@ -120,7 +124,7 @@ public class MainActivity extends Activity
 
     @Override
     public void onRepositoryInteraction(Repository repo) {
-        SharedPreferences getRepoName = getApplication().getApplicationContext().getSharedPreferences("Application",Context.MODE_PRIVATE);
+        SharedPreferences getRepoName = getApplication().getApplicationContext().getSharedPreferences("Application", Context.MODE_PRIVATE);
         String repoName = getRepoName.getString(RepositoryFragment.REPOSITORY_STR, "");
         if (repoName.equals(""))
             repoName = repo.getName();
@@ -142,15 +146,14 @@ public class MainActivity extends Activity
 
     @Override
     public void onBranchInteraction(String repoName, RepositoryBranch branch) {
-        Log.d("REPONAME", repoName + " " + branch.getName());
-        SharedPreferences getBranchName = this.getPreferences(Context.MODE_PRIVATE);
+        SharedPreferences getBranchName = getApplication().getApplicationContext().getSharedPreferences("Application", Context.MODE_PRIVATE);
         String branchName = getBranchName.getString(BranchFragment.BRANCH_STR, "");
         if (branchName.equals(""))
             branchName = branch.getName();
         else {
             String[] arr = branchName.split(BranchFragment.BRANCH_SEPARATOR);
             boolean itExists = false;
-          
+
 
             if (!itExists)
                 branchName += BranchFragment.BRANCH_SEPARATOR + branch.getName();
@@ -158,6 +161,8 @@ public class MainActivity extends Activity
         SharedPreferences.Editor editor = getBranchName.edit();
         editor.putString(BranchFragment.BRANCH_STR, branchName);
         editor.commit();
+
+        Log.d("REPONAME", repoName + " " + branch.getName());
 
     }
 }
