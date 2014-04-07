@@ -52,6 +52,7 @@ public class MainActivity extends Activity
     public void onNavigationDrawerItemSelected(int position) {
         // update the main content by replacing fragments
         Fragment f = null;
+        //TODO: if fragment already create avoid creating a new instance
         switch (position) {
             case 0:
                 f = RepositoryFragment.createInstance();
