@@ -96,7 +96,7 @@ public class LoginActivity extends ActionBarActivity {
     }
 
     protected void startContainerActivity() {
-        Intent intent = new Intent(LoginActivity.this, ContainerActivity.class);
+        Intent intent = new Intent(LoginActivity.this, MainActivity.class);
         startActivity(intent);
     }
 
