@@ -13,12 +13,15 @@ import android.view.Menu;
 import android.view.MenuItem;
 
 import org.eclipse.egit.github.core.Repository;
+import org.eclipse.egit.github.core.RepositoryBranch;
 
 import se.chalmers.agile.R;
+import se.chalmers.agile.fragments.BranchFragment;
 import se.chalmers.agile.fragments.RepositoryFragment;
 
 public class MainActivity extends Activity
-        implements NavigationDrawerFragment.NavigationDrawerCallbacks, RepositoryFragment.OnRepositoryFragmentInteractionListener {
+        implements NavigationDrawerFragment.NavigationDrawerCallbacks, RepositoryFragment.OnRepositoryFragmentInteractionListener,
+        BranchFragment.OnBranchFragmentInteractionListener {
 
     /**
      * Fragment managing the behaviors, interactions and presentation of the navigation drawer.
@@ -52,6 +55,9 @@ public class MainActivity extends Activity
         switch (position) {
             case 0:
                 f = RepositoryFragment.createInstance();
+                break;
+            case 1:
+                f = BranchFragment.createInstance();
                 break;
             default:
                 f = RepositoryFragment.createInstance();
@@ -113,15 +119,28 @@ public class MainActivity extends Activity
 
     @Override
     public void onRepositoryInteraction(Repository repo) {
-        Log.d("FragmentInteraction", repo.getName());
         SharedPreferences getRepoName = this.getPreferences(Context.MODE_PRIVATE);
         String repoName = getRepoName.getString(RepositoryFragment.REPOSITORY_STR, "");
         if (repoName.equals(""))
             repoName = repo.getName();
-        else
-            repoName += RepositoryFragment.REPOSITORY_SEPARATOR+repo.getName();
+        else {
+            String[] arr = repoName.split(RepositoryFragment.REPOSITORY_SEPARATOR);
+            boolean itExists = false;
+            /*for (String str : arr) {
+                if (itExists) break;
+                itExists = str.equals(repo.getName());
+            }*/
+
+            if (!itExists)
+                repoName += RepositoryFragment.REPOSITORY_SEPARATOR + repo.getName();
+        }
         SharedPreferences.Editor editor = getRepoName.edit();
         editor.putString(RepositoryFragment.REPOSITORY_STR, repoName);
         editor.commit();
+    }
+
+    @Override
+    public void onBranchInteraction(String repoName, RepositoryBranch branch) {
+        Log.d("REPONAME", repoName + " " + branch.getName());
     }
 }

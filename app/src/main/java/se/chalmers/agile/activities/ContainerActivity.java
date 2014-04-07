@@ -156,7 +156,7 @@ public class ContainerActivity extends Activity implements ActionBar.TabListener
     public void onRepositoryInteraction(Repository repo) {
 
         BranchFragment bf = null;
-        try {
+       /* try {
             bf = (BranchFragment) mSectionsPagerAdapter.getItem(1);
         } catch (IndexOutOfBoundsException e) {
             bf = BranchFragment.createInstance(repo);
@@ -166,7 +166,7 @@ public class ContainerActivity extends Activity implements ActionBar.TabListener
             bf = BranchFragment.createInstance(repo);
             mSectionsPagerAdapter.addFragment(bf, 1, "branches");
             return;
-        }
+        }*/
 
         bf.updateBranch(repo.getName());
         mViewPager.setCurrentItem(1);

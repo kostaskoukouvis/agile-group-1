@@ -43,20 +43,18 @@ public class BranchFragment extends ListFragment {
     }
 
     /**
-     * @param repo Repository instance needed to instantiate the branch fragments
      * @return The Instance of the BranchFregment
      */
-    public static BranchFragment createInstance(Repository repo) {
-        Bundle args = new Bundle();
-        args.putString(BRANCH_STR, repo.getName());
+    public static BranchFragment createInstance() {
         BranchFragment fragment = new BranchFragment();
-        fragment.setArguments(args);
         return fragment;
     }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        repositoryName = getRepoFromPreferences();
 
         if (getArguments() != null) {
             repositoryName = getArguments().getString(BRANCH_STR);
@@ -99,6 +97,14 @@ public class BranchFragment extends ListFragment {
 
     }
 
+    private String getRepoFromPreferences(){
+        SharedPreferences sp = getActivity().getPreferences(Context.MODE_PRIVATE);
+        String str = sp.getString(RepositoryFragment.REPOSITORY_STR, "");
+        String [] arr = str.split(RepositoryFragment.REPOSITORY_SEPARATOR);
+        Log.d("RepoFtched",arr[arr.length - 1] );
+        return arr[arr.length - 1];
+    }
+
     /**
      * This interface must be implemented by activities that contain this
      * fragment to allow an interaction in this fragment to be communicated
@@ -132,6 +138,7 @@ public class BranchFragment extends ListFragment {
             RepositoryService rs = new RepositoryService();
             rs.getClient().setCredentials(un, pwd);
             IRepositoryIdProvider repositoryId = RepositoryId.create(un, repositoryName);
+            Log.d("BRANCHTASK", repositoryId.generateId());
 
             try {
                 result = rs.getBranches(repositoryId);
@@ -203,5 +210,7 @@ public class BranchFragment extends ListFragment {
             return branches.get(position);
         }
     }
+
+
 
 }
