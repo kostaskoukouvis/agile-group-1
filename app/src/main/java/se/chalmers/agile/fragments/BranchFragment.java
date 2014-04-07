@@ -100,7 +100,7 @@ public class BranchFragment extends ListFragment {
     }
 
     private String getRepoFromPreferences(){
-        SharedPreferences sp = getActivity().getPreferences(Context.MODE_PRIVATE);
+        SharedPreferences sp = getActivity().getApplication().getApplicationContext().getSharedPreferences("Application",Context.MODE_PRIVATE);
         String str = sp.getString(RepositoryFragment.REPOSITORY_STR, "");
         String [] arr = str.split(RepositoryFragment.REPOSITORY_SEPARATOR);
         Log.d("RepoFtched",arr[arr.length - 1] );
