@@ -1,20 +1,20 @@
-package timer;
+package se.chalmers.agile.timer;
 
 import android.os.Handler;
 import android.view.MenuItem;
 
-import constants.Constants;
+import se.chalmers.agile.constants.Constants;
 import se.chalmers.agile.R;
 
 /**
- * A countdown timer that counts down from a time given when created.
+ * A countdown se.chalmers.agile.timer that counts down from a time given when created.
  */
 public class CountDownTimer extends Thread {
 
     //Singleton instance
     private static CountDownTimer instance = null;
 
-    //Representation of the time state of the timer
+    //Representation of the time state of the se.chalmers.agile.timer
     private long millis;
     private long millisUntilFinished;
     private long interval;
@@ -24,11 +24,11 @@ public class CountDownTimer extends Thread {
     private MenuItem subStart;
     private MenuItem timer;
 
-    //States of the timer
+    //States of the se.chalmers.agile.timer
     private boolean running;
     private boolean finished;
 
-    //Handler to pass information from the timer thread to the UI thread
+    //Handler to pass information from the se.chalmers.agile.timer thread to the UI thread
     private Handler handler;
 
     //Constant to represent when the time is out
@@ -39,7 +39,7 @@ public class CountDownTimer extends Thread {
 
 
     /**
-     *Private constructor to create a countdown timer.
+     *Private constructor to create a countdown se.chalmers.agile.timer.
      */
     private CountDownTimer(long millisInFuture, long countDownInterval, Handler handler) {
         super();
@@ -65,7 +65,7 @@ public class CountDownTimer extends Thread {
 
 
     /**
-     *Overridden run method from Thread. Defines what should happen when the timer run.
+     *Overridden run method from Thread. Defines what should happen when the se.chalmers.agile.timer run.
      */
     @Override
     public void run(){
@@ -91,7 +91,7 @@ public class CountDownTimer extends Thread {
     }
 
     /**
-     *Start the timer for the first time. If the thread is already alive, only update the timer menu item.
+     *Start the se.chalmers.agile.timer for the first time. If the thread is already alive, only update the se.chalmers.agile.timer menu item.
      */
     public void startTimer(MenuItem timer){
         this.timer = timer;
@@ -114,7 +114,7 @@ public class CountDownTimer extends Thread {
     }
 
     /**
-     *Pauses the timer
+     *Pauses the se.chalmers.agile.timer
      */
     public void pauseTimer(){
         subPause.setVisible(false);
@@ -123,7 +123,7 @@ public class CountDownTimer extends Thread {
     }
 
     /**
-     *Resumes the timer
+     *Resumes the se.chalmers.agile.timer
      */
     public void resumeTimer(){
         subStart.setVisible(false);
@@ -133,7 +133,7 @@ public class CountDownTimer extends Thread {
 
 
     /**
-     *Resets the timer
+     *Resets the se.chalmers.agile.timer
      */
     public void resetTimer(){
         subPause.setVisible(true);
@@ -145,14 +145,14 @@ public class CountDownTimer extends Thread {
 
 
     /**
-     *Check if the timer is running
+     *Check if the se.chalmers.agile.timer is running
      */
     private boolean isRunning(){
         return running;
     }
 
     /**
-     *Updates the timer text. Sends information to the handler to forward information to the UI thread.
+     *Updates the se.chalmers.agile.timer text. Sends information to the handler to forward information to the UI thread.
      */
     private void onTick(final long millisUntilFinished) {
         final Runnable myRunnable = new Runnable() {

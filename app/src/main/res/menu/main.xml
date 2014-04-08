@@ -1,9 +1,33 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     tools:context="se.chalmers.agile.activities.MainActivity" >
-    <item android:id="@+id/action_example"
-        android:title="@string/action_example"
-        android:showAsAction="withText|ifRoom" />
+
+    <item android:id="@+id/timer_button"
+        android:title=""
+        android:orderInCategory="0"
+        android:showAsAction="ifRoom">
+
+        <menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+            <item
+                android:id="@+id/timerStart"
+                android:title="Resume"
+                android:icon="@android:drawable/ic_media_play"
+                />
+
+            <item
+                android:id="@+id/timerPause"
+                android:title="Pause"
+                android:icon="@android:drawable/ic_media_pause"
+                />
+
+            <item
+                android:id="@+id/timerReset"
+                android:title="Reset"
+                android:icon="@android:drawable/ic_popup_sync"
+                />
+        </menu>
+    </item>
     <item android:id="@+id/action_settings"
         android:title="@string/action_settings"
         android:orderInCategory="100"

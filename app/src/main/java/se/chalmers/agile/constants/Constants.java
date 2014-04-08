@@ -1,4 +1,4 @@
-package constants;
+package se.chalmers.agile.constants;
 
 /**
  * Created by Daniel on 2014-04-06.

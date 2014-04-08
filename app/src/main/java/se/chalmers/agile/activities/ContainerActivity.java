@@ -21,12 +21,12 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
-import constants.Constants;
+import se.chalmers.agile.constants.Constants;
 import se.chalmers.agile.R;
 import se.chalmers.agile.fragments.BranchFragment;
 import se.chalmers.agile.fragments.LastUpdatesFragment;
 import se.chalmers.agile.fragments.RepositoryFragment;
-import timer.CountDownTimer;
+import se.chalmers.agile.timer.CountDownTimer;
 
 
 public class ContainerActivity extends Activity implements ActionBar.TabListener, RepositoryFragment.OnRepositoryFragmentInteractionListener, BranchFragment.OnBranchFragmentInteractionListener {
@@ -104,9 +104,9 @@ public class ContainerActivity extends Activity implements ActionBar.TabListener
 
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.container, menu);
-        getMenuInflater().inflate(R.menu.timer, menu);
+        //getMenuInflater().inflate(R.menu.se.chalmers.agile.timer, menu);
 
-        //Get the countdown timer and start it
+        //Get the countdown se.chalmers.agile.timer and start it
         countdownTimer = CountDownTimer.getInstance(Constants.TIMER_START_TIME, Constants.SECOND, handler);
         countdownTimer.startTimer(menu.findItem(R.id.timer_button));
 

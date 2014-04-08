@@ -7,6 +7,7 @@ import android.app.FragmentManager;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v4.widget.DrawerLayout;
 import android.util.Log;
 import android.view.Menu;
@@ -15,10 +16,12 @@ import android.view.MenuItem;
 import org.eclipse.egit.github.core.Repository;
 import org.eclipse.egit.github.core.RepositoryBranch;
 
+import se.chalmers.agile.constants.Constants;
 import se.chalmers.agile.R;
 import se.chalmers.agile.fragments.BranchFragment;
 import se.chalmers.agile.fragments.LastUpdatesFragment;
 import se.chalmers.agile.fragments.RepositoryFragment;
+import se.chalmers.agile.timer.CountDownTimer;
 
 public class MainActivity extends Activity
         implements NavigationDrawerFragment.NavigationDrawerCallbacks, RepositoryFragment.OnRepositoryFragmentInteractionListener,
@@ -29,9 +32,12 @@ public class MainActivity extends Activity
      */
     private NavigationDrawerFragment mNavigationDrawerFragment;
 
-    /**
-     * Used to store the last screen title. For use in {@link #restoreActionBar()}.
-     */
+    //Countdowntimer
+    private CountDownTimer countdownTimer;
+
+    //Handler to handle communication between threads
+    final Handler handler = new Handler();
+
     private CharSequence mTitle;
 
     @Override
@@ -88,21 +94,27 @@ public class MainActivity extends Activity
         }
     }
 
-    public void restoreActionBar() {
+    public void restoreActionBar(Menu menu) {
         ActionBar actionBar = getActionBar();
         actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_STANDARD);
         actionBar.setDisplayShowTitleEnabled(true);
         actionBar.setTitle(mTitle);
+
+        //Get the countdown se.chalmers.agile.timer and start it if it is not already started
+        countdownTimer = CountDownTimer.getInstance(Constants.TIMER_START_TIME, Constants.SECOND, handler);
+        countdownTimer.startTimer(menu.findItem(R.id.timer_button));
     }
 
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
+
         if (!mNavigationDrawerFragment.isDrawerOpen()) {
             getMenuInflater().inflate(R.menu.main, menu);
-            restoreActionBar();
+            restoreActionBar(menu);
             return true;
         }
+
         return super.onCreateOptionsMenu(menu);
     }
 
@@ -112,9 +124,19 @@ public class MainActivity extends Activity
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
-        if (id == R.id.action_settings) {
-            return true;
+        switch(id){
+            case(R.id.timerPause):
+                countdownTimer.pauseTimer();
+                break;
+            case(R.id.timerStart):
+                countdownTimer.resumeTimer();
+                break;
+            case(R.id.timerReset):
+                countdownTimer.resetTimer();
+                break;
+            default:
         }
+
         return super.onOptionsItemSelected(item);
     }
 
