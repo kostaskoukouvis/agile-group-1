@@ -15,7 +15,6 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import org.eclipse.egit.github.core.IRepositoryIdProvider;
-import org.eclipse.egit.github.core.Repository;
 import org.eclipse.egit.github.core.RepositoryBranch;
 import org.eclipse.egit.github.core.RepositoryId;
 import org.eclipse.egit.github.core.service.RepositoryService;
@@ -31,11 +30,14 @@ import se.chalmers.agile.activities.LoginActivity;
 public class BranchFragment extends ListFragment {
 
     public final static String BRANCH_STR = "branch";
-    private String repositoryName;
-
     public final static String BRANCH_SEPARATOR = "###";
 
+    private String repositoryName;
     private OnBranchFragmentInteractionListener mListener;
+
+    private BranchTask  branchTask = null;
+    private BranchArrayAdapter branchAdapter = null;
+
 
     /**
      * Mandatory empty constructor for the fragment manager to instantiate the
@@ -57,15 +59,22 @@ public class BranchFragment extends ListFragment {
         super.onCreate(savedInstanceState);
 
         repositoryName = getRepoFromPreferences();
+        branchTask = new BranchTask();
+
 
         if (getArguments() != null) {
             repositoryName = getArguments().getString(BRANCH_STR);
 
         }
-        //Call the async task
-        new BranchTask().execute();
     }
 
+    @Override
+    public void onStart() {
+        super.onStart();
+        if(branchAdapter == null)
+            branchTask.execute();
+        else setListAdapter(branchAdapter);
+    }
 
     @Override
     public void onAttach(Activity activity) {
@@ -90,7 +99,7 @@ public class BranchFragment extends ListFragment {
         super.onListItemClick(l, v, position, id);
         ArrayAdapter<RepositoryBranch> adapter = (ArrayAdapter<RepositoryBranch>) l.getAdapter();
         RepositoryBranch selected = adapter.getItem(position);
-        mListener.onBranchInteraction(repositoryName,selected);
+        mListener.onBranchInteraction(repositoryName, selected);
     }
 
     public void updateBranch(String repositoryName) {
@@ -100,11 +109,11 @@ public class BranchFragment extends ListFragment {
 
     }
 
-    private String getRepoFromPreferences(){
-        SharedPreferences sp = getActivity().getApplication().getApplicationContext().getSharedPreferences("Application",Context.MODE_PRIVATE);
+    private String getRepoFromPreferences() {
+        SharedPreferences sp = getActivity().getApplication().getApplicationContext().getSharedPreferences("Application", Context.MODE_PRIVATE);
         String str = sp.getString(RepositoryFragment.REPOSITORY_STR, "");
-        String [] arr = str.split(RepositoryFragment.REPOSITORY_SEPARATOR);
-        Log.d("RepoFtched",arr[arr.length - 1] );
+        String[] arr = str.split(RepositoryFragment.REPOSITORY_SEPARATOR);
+        Log.d("RepoFtched", arr[arr.length - 1]);
         return arr[arr.length - 1];
     }
 
@@ -159,7 +168,9 @@ public class BranchFragment extends ListFragment {
 
         @Override
         protected void onPostExecute(List<RepositoryBranch> branches) {
-            setListAdapter(new BranchArrayAdapter(getActivity(), R.id.branchName, branches));
+            if(branchAdapter == null)
+                branchAdapter = new BranchArrayAdapter(getActivity(), R.id.branchName, branches);
+            setListAdapter(branchAdapter);
         }
 
         @Override
@@ -175,6 +186,7 @@ public class BranchFragment extends ListFragment {
         @Override
         protected void onCancelled() {
             super.onCancelled();
+            setListAdapter(branchAdapter);
         }
     }
 
@@ -213,7 +225,6 @@ public class BranchFragment extends ListFragment {
             return branches.get(position);
         }
     }
-
 
 
 }

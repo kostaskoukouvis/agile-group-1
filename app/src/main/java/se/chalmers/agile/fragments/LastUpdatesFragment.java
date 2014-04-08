@@ -4,7 +4,6 @@ import android.app.Activity;
 import android.app.ListFragment;
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -31,11 +30,12 @@ public class LastUpdatesFragment extends ListFragment
 
 
     public static final String LAST_UPDATE_TIME = "last_update";
-
-
     private static final DateFormat dateFormat = DateFormat.getDateTimeInstance();
+    private UpdatesFetcher updatesFetcher = null;
+    private UpdatesAdapter updatesAdapter = null;
     private String branchName;
     private String repositoryName;
+
     /**
      * Builds a instance once provided the correct parameters.
      *
@@ -57,10 +57,16 @@ public class LastUpdatesFragment extends ListFragment
         repositoryName = getRepoFromPreferences();
 
         //Call the async task
-        new UpdatesFetcher(getActivity().getApplicationContext(),this).execute(repositoryName, branchName);
+        updatesFetcher = new UpdatesFetcher(getActivity().getApplicationContext(), this);
+
 
     }
 
+    @Override
+    public void onStart() {
+        super.onStart();
+        updatesFetcher.execute(repositoryName, branchName);
+    }
 
     @Override
     public void onResume() {
@@ -71,20 +77,35 @@ public class LastUpdatesFragment extends ListFragment
     }
 
 
-    private String getBranchFromPreferences(){
-        SharedPreferences sp = getActivity().getApplication().getApplicationContext().getSharedPreferences("Application",Context.MODE_PRIVATE);
+    private String getBranchFromPreferences() {
+        SharedPreferences sp = getActivity().getApplication().getApplicationContext().getSharedPreferences("Application", Context.MODE_PRIVATE);
         String str = sp.getString(BranchFragment.BRANCH_STR, "");
-        String [] arr = str.split(BranchFragment.BRANCH_SEPARATOR);
+        String[] arr = str.split(BranchFragment.BRANCH_SEPARATOR);
         Log.d("BranchFtched", arr[arr.length - 1]);
         return arr[arr.length - 1];
     }
 
-    private String getRepoFromPreferences(){
-        SharedPreferences sp = getActivity().getApplication().getApplicationContext().getSharedPreferences("Application",Context.MODE_PRIVATE);
+    private String getRepoFromPreferences() {
+        SharedPreferences sp = getActivity().getApplication().getApplicationContext().getSharedPreferences("Application", Context.MODE_PRIVATE);
         String str = sp.getString(RepositoryFragment.REPOSITORY_STR, "");
-        String [] arr = str.split(RepositoryFragment.REPOSITORY_SEPARATOR);
-        Log.d("RepoFtched",arr[arr.length - 1] );
+        String[] arr = str.split(RepositoryFragment.REPOSITORY_SEPARATOR);
+        Log.d("RepoFtched", arr[arr.length - 1]);
         return arr[arr.length - 1];
+
+    }
+
+    /**
+     * Just adapts the adapter.
+     *
+     * @param commits Items of the list.
+     */
+    @Override
+    public void performAction(Collection<RepositoryCommit> commits) {
+        // if (updatesAdapter == null)
+        updatesAdapter = new UpdatesAdapter(getActivity(),
+                R.layout.updates_list_item_layout,
+                commits.toArray(new RepositoryCommit[commits.size()]));
+        setListAdapter(updatesAdapter);
 
     }
 
@@ -128,18 +149,5 @@ public class LastUpdatesFragment extends ListFragment
 
             return row;
         }
-    }
-
-    /**
-     * Just adapts the adapter.
-     *
-     * @param commits Items of the list.
-     */
-    @Override
-    public void performAction(Collection<RepositoryCommit> commits) {
-        setListAdapter(new UpdatesAdapter(getActivity(),
-                R.layout.updates_list_item_layout,
-                commits.toArray(new RepositoryCommit[commits.size()])));
-
     }
 }
