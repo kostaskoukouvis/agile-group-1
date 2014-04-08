@@ -161,6 +161,9 @@ public class MainActivity extends Activity
         SharedPreferences.Editor editor = getRepoName.edit();
         editor.putString(RepositoryFragment.REPOSITORY_STR, repoName);
         editor.commit();
+
+        //Switch to BranchFragment in NavigationDrawerFragment
+        mNavigationDrawerFragment.selectItem(1);
     }
 
     @Override
@@ -183,5 +186,7 @@ public class MainActivity extends Activity
 
         Log.d("REPONAME", repoName + " " + branch.getName());
 
+        //Switch to LastUpdatesFragment in NavigationDrawerFragment
+        mNavigationDrawerFragment.selectItem(2);
     }
 }
