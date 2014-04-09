@@ -21,6 +21,7 @@ import java.util.Collection;
 import se.chalmers.agile.R;
 import se.chalmers.agile.tasks.OnPostExecuteCallback;
 import se.chalmers.agile.tasks.UpdatesFetcher;
+import se.chalmers.agile.utils.AppPreferences;
 
 /**
  * Displays the last updates from the selected repositories.
@@ -35,6 +36,8 @@ public class LastUpdatesFragment extends ListFragment
     private UpdatesAdapter updatesAdapter = null;
     private String branchName;
     private String repositoryName;
+
+    private AppPreferences appPref = null;
 
     /**
      * Builds a instance once provided the correct parameters.
@@ -52,6 +55,7 @@ public class LastUpdatesFragment extends ListFragment
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        appPref = AppPreferences.getInstance();
 
         branchName = getBranchFromPreferences();
         repositoryName = getRepoFromPreferences();
@@ -78,18 +82,12 @@ public class LastUpdatesFragment extends ListFragment
 
 
     private String getBranchFromPreferences() {
-        SharedPreferences sp = getActivity().getApplication().getApplicationContext().getSharedPreferences("Application", Context.MODE_PRIVATE);
-        String str = sp.getString(BranchFragment.BRANCH_STR, "");
-        String[] arr = str.split(BranchFragment.BRANCH_SEPARATOR);
-        Log.d("BranchFtched", arr[arr.length - 1]);
+        String[] arr = appPref.getBranches();
         return arr[arr.length - 1];
     }
 
     private String getRepoFromPreferences() {
-        SharedPreferences sp = getActivity().getApplication().getApplicationContext().getSharedPreferences("Application", Context.MODE_PRIVATE);
-        String str = sp.getString(RepositoryFragment.REPOSITORY_STR, "");
-        String[] arr = str.split(RepositoryFragment.REPOSITORY_SEPARATOR);
-        Log.d("RepoFtched", arr[arr.length - 1]);
+        String[] arr = appPref.getRepositories();
         return arr[arr.length - 1];
 
     }

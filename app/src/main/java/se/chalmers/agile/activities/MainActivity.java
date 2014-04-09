@@ -23,12 +23,14 @@ import se.chalmers.agile.fragments.BranchFragment;
 import se.chalmers.agile.fragments.LastUpdatesFragment;
 import se.chalmers.agile.fragments.RepositoryFragment;
 import se.chalmers.agile.timer.CountDownTimer;
+import se.chalmers.agile.utils.AppPreferences;
 
 public class MainActivity extends Activity
         implements NavigationDrawerFragment.NavigationDrawerCallbacks, RepositoryFragment.OnRepositoryFragmentInteractionListener,
         BranchFragment.OnBranchFragmentInteractionListener {
 
     RepositoryFragment repoFrag = null;
+    AppPreferences appPreferences = null;
 
     /**
      * Fragment managing the behaviors, interactions and presentation of the navigation drawer.
@@ -49,6 +51,8 @@ public class MainActivity extends Activity
 
 
         setContentView(R.layout.activity_main);
+
+        appPreferences = AppPreferences.getInstance();
 
 
         mNavigationDrawerFragment = (NavigationDrawerFragment)
@@ -164,49 +168,14 @@ public class MainActivity extends Activity
 
     @Override
     public void onRepositoryInteraction(Repository repo) {
-        SharedPreferences getRepoName = getApplication().getApplicationContext().getSharedPreferences("Application", Context.MODE_PRIVATE);
-        String repoName = getRepoName.getString(RepositoryFragment.REPOSITORY_STR, "");
-        if (repoName.equals(""))
-            repoName = repo.generateId();
-        else {
-            String[] arr = repoName.split(RepositoryFragment.REPOSITORY_SEPARATOR);
-            boolean itExists = false;
-            /*for (String str : arr) {
-                if (itExists) break;
-                itExists = str.equals(repo.getName());
-            }*/
-
-            if (!itExists)
-                repoName += RepositoryFragment.REPOSITORY_SEPARATOR + repo.generateId();
-        }
-        SharedPreferences.Editor editor = getRepoName.edit();
-        editor.putString(RepositoryFragment.REPOSITORY_STR, repoName);
-        editor.commit();
-
+        appPreferences.appendRepository(repo.generateId());
         //Switch to BranchFragment in NavigationDrawerFragment
         mNavigationDrawerFragment.selectItem(1);
     }
 
     @Override
     public void onBranchInteraction(String repoName, RepositoryBranch branch) {
-        SharedPreferences getBranchName = getApplication().getApplicationContext().getSharedPreferences("Application", Context.MODE_PRIVATE);
-        String branchName = getBranchName.getString(BranchFragment.BRANCH_STR, "");
-        if (branchName.equals(""))
-            branchName = branch.getName();
-        else {
-            String[] arr = branchName.split(BranchFragment.BRANCH_SEPARATOR);
-            boolean itExists = false;
-
-
-            if (!itExists)
-                branchName += BranchFragment.BRANCH_SEPARATOR + branch.getName();
-        }
-        SharedPreferences.Editor editor = getBranchName.edit();
-        editor.putString(BranchFragment.BRANCH_STR, branchName);
-        editor.commit();
-
-        Log.d("REPONAME", repoName + " " + branch.getName());
-
+        appPreferences.appendBranch(repoName,branch.getName());
         //Switch to LastUpdatesFragment in NavigationDrawerFragment
         mNavigationDrawerFragment.selectItem(2);
     }

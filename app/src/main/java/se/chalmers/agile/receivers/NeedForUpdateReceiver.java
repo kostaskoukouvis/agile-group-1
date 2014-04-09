@@ -46,7 +46,7 @@ public class NeedForUpdateReceiver extends BroadcastReceiver
     public void onReceive(Context context, Intent intent) {
         this.context = context;
         if (prefs == null) {
-            prefs = new AppPreferences(context);
+            prefs = AppPreferences.getInstance();
         }
         if (intent != null && intent.getAction() != null
                 && (intent.getAction().equals("android.intent.action.BOOT_COMPLETED")
