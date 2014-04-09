@@ -95,6 +95,12 @@ public class RepositoryFragment extends ListFragment implements Serializable {
         mListener = null;
     }
 
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        ListView l = (ListView) inflater.inflate(R.layout.repo_list_view, container, false);
+        return l;
+    }
+
 
 
 

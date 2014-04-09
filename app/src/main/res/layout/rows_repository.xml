@@ -1,17 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical" android:layout_width="match_parent"
-    android:layout_height="wrap_content" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-    android:dividerPadding="1dp"
-    android:gravity="center_vertical|left"
-    android:background="@color/black">
 
-    <FrameLayout
-        android:layout_width="fill_parent"
-        android:layout_height="fill_parent"
-        android:layout_margin="15dp"
-        android:background="@color/white">
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_margin="15dp">
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        style="@style/RepoContainerStyle">
+
 
         <TextView
             android:layout_width="wrap_content"
@@ -22,6 +22,5 @@
             style="@style/AppTheme"
             android:ellipsize="end"
             android:gravity="center" />
-
-        </FrameLayout>
-</LinearLayout>
+    </LinearLayout>
+</FrameLayout>
