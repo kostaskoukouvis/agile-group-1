@@ -9,7 +9,7 @@
         <item name="android:textColor">#FFF</item>
     </style>
     
-    <style name="RepoContainerStyle" parent="AppTheme">
+    <style name="AppContainerStyle" parent="AppTheme">
         <item name="android:dividerPadding">1dp</item>
         <item name="android:gravity">center_vertical|left</item>
         <item name="android:paddingRight">10dp</item>
@@ -22,8 +22,6 @@
         <item name="android:layout_marginRight">15dp</item>
         <item name="android:background">@drawable/border_box</item>
     </style>
-
-    <style name="BranchContainerStyle" parent="RepoContainerStyle"></style>
 
     <style name="RepoStyle" parent="AppTheme">
         

@@ -10,6 +10,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.ListView;
 import android.widget.TextView;
 
 import org.eclipse.egit.github.core.Commit;
@@ -79,7 +80,11 @@ public class LastUpdatesFragment extends ListFragment
         String branchName = getBranchFromPreferences();
         new UpdatesFetcher(getActivity().getApplicationContext(), this).execute(projectName, branchName);
     }
-
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        ListView l = (ListView) inflater.inflate(R.layout.app_list_view, container, false);
+        return l;
+    }
 
     private String getBranchFromPreferences() {
         String[] arr = appPref.getBranches();
@@ -134,7 +139,7 @@ public class LastUpdatesFragment extends ListFragment
             Commit commit = data[position].getCommit();
 
             TextView branch = (TextView) row.findViewById(R.id.commit_branch);
-            branch.setText("~");
+            branch.setText(repositoryName + "/" + branchName);
 
             TextView date = (TextView) row.findViewById(R.id.commit_date);
             date.setText(dateFormat.format(commit.getCommitter().getDate()));
@@ -143,7 +148,7 @@ public class LastUpdatesFragment extends ListFragment
             message.setText(commit.getMessage());
 
             TextView author = (TextView) row.findViewById(R.id.commit_user);
-            author.setText(commit.getCommitter().getName());
+            author.setText("by " + commit.getCommitter().getName());
 
             return row;
         }

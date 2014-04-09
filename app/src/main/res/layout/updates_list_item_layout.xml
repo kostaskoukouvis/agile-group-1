@@ -1,8 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_margin="15dp">
+
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical" android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    style="@style/AppContainerStyle">
 
     <RelativeLayout
         android:layout_width="match_parent"
@@ -13,7 +19,19 @@
             android:layout_height="wrap_content"
             android:textAppearance="?android:attr/textAppearanceMedium"
             android:text="Branch"
-            android:id="@+id/commit_branch" />
+            android:id="@+id/commit_branch"
+            style="@style/AppTheme"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceSmall"
+            android:text="Who"
+            android:layout_marginTop="10dp"
+            android:id="@+id/commit_user"
+            android:layout_below="@id/commit_branch"
+            android:layout_alignParentLeft="true"
+            style="@style/AppTheme"/>
 
         <TextView
             android:layout_width="wrap_content"
@@ -22,7 +40,9 @@
             android:text="Message"
             android:layout_marginTop="10dp"
             android:id="@+id/commit_message"
-            android:layout_below="@id/commit_branch" />
+            android:layout_below="@id/commit_user"
+            android:layout_alignParentLeft="true"
+            style="@style/AppTheme"/>
 
         <TextView
             android:layout_width="wrap_content"
@@ -31,17 +51,11 @@
             android:text="Date"
             android:id="@+id/commit_date"
             android:layout_alignParentTop="true"
-            android:layout_alignParentRight="true"/>
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textAppearance="?android:attr/textAppearanceSmall"
-            android:text="Who"
-            android:layout_marginTop="10dp"
-            android:id="@+id/commit_user"
-            android:layout_below="@id/commit_date"
             android:layout_alignParentRight="true"
-             />
+            style="@style/AppTheme"/>
+
+
     </RelativeLayout>
 
 </LinearLayout>
+</FrameLayout>

@@ -88,15 +88,23 @@ public class MainActivity extends Activity
                     repoFrag = RepositoryFragment.createInstance();
                 }
                 f = repoFrag;
+                getActionBar().setSubtitle(getString(R.string.title_repos));
                 break;
             case 1:
                 f = BranchFragment.createInstance();
+                getActionBar().setSubtitle(getString(R.string.title_branches));
                 break;
             case 2:
                 f = LastUpdatesFragment.createInstance();
+                getActionBar().setSubtitle(getString(R.string.title_commits));
                 break;
             default:
-                f = BranchFragment.createInstance();
+                if (repoFrag == null) {
+                    Log.d("repoFrag", "created from fragmentManager");
+                    repoFrag = RepositoryFragment.createInstance();
+                }
+                f = repoFrag;
+                getActionBar().setSubtitle(getString(R.string.title_repos));
                 break;
         }
 
@@ -110,13 +118,13 @@ public class MainActivity extends Activity
     public void onSectionAttached(int number) {
         switch (number) {
             case 1:
-                mTitle = getString(R.string.title_section1);
+                mTitle = getString(R.string.title_repos);
                 break;
             case 2:
-                mTitle = getString(R.string.title_section2);
+                mTitle = getString(R.string.title_branches);
                 break;
             case 3:
-                mTitle = getString(R.string.title_section3);
+                mTitle = getString(R.string.title_commits);
                 break;
         }
     }

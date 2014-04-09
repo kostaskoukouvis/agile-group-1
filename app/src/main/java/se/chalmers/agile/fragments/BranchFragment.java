@@ -101,10 +101,7 @@ public class BranchFragment extends ListFragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        //   View header = (View) getLayoutInflater.inflate(R.layout.repo_header, null);
-
         ListView l = (ListView) inflater.inflate(R.layout.app_list_view, container, false);
-        //   l.addHeaderView(header);
         return l;
     }
 
