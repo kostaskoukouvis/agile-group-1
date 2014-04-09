@@ -22,6 +22,8 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.Toast;
 
+import java.io.Serializable;
+
 import se.chalmers.agile.R;
 
 
@@ -30,7 +32,7 @@ import se.chalmers.agile.R;
  * See the <a href="https://developer.android.com/design/patterns/navigation-drawer.html#Interaction">
  * design guidelines</a> for a complete explanation of the behaviors implemented here.
  */
-public class NavigationDrawerFragment extends Fragment {
+public class NavigationDrawerFragment extends Fragment implements Serializable {
 
     //03e5ced6c8d2d5298dbeca3a861128eb59d6aa0f
 

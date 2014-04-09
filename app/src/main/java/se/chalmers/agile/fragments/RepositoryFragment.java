@@ -18,6 +18,7 @@ import org.eclipse.egit.github.core.Repository;
 import org.eclipse.egit.github.core.service.RepositoryService;
 
 import java.io.IOException;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -26,13 +27,18 @@ import se.chalmers.agile.activities.LoginActivity;
 
 /**
  */
-public class RepositoryFragment extends ListFragment {
+public class RepositoryFragment extends ListFragment implements Serializable {
 
+    private RepositoryTask repoTask = null;
+    private RepositoryArrayAdapter repoAdapter = null;
 
     public final static String REPOSITORY_STR = "project";
+    public final static String REPOSITORY_SEPARATOR = "###";
+
+
     private OnRepositoryFragmentInteractionListener mListener;
 
-    public final static String REPOSITORY_SEPARATOR = "###";
+
     /**
      * Mandatory empty constructor for the fragment manager to instantiate the
      * fragment (e.g. upon screen orientation changes).
@@ -49,11 +55,20 @@ public class RepositoryFragment extends ListFragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        if(repoTask == null)
+            repoTask = new RepositoryTask();
+        if(savedInstanceState != null)
+            repoAdapter = (RepositoryArrayAdapter)savedInstanceState.getSerializable("test");
 
-        //Call the async task
-        new RepositoryTask().execute();
     }
 
+    @Override
+    public void onStart() {
+        super.onStart();
+        if(repoAdapter == null)
+            repoTask.execute();
+        else setListAdapter(repoAdapter);
+    }
 
     @Override
     public void onAttach(Activity activity) {
@@ -67,10 +82,18 @@ public class RepositoryFragment extends ListFragment {
     }
 
     @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putSerializable("test", repoAdapter);
+    }
+
+    @Override
     public void onDetach() {
         super.onDetach();
         mListener = null;
     }
+
+
 
 
     @Override
@@ -131,29 +154,35 @@ public class RepositoryFragment extends ListFragment {
         @Override
         protected void onPostExecute(List<Repository> repositories) {
             //TODO: change R.layout.simple_list_item
-            setListAdapter(new RepositoryArrayAdapter(getActivity(), R.id.repoName, repositories));
+            if(repoAdapter == null)
+                repoAdapter = new RepositoryArrayAdapter(getActivity(), R.id.repoName, repositories);
+            setListAdapter(repoAdapter);
         }
+
+
 
         @Override
         protected void onProgressUpdate(Void... values) {
             super.onProgressUpdate(values);
         }
 
-        @Override
-        protected void onCancelled(List<Repository> repositories) {
-            super.onCancelled(repositories);
-        }
 
         @Override
         protected void onCancelled() {
             super.onCancelled();
+            setListAdapter(repoAdapter);
+        }
+
+        @Override
+        protected void onCancelled(List<Repository> repositories) {
+            super.onCancelled(repositories);
         }
     }
 
     /**
      * Custom adapter for the repository list
      */
-    private class RepositoryArrayAdapter extends ArrayAdapter<Repository> {
+    private class RepositoryArrayAdapter extends ArrayAdapter<Repository> implements Serializable {
 
         private List<Repository> repos = null;
         private Context context = null;

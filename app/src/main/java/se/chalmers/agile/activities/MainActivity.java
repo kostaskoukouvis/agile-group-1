@@ -27,6 +27,8 @@ public class MainActivity extends Activity
         implements NavigationDrawerFragment.NavigationDrawerCallbacks, RepositoryFragment.OnRepositoryFragmentInteractionListener,
         BranchFragment.OnBranchFragmentInteractionListener {
 
+    RepositoryFragment repoFrag = null;
+
     /**
      * Fragment managing the behaviors, interactions and presentation of the navigation drawer.
      */
@@ -43,7 +45,10 @@ public class MainActivity extends Activity
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+
         setContentView(R.layout.activity_main);
+
 
         mNavigationDrawerFragment = (NavigationDrawerFragment)
                 getFragmentManager().findFragmentById(R.id.navigation_drawer);
@@ -53,16 +58,31 @@ public class MainActivity extends Activity
         mNavigationDrawerFragment.setUp(
                 R.id.navigation_drawer,
                 (DrawerLayout) findViewById(R.id.drawer_layout));
+
+    }
+
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putSerializable("drawer", mNavigationDrawerFragment);
+        outState.putSerializable("fragment", repoFrag);
+
     }
 
     @Override
     public void onNavigationDrawerItemSelected(int position) {
         // update the main content by replacing fragments
         Fragment f = null;
+        FragmentManager fragmentManager = getFragmentManager();
         //TODO: if fragment already create avoid creating a new instance
         switch (position) {
             case 0:
-                f = RepositoryFragment.createInstance();
+                if (repoFrag == null) {
+                    Log.d("repoFrag", "created from fragmentManager");
+                    repoFrag = RepositoryFragment.createInstance();
+                }
+                f = repoFrag;
                 break;
             case 1:
                 f = BranchFragment.createInstance();
@@ -71,10 +91,10 @@ public class MainActivity extends Activity
                 f = LastUpdatesFragment.createInstance();
                 break;
             default:
-                f = RepositoryFragment.createInstance();
+                f = BranchFragment.createInstance();
                 break;
         }
-        FragmentManager fragmentManager = getFragmentManager();
+
         fragmentManager.beginTransaction()
                 .replace(R.id.container, f)
                 .commit();
@@ -104,7 +124,6 @@ public class MainActivity extends Activity
         countdownTimer = CountDownTimer.getInstance(Constants.TIMER_START_TIME, Constants.SECOND, handler);
         countdownTimer.startTimer(menu.findItem(R.id.timer_button));
     }
-
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -139,7 +158,6 @@ public class MainActivity extends Activity
 
         return super.onOptionsItemSelected(item);
     }
-
 
     @Override
     public void onRepositoryInteraction(Repository repo) {
