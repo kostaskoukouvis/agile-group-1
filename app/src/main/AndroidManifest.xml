@@ -25,8 +25,7 @@
             android:name="se.chalmers.agile.activities.MainActivity"
             android:label="@string/title_activity_main"></activity>
 
-        <receiver
-            android:name="se.chalmers.agile.receivers.NeedForUpdateReceiver">
+        <receiver android:name="se.chalmers.agile.receivers.NeedForUpdateReceiver">
             <intent-filter>
                 <action android:name="android.intent.action.BOOT_COMPLETED" />
             </intent-filter>
