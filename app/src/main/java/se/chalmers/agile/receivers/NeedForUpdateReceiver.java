@@ -22,7 +22,9 @@ import java.util.LinkedList;
 import se.chalmers.agile.R;
 import se.chalmers.agile.activities.ContainerActivity;
 import se.chalmers.agile.activities.MainActivity;
+import se.chalmers.agile.fragments.BranchFragment;
 import se.chalmers.agile.fragments.LastUpdatesFragment;
+import se.chalmers.agile.fragments.RepositoryFragment;
 import se.chalmers.agile.tasks.OnPostExecuteCallback;
 import se.chalmers.agile.tasks.UpdatesFetcher;
 
@@ -31,23 +33,50 @@ import se.chalmers.agile.tasks.UpdatesFetcher;
  */
 public class NeedForUpdateReceiver extends BroadcastReceiver
         implements OnPostExecuteCallback<Collection<RepositoryCommit>> {
+
+    private final static String TAG = "UPDATE_FETCHING_TASK";
+    public final static String ACTION = "START_ALARM";
     public Context context;
     private SharedPreferences prefs;
     public static final int NOTIFICATION_ID = 10;
+    public static final long UPDATE_TIME_MS = 30 * 1000;
 
 
     @Override
     public void onReceive(Context context, Intent intent) {
         this.context = context;
-        this.prefs = context.getSharedPreferences("Application",
-                Context.MODE_PRIVATE);
+        if (intent != null && intent.getAction() != null
+                && (intent.getAction().equals("android.intent.action.BOOT_COMPLETED")
+                || intent.getAction().equals(ACTION))) {
+            Log.d(TAG, "Starting update fetching service");
+            startUpdatesService();
+        } else {
+            this.prefs = context.getSharedPreferences("Application",
+                    Context.MODE_PRIVATE);
+            String repoName = prefs.getString(RepositoryFragment.REPOSITORY_STR, "");
+            String branch = prefs.getString(BranchFragment.BRANCH_STR, "");
 
-        new UpdatesFetcher(context, this).execute("SantiMunin/mockrepo", "master");
+            if (!repoName.isEmpty() && !branch.isEmpty()) {
+                new UpdatesFetcher(context, this).execute(repoName, branch);
+            } else {
+                Log.d(this.getClass().toString(), "No branch was selected, no need to check for updates");
+            }
+        }
+    }
+
+    /**
+     * Starts the periodic updates fetching.
+     */
+    private void startUpdatesService() {
+        Intent alarmIntent = new Intent(context, NeedForUpdateReceiver.class);
+        PendingIntent pendingIntent = PendingIntent.getBroadcast(context, 0, alarmIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+        AlarmManager alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
+        alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, new Date().getTime(), UPDATE_TIME_MS, pendingIntent);
     }
 
     @Override
     public void performAction(Collection<RepositoryCommit> data) {
-        Toast.makeText(context, "CHECKING!", Toast.LENGTH_SHORT).show();
+        Toast.makeText(context, "CHECKING FOR UPDATES!", Toast.LENGTH_SHORT).show();
         buildAndLaunchNotification(data);
     }
 
@@ -55,7 +84,7 @@ public class NeedForUpdateReceiver extends BroadcastReceiver
      * Filters the commits to check for something new.
      *
      * @param data Latest commits.
-     * @return A filtered list.
+     * @return A filtered list
      */
     private Collection<RepositoryCommit> filterData(Collection<RepositoryCommit> data) {
         Collection<RepositoryCommit> result = new LinkedList<RepositoryCommit>();

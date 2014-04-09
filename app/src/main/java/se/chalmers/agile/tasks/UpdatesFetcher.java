@@ -13,6 +13,7 @@ import org.eclipse.egit.github.core.service.CommitService;
 
 import java.util.Date;
 import java.util.Collection;
+import java.util.LinkedList;
 
 import se.chalmers.agile.R;
 import se.chalmers.agile.fragments.LastUpdatesFragment;
@@ -22,6 +23,7 @@ import se.chalmers.agile.fragments.LastUpdatesFragment;
  */
 public class UpdatesFetcher extends AsyncTask<String, Void, Collection<RepositoryCommit>> {
 
+    private final static String TAG = "UPDATES_FETCHER";
     private Context context;
     private OnPostExecuteCallback<Collection<RepositoryCommit>> callback;
 
@@ -32,13 +34,17 @@ public class UpdatesFetcher extends AsyncTask<String, Void, Collection<Repositor
 
     @Override
     protected Collection<RepositoryCommit> doInBackground(String... args) {
-        Log.d("TESTRECIEVER", "downloading");
+        Log.d(TAG, "Downloading updates");
         CommitService cs = new CommitService();
         cs.getClient().setOAuth2Token(context.getString(R.string.api_key));
         String[] project = args[0].split("/");
         IRepositoryIdProvider repositoryId = RepositoryId.create(project[0], project[1]);
         PageIterator<RepositoryCommit> commitPages = cs.pageCommits(repositoryId, args[1], null, 10);
-        return commitPages.next();
+        if (commitPages.hasNext()) {
+            return commitPages.next();
+        } else {
+            return new LinkedList<RepositoryCommit>();
+        }
     }
 
     @Override

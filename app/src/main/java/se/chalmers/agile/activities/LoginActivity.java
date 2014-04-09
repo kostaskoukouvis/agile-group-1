@@ -47,7 +47,7 @@ public class LoginActivity extends ActionBarActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.login_screen);
-        startUpdatesService();
+        callReceiver();
 
         SharedPreferences sharedPref = getApplication().getBaseContext().getSharedPreferences("Application", Context.MODE_PRIVATE);
         String un = sharedPref.getString(USERNAME_STR, NOT_LOGGED_IN);
@@ -63,14 +63,11 @@ public class LoginActivity extends ActionBarActivity {
         }
     }
 
-    /**
-     * Starts the periodic updates fetching.
-     */
-    private void startUpdatesService() {
-        Intent alarmIntent = new Intent(this, NeedForUpdateReceiver.class);
-        PendingIntent pendingIntent = PendingIntent.getBroadcast(this, 0, alarmIntent, PendingIntent.FLAG_UPDATE_CURRENT);
-        AlarmManager alarmManager = (AlarmManager) this.getSystemService(Context.ALARM_SERVICE);
-        alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, new Date().getTime(), 30*1000, pendingIntent);
+    private void callReceiver() {
+        Intent intent = new Intent();
+        intent.setAction(NeedForUpdateReceiver.ACTION);
+        sendBroadcast(intent);
+
     }
 
 
