@@ -3,7 +3,6 @@ package se.chalmers.agile.fragments;
 import android.app.Activity;
 import android.app.ListFragment;
 import android.content.Context;
-import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
@@ -23,7 +22,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import se.chalmers.agile.R;
-import se.chalmers.agile.activities.LoginActivity;
 import se.chalmers.agile.utils.AppPreferences;
 
 /**
@@ -95,9 +93,10 @@ public class RepositoryFragment extends ListFragment implements Serializable {
         mListener = null;
     }
 
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        ListView l = (ListView) inflater.inflate(R.layout.repo_list_view, container, false);
+        ListView l = (ListView) inflater.inflate(R.layout.app_list_view, container, false);
         return l;
     }
 

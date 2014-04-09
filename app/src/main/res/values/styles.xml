@@ -23,7 +23,7 @@
         <item name="android:background">@drawable/border_box</item>
     </style>
 
-    <style name="BranchContainer" parent="RepoContainerStyle"></style>
+    <style name="BranchContainerStyle" parent="RepoContainerStyle"></style>
 
     <style name="RepoStyle" parent="AppTheme">
         
