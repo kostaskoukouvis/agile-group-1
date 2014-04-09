@@ -27,6 +27,7 @@ import se.chalmers.agile.fragments.LastUpdatesFragment;
 import se.chalmers.agile.fragments.RepositoryFragment;
 import se.chalmers.agile.tasks.OnPostExecuteCallback;
 import se.chalmers.agile.tasks.UpdatesFetcher;
+import se.chalmers.agile.utils.AppPreferences;
 
 /**
  * Executed periodically, looks for new updates and, if found, launches a notification.
@@ -37,7 +38,7 @@ public class NeedForUpdateReceiver extends BroadcastReceiver
     private final static String TAG = "UPDATE_FETCHING_TASK";
     public final static String ACTION = "START_ALARM";
     public Context context;
-    private SharedPreferences prefs;
+    private static AppPreferences prefs;
     public static final int NOTIFICATION_ID = 10;
     public static final long UPDATE_TIME_MS = 30 * 1000;
 
@@ -45,17 +46,21 @@ public class NeedForUpdateReceiver extends BroadcastReceiver
     @Override
     public void onReceive(Context context, Intent intent) {
         this.context = context;
+        if (prefs == null) {
+            prefs = new AppPreferences(context);
+        }
         if (intent != null && intent.getAction() != null
                 && (intent.getAction().equals("android.intent.action.BOOT_COMPLETED")
                 || intent.getAction().equals(ACTION))) {
             Log.d(TAG, "Starting update fetching service");
             startUpdatesService();
         } else {
-            this.prefs = context.getSharedPreferences("Application",
-                    Context.MODE_PRIVATE);
-            String repoName = prefs.getString(RepositoryFragment.REPOSITORY_STR, "");
-            String branch = prefs.getString(BranchFragment.BRANCH_STR, "");
 
+            String[] branches = prefs.getBranches();
+            if (branches.length == 0) return;
+            String[] parts = branches[branches.length - 1].split(AppPreferences.REPO_BRANCH_SEPARATOR);
+            String repoName = parts[0];
+            String branch = parts[1];
             if (!repoName.isEmpty() && !branch.isEmpty()) {
                 new UpdatesFetcher(context, this).execute(repoName, branch);
             } else {
@@ -88,7 +93,7 @@ public class NeedForUpdateReceiver extends BroadcastReceiver
      */
     private Collection<RepositoryCommit> filterData(Collection<RepositoryCommit> data) {
         Collection<RepositoryCommit> result = new LinkedList<RepositoryCommit>();
-        long from = prefs.getLong(LastUpdatesFragment.LAST_UPDATE_TIME, 0);
+        long from = prefs.getLastUpdateTime();
         Date fromTime = new Date();
         fromTime.setTime(from);
         for (RepositoryCommit rc : data) {
@@ -138,8 +143,6 @@ public class NeedForUpdateReceiver extends BroadcastReceiver
      */
     private void setLastUpdateDate(RepositoryCommit c) {
         long time = c.getCommit().getCommitter().getDate().getTime();
-        SharedPreferences prefs =
-                context.getSharedPreferences("Application", Context.MODE_PRIVATE);
-        prefs.edit().putLong(LastUpdatesFragment.LAST_UPDATE_TIME, time).commit();
+        prefs.setLastUpdateTime(time);
     }
 }

@@ -40,6 +40,8 @@ public class UpdatesFetcher extends AsyncTask<String, Void, Collection<Repositor
         String[] project = args[0].split("/");
         IRepositoryIdProvider repositoryId = RepositoryId.create(project[0], project[1]);
         PageIterator<RepositoryCommit> commitPages = cs.pageCommits(repositoryId, args[1], null, 10);
+        Log.d(TAG, args[0]);
+        Log.d(TAG, args[1]);
         if (commitPages.hasNext()) {
             return commitPages.next();
         } else {

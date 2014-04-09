@@ -24,6 +24,7 @@ import java.util.Date;
 
 import se.chalmers.agile.R;
 import se.chalmers.agile.receivers.NeedForUpdateReceiver;
+import se.chalmers.agile.utils.AppPreferences;
 
 //TODO
 // 1. Loading screen while checking the credentials.
@@ -34,6 +35,7 @@ import se.chalmers.agile.receivers.NeedForUpdateReceiver;
  */
 public class LoginActivity extends ActionBarActivity {
 
+    private static String TAG = "LoginActivity";
     public static String USERNAME_STR = "Username";
     public static String PASSWORD_STR = "Password";
     public static String NOT_LOGGED_IN = "notSet";
@@ -42,30 +44,35 @@ public class LoginActivity extends ActionBarActivity {
     private EditText userName;
     private EditText password;
 
+    private AppPreferences prefs;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.login_screen);
+
+
+        prefs = new AppPreferences(getApplicationContext());
+        String user = prefs.getUser();
+        String pwd = prefs.getPassword();
+
         callReceiver();
-
-        SharedPreferences sharedPref = getApplication().getBaseContext().getSharedPreferences("Application", Context.MODE_PRIVATE);
-        String un = sharedPref.getString(USERNAME_STR, NOT_LOGGED_IN);
-        String pwd = sharedPref.getString(PASSWORD_STR, NOT_LOGGED_IN);
-
-        Log.d("Preferences", getPreferences(Context.MODE_PRIVATE).toString());
+        if (!user.isEmpty() && !pwd.isEmpty()) {
+            startContainerActivity();
+        }
 
         userName = (EditText) findViewById(R.id.usernameText);
         password = (EditText) findViewById(R.id.passwordText);
 
-        if (!un.equals(NOT_LOGGED_IN) && !pwd.equals(NOT_LOGGED_IN)) {
-            startContainerActivity();
-        }
+
     }
 
     private void callReceiver() {
+        Log.d(TAG, "Calling receiver");
         Intent intent = new Intent();
         intent.setAction(NeedForUpdateReceiver.ACTION);
+        intent.getAction();
         sendBroadcast(intent);
 
     }
@@ -158,13 +165,8 @@ public class LoginActivity extends ActionBarActivity {
         }
 
         private void storeCredentials() {
-            //TODO
-            SharedPreferences sharedPref = getApplication().getBaseContext().getSharedPreferences("Application", Context.MODE_PRIVATE);
-            SharedPreferences.Editor editor = sharedPref.edit();
-            editor.putString(USERNAME_STR, userName.getText().toString());
-            editor.putString(PASSWORD_STR, password.getText().toString());
-            editor.commit();
-
+            prefs.setUser(userName.getText().toString());
+            prefs.setPassword(password.getText().toString());
         }
     }
 }
