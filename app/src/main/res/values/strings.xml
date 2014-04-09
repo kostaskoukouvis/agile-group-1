@@ -1,28 +1,28 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <string name="app_name">Agile-1</string>
-    <string name="title_activity_main">MainActivity</string>
-    <string name="hello_world">Hello world!</string>
+    <string name="app_name">Project_wow</string>
+    <string name="title_activity_main">Project_wow</string>
     <string name="action_settings">Settings</string>
     <string name="introduce_user_name">Username</string>
     <string name="password">Password</string>
-    <string name="login">Project wow</string>
-    <string name="login_error">Wrong credentials</string>
+    <string name="login">Log in</string>
+    <string name="login_error">Wrong Credentials!</string>
     <string name="connection_problem">There was a connection problem</string>
     <string name="empty_input">Please, fill the input.</string>
     <string name="title_activity_container">ContainerActivity</string>
     <string name="title_section1">Repositories</string>
-    <string name="title_section2">Section 2</string>
-    <string name="title_section3">Section 3</string>
+    <string name="title_section2">Branches</string>
+    <string name="title_section3">Commits</string>
     <string name="title_timer">Timer</string>
     <string name="timerStart">Start</string>
     <string name="titleReset">Reset</string>
     <string name="title_activity_updates">UpdatesActivity</string>
-
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
-    <string name="action_example">Example action</string>
+
+    <color name="black">#000000</color>
+    <color name="white">#FFFFFF</color>
 
     <string name="api_key">e01be97648f84ce72522bb58b69dbe95af5cb94d</string>
 

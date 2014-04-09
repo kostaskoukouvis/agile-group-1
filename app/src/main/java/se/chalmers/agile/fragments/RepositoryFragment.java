@@ -57,6 +57,7 @@ public class RepositoryFragment extends ListFragment implements Serializable {
         super.onCreate(savedInstanceState);
         if(repoTask == null)
             repoTask = new RepositoryTask();
+
         if(savedInstanceState != null)
             repoAdapter = (RepositoryArrayAdapter)savedInstanceState.getSerializable("test");
 

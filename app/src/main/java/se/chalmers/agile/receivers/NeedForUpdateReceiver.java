@@ -20,7 +20,6 @@ import java.util.Date;
 import java.util.LinkedList;
 
 import se.chalmers.agile.R;
-import se.chalmers.agile.activities.ContainerActivity;
 import se.chalmers.agile.activities.MainActivity;
 import se.chalmers.agile.fragments.BranchFragment;
 import se.chalmers.agile.fragments.LastUpdatesFragment;

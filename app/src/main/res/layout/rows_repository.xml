@@ -4,15 +4,24 @@
     android:orientation="vertical" android:layout_width="match_parent"
     android:layout_height="wrap_content" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     android:dividerPadding="1dp"
-    android:gravity="center_vertical|left">
+    android:gravity="center_vertical|left"
+    android:background="@color/black">
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceLarge"
-        android:text="Large Text"
-        android:id="@+id/repoName"
-        style="@style/AppTheme"
-        android:ellipsize="end"
-        android:gravity="center" />
+    <FrameLayout
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:layout_margin="15dp"
+        android:background="@color/white">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:text="  Large Text"
+            android:id="@+id/repoName"
+            style="@style/AppTheme"
+            android:ellipsize="end"
+            android:gravity="center" />
+
+        </FrameLayout>
 </LinearLayout>

@@ -4,6 +4,7 @@ import android.app.ActionBar;
 import android.app.Activity;
 import android.app.Fragment;
 import android.app.FragmentManager;
+import android.app.FragmentTransaction;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -95,9 +96,11 @@ public class MainActivity extends Activity
                 break;
         }
 
-        fragmentManager.beginTransaction()
-                .replace(R.id.container, f)
-                .commit();
+        FragmentTransaction transaction = fragmentManager.beginTransaction();
+                transaction.replace(R.id.container, f);
+                transaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
+                transaction.addToBackStack(null);
+                transaction.commit();
     }
 
     public void onSectionAttached(int number) {
