@@ -36,6 +36,8 @@ public class NeedForUpdateReceiver extends BroadcastReceiver
     private final static String TAG = "UPDATE_FETCHING_TASK";
     private static AppPreferences prefs;
     public Context context;
+    private String repoName;
+    private String branchName;
 
     @Override
     public void onReceive(Context context, Intent intent) {
@@ -59,10 +61,10 @@ public class NeedForUpdateReceiver extends BroadcastReceiver
                 e.printStackTrace();
             }
             String[] parts = branches[branches.length - 1].split(AppPreferences.REPO_BRANCH_SEPARATOR);
-            String repoName = prefs.getRepositories()[prefs.getRepositories().length -1];
-            String branch = parts[0];
-            if (!repoName.isEmpty() && !branch.isEmpty()) {
-                new UpdatesFetcher(context, this).execute(repoName, branch);
+            repoName = prefs.getRepositories()[prefs.getRepositories().length -1];
+            branchName = parts[0];
+            if (!repoName.isEmpty() && !branchName.isEmpty()) {
+                new UpdatesFetcher(context, this).execute(repoName, branchName);
             } else {
                 Log.d(this.getClass().toString(), "No branch was selected, no need to check for updates");
             }
@@ -113,13 +115,14 @@ public class NeedForUpdateReceiver extends BroadcastReceiver
      */
     private void buildAndLaunchNotification(Collection<RepositoryCommit> updates) {
         Collection<RepositoryCommit> news = filterData(updates);
+
         if (news.size() == 0) return;
         //TODO this has to be done on the commit list activity
         setLastUpdateDate(news.iterator().next());
         NotificationCompat.Builder mBuilder =
                 new NotificationCompat.Builder(context)
                         .setSmallIcon(R.drawable.dogen)
-                        .setContentTitle("New updates on X repository/branch blabla")
+                        .setContentTitle("New updates for branch "+branchName+" in repository "+repoName)
                         .setContentText(news.size() + " new commits!").setAutoCancel(true);
 
         //TODO and select the correct tab!
