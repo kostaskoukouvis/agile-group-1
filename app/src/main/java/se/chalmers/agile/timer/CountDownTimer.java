@@ -112,8 +112,12 @@ public class CountDownTimer extends Thread {
             subPause.setVisible(true);
         }
         else{
-            subStart.setVisible(true);
-            subPause.setVisible(false);
+            if(finished){
+                onFinish();
+            }
+            else {
+                pauseTimer();
+            }
         }
     }
 
@@ -123,6 +127,7 @@ public class CountDownTimer extends Thread {
     public void pauseTimer(){
         subPause.setVisible(false);
         subStart.setVisible(true);
+        onTick(millisUntilFinished);
         running = false;
     }
 
@@ -174,6 +179,7 @@ public class CountDownTimer extends Thread {
      * Runs when the time is up
      */
     private void onFinish(){
+        subStart.setVisible(false);
         subPause.setVisible(false);
         running = false;
         finished = true;
