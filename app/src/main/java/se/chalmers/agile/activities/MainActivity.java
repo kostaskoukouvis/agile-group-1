@@ -5,8 +5,7 @@ import android.app.Activity;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
-import android.content.Context;
-import android.content.SharedPreferences;
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.widget.DrawerLayout;
@@ -95,6 +94,9 @@ public class MainActivity extends Activity
             case 2:
                 f = LastUpdatesFragment.createInstance();
                 getActionBar().setSubtitle(getString(R.string.title_commits));
+                break;
+            case 3:
+                f = SettingsFragment.createInstance();
                 break;
             default:
                 if (repoFrag == null) {
