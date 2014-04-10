@@ -10,6 +10,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -36,6 +37,7 @@ public class RepositoryFragment extends ListFragment implements Serializable {
 
 
     private OnRepositoryFragmentInteractionListener mListener;
+    private ListView mList = null;
 
 
     /**
@@ -96,8 +98,9 @@ public class RepositoryFragment extends ListFragment implements Serializable {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        ListView l = (ListView) inflater.inflate(R.layout.app_list_view, container, false);
-        return l;
+        LinearLayout ll = (LinearLayout) inflater.inflate(R.layout.app_list_view, container, false);
+        mList = (ListView) ll.findViewById(android.R.id.list);
+        return ll;
     }
 
 

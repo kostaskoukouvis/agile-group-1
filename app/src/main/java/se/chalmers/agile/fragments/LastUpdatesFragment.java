@@ -8,6 +8,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -32,7 +33,7 @@ import se.chalmers.agile.utils.AppPreferences;
  * Displays the last updates from the selected repositories.
  */
 public class LastUpdatesFragment extends ListFragment
-        implements OnPostExecuteCallback<Collection<RepositoryCommit>> {
+        implements OnPostExecuteCallback<Collection<RepositoryCommit>>{
 
 
     public static final String LAST_UPDATE_TIME = "last_update";
@@ -41,6 +42,7 @@ public class LastUpdatesFragment extends ListFragment
     private PullToRefreshLayout mPullToRefreshLayout;
     private String branchName;
     private String repositoryName;
+    private ListView mList = null;
 
     private AppPreferences appPref = null;
 
@@ -108,8 +110,9 @@ public class LastUpdatesFragment extends ListFragment
     }
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        ListView l = (ListView) inflater.inflate(R.layout.app_list_view, container, false);
-        return l;
+        LinearLayout ll = (LinearLayout) inflater.inflate(R.layout.app_list_view, container, false);
+        mList = (ListView) ll.findViewById(android.R.id.list);
+        return ll;
     }
 
     private String getBranchFromPreferences() {
@@ -142,6 +145,9 @@ public class LastUpdatesFragment extends ListFragment
         setListAdapter(updatesAdapter);
 
     }
+
+
+
 
     /**
      * Adapter to show updates.

@@ -11,6 +11,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -99,10 +100,10 @@ public class BranchFragment extends ListFragment {
     }
 
 
-    @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        ListView l = (ListView) inflater.inflate(R.layout.app_list_view, container, false);
-        return l;
+        LinearLayout ll = (LinearLayout) inflater.inflate(R.layout.app_list_view, container, false);
+        ListView mList = (ListView) ll.findViewById(android.R.id.list);
+        return ll;
     }
 
     @Override
