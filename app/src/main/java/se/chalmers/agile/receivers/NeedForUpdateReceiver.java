@@ -7,23 +7,19 @@ import android.app.TaskStackBuilder;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.support.v4.app.NotificationCompat;
 import android.util.Log;
 import android.widget.Toast;
 
 import org.eclipse.egit.github.core.RepositoryCommit;
 
-import java.util.Calendar;
 import java.util.Collection;
 import java.util.Date;
 import java.util.LinkedList;
+import java.util.concurrent.TimeUnit;
 
 import se.chalmers.agile.R;
 import se.chalmers.agile.activities.MainActivity;
-import se.chalmers.agile.fragments.BranchFragment;
-import se.chalmers.agile.fragments.LastUpdatesFragment;
-import se.chalmers.agile.fragments.RepositoryFragment;
 import se.chalmers.agile.tasks.OnPostExecuteCallback;
 import se.chalmers.agile.tasks.UpdatesFetcher;
 import se.chalmers.agile.utils.AppPreferences;
@@ -34,13 +30,12 @@ import se.chalmers.agile.utils.AppPreferences;
 public class NeedForUpdateReceiver extends BroadcastReceiver
         implements OnPostExecuteCallback<Collection<RepositoryCommit>> {
 
-    private final static String TAG = "UPDATE_FETCHING_TASK";
     public final static String ACTION = "START_ALARM";
-    public Context context;
-    private static AppPreferences prefs;
     public static final int NOTIFICATION_ID = 10;
-    public static final long UPDATE_TIME_MS = 30 * 1000;
-
+    public static final long UPDATE_TIME_MS = TimeUnit.SECONDS.toMillis(30);
+    private final static String TAG = "UPDATE_FETCHING_TASK";
+    private static AppPreferences prefs;
+    public Context context;
 
     @Override
     public void onReceive(Context context, Intent intent) {
@@ -57,9 +52,15 @@ public class NeedForUpdateReceiver extends BroadcastReceiver
 
             String[] branches = prefs.getBranches();
             if (branches.length == 0) return;
+            Log.d(TAG+" SOMETHING", branches[branches.length - 1]);
+            try {
+                TimeUnit.SECONDS.sleep(1);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
             String[] parts = branches[branches.length - 1].split(AppPreferences.REPO_BRANCH_SEPARATOR);
-            String repoName = parts[0];
-            String branch = parts[1];
+            String repoName = prefs.getRepositories()[prefs.getRepositories().length -1];
+            String branch = parts[0];
             if (!repoName.isEmpty() && !branch.isEmpty()) {
                 new UpdatesFetcher(context, this).execute(repoName, branch);
             } else {
@@ -72,6 +73,7 @@ public class NeedForUpdateReceiver extends BroadcastReceiver
      * Starts the periodic updates fetching.
      */
     private void startUpdatesService() {
+        Log.d(TAG, "Starting automatic updates");
         Intent alarmIntent = new Intent(context, NeedForUpdateReceiver.class);
         PendingIntent pendingIntent = PendingIntent.getBroadcast(context, 0, alarmIntent, PendingIntent.FLAG_UPDATE_CURRENT);
         AlarmManager alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
