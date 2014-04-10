@@ -1,4 +1,4 @@
-package se.chalmers.agile.activities;
+package se.chalmers.agile.fragments;
 
 import android.os.Bundle;
 import android.preference.PreferenceFragment;

@@ -5,7 +5,6 @@ import android.app.Activity;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
-import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.widget.DrawerLayout;
@@ -21,6 +20,7 @@ import se.chalmers.agile.R;
 import se.chalmers.agile.fragments.BranchFragment;
 import se.chalmers.agile.fragments.LastUpdatesFragment;
 import se.chalmers.agile.fragments.RepositoryFragment;
+import se.chalmers.agile.fragments.SettingsFragment;
 import se.chalmers.agile.timer.CountDownTimer;
 import se.chalmers.agile.utils.AppPreferences;
 
@@ -136,7 +136,7 @@ public class MainActivity extends Activity
         actionBar.setTitle(mTitle);
 
         //Get the countdown se.chalmers.agile.timer and start it if it is not already started
-        countdownTimer = CountDownTimer.getInstance(Constants.TIMER_START_TIME, Constants.SECOND, handler);
+        countdownTimer = CountDownTimer.getInstance(Constants.SECOND, handler, getApplicationContext());
         countdownTimer.startTimer(menu.findItem(R.id.timer_button));
     }
 

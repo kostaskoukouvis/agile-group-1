@@ -1,6 +1,9 @@
 package se.chalmers.agile.timer;
 
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Handler;
+import android.preference.PreferenceManager;
 import android.view.MenuItem;
 
 import se.chalmers.agile.constants.Constants;
@@ -37,15 +40,19 @@ public class CountDownTimer extends Thread {
     //Constant to represent how many seconds there are per minute
     private static final long SECONDS_MINUTE = 60;
 
+    //Access the settings values
+    public SharedPreferences SP;
+
 
     /**
      *Private constructor to create a countdown se.chalmers.agile.timer.
      */
-    private CountDownTimer(long millisInFuture, long countDownInterval, Handler handler) {
+    private CountDownTimer(long countDownInterval, Handler handler, Context context) {
         super();
-        millis = millisInFuture;
+        SP = PreferenceManager.getDefaultSharedPreferences(context);
+        millis = millisUntilFinished = Long.parseLong(SP.getString("countdownTime", "1800000"));
         interval = countDownInterval;
-        millisUntilFinished = millisInFuture;
+        millisUntilFinished = millis;
         running = false;
         finished = false;
         this.handler = handler;
@@ -56,9 +63,9 @@ public class CountDownTimer extends Thread {
      *Method to get singleton object. Create a new object if instance is null, else return instance.
      */
 
-    public static CountDownTimer getInstance(long millisInFuture, long countDownInterval, Handler handler){
+    public static CountDownTimer getInstance(long countDownInterval, Handler handler, Context context){
         if(instance == null){
-            instance = new CountDownTimer(millisInFuture, countDownInterval, handler);
+            instance = new CountDownTimer(countDownInterval, handler, context);
         }
         return instance;
     }
@@ -78,9 +85,6 @@ public class CountDownTimer extends Thread {
                 else{
                     onFinish();
                 }
-            }
-            else{
-                onTick(millisUntilFinished);
             }
             try {
                 Thread.sleep(interval);
@@ -138,7 +142,7 @@ public class CountDownTimer extends Thread {
     public void resetTimer(){
         subPause.setVisible(true);
         subStart.setVisible(false);
-        millisUntilFinished = millis;
+        millisUntilFinished = Long.parseLong(SP.getString("countdownTime", "1800000"));
         finished = false;
         running = true;
     }

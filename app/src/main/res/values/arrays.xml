@@ -1,12 +1,14 @@
 <resources>
     <string-array name="listArray">
+        <item>10sec - Test</item>
         <item>20min</item>
         <item>30min</item>
         <item>60min</item>
     </string-array>
     <string-array name="listValues">
-        <item>1</item>
-        <item>2</item>
-        <item>3</item>
+        <item>10000</item>
+        <item>1200000</item>
+        <item>1800000</item>
+        <item>3600000</item>
     </string-array>
 </resources>
