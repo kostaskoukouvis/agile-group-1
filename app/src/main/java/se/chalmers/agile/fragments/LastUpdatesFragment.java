@@ -21,6 +21,9 @@ import java.util.Collection;
 import se.chalmers.agile.R;
 import se.chalmers.agile.tasks.OnPostExecuteCallback;
 import se.chalmers.agile.tasks.UpdatesFetcher;
+import uk.co.senab.actionbarpulltorefresh.library.ActionBarPullToRefresh;
+import uk.co.senab.actionbarpulltorefresh.library.PullToRefreshLayout;
+import uk.co.senab.actionbarpulltorefresh.library.listeners.OnRefreshListener;
 
 /**
  * Displays the last updates from the selected repositories.
@@ -31,8 +34,8 @@ public class LastUpdatesFragment extends ListFragment
 
     public static final String LAST_UPDATE_TIME = "last_update";
     private static final DateFormat dateFormat = DateFormat.getDateTimeInstance();
-    private UpdatesFetcher updatesFetcher = null;
     private UpdatesAdapter updatesAdapter = null;
+    private PullToRefreshLayout mPullToRefreshLayout;
     private String branchName;
     private String repositoryName;
 
@@ -55,25 +58,47 @@ public class LastUpdatesFragment extends ListFragment
 
         branchName = getBranchFromPreferences();
         repositoryName = getRepoFromPreferences();
+    }
 
-        //Call the async task
-        updatesFetcher = new UpdatesFetcher(getActivity().getApplicationContext(), this);
+    @Override
+    public void onViewCreated(View view, Bundle savedInstanceState) {
+        super.onViewCreated(view,savedInstanceState);
 
+        // This is the View which is created by ListFragment
+        ViewGroup viewGroup = (ViewGroup) view;
 
+        // We need to create a PullToRefreshLayout manually
+        mPullToRefreshLayout = new PullToRefreshLayout(viewGroup.getContext());
+
+        // We can now setup the PullToRefreshLayout
+        ActionBarPullToRefresh.from(getActivity())
+                // We need to insert the PullToRefreshLayout into the Fragment's ViewGroup
+                .insertLayoutInto(viewGroup)
+                // We need to mark the ListView and it's Empty View as pullable
+                // This is because they are not dirent children of the ViewGroup
+                .theseChildrenArePullable(getListView(), getListView().getEmptyView())
+                // We can now complete the setup as desired
+                .listener(new OnRefreshListener() {
+                    @Override
+                    public void onRefreshStarted(View view) {
+                        if (repositoryName != null && branchName != null) {
+                            new UpdatesFetcher(getActivity().getApplicationContext(), LastUpdatesFragment.this).execute(repositoryName, branchName);
+                        }
+                    }
+                })
+                .setup(mPullToRefreshLayout);
     }
 
     @Override
     public void onStart() {
         super.onStart();
-        updatesFetcher.execute(repositoryName, branchName);
+        new UpdatesFetcher(getActivity().getApplicationContext(), this).execute(repositoryName, branchName);
     }
 
     @Override
     public void onResume() {
         super.onResume();
-        String projectName = getRepoFromPreferences();
-        String branchName = getBranchFromPreferences();
-        new UpdatesFetcher(getActivity().getApplicationContext(), this).execute(projectName, branchName);
+        new UpdatesFetcher(getActivity().getApplicationContext(), this).execute(repositoryName, branchName);
     }
 
 
@@ -102,6 +127,11 @@ public class LastUpdatesFragment extends ListFragment
     @Override
     public void performAction(Collection<RepositoryCommit> commits) {
         // if (updatesAdapter == null)
+
+        // Notify PullToRefreshLayout that the refresh has finished
+        if(mPullToRefreshLayout.isRefreshing()){
+            mPullToRefreshLayout.setRefreshComplete();
+        }
         updatesAdapter = new UpdatesAdapter(getActivity(),
                 R.layout.updates_list_item_layout,
                 commits.toArray(new RepositoryCommit[commits.size()]));
@@ -149,5 +179,9 @@ public class LastUpdatesFragment extends ListFragment
 
             return row;
         }
+    }
+
+    public PullToRefreshLayout getmPullToRefreshLayout() {
+        return mPullToRefreshLayout;
     }
 }
