@@ -1,7 +1,53 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical" android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:gravity="center_vertical"
+    android:background="#222222"
+    android:orientation="vertical">
 
+    <RelativeLayout
+        android:orientation="vertical"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        style="@style/AppContainerStyle">
+
+        <EditText
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:ems="15"
+            android:hint="@string/introduce_user_name"
+            android:id="@+id/usernameText"
+            android:singleLine="true"
+            android:layout_gravity="center_horizontal"
+            style="@style/AppTheme"/>
+
+        <EditText
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:inputType="textPassword"
+            android:ems="15"
+            android:hint="@string/password"
+            android:id="@+id/passwordText"
+            android:singleLine="true"
+            android:layout_below="@id/usernameText"
+            android:layout_gravity="center_horizontal"
+            style="@style/AppTheme" />
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:layout_below="@id/passwordText"
+            android:layout_centerHorizontal="true"
+            android:text="@string/login"
+            android:id="@+id/loginButton"
+            android:onClick="tryToLogIn"
+            android:drawableLeft="@drawable/switchuser"
+            style="?android:attr/borderlessButtonStyle" />
+    </RelativeLayout>
 </LinearLayout>

@@ -11,18 +11,16 @@
     <string name="connection_problem">There was a connection problem</string>
     <string name="empty_input">Please, fill the input.</string>
     <string name="title_activity_container">ContainerActivity</string>
-    <string name="title_section1">Repositories</string>
-    <string name="title_section2">Branches</string>
-    <string name="title_section3">Commits</string>
+    <string name="title_repos">Repositories</string>
+    <string name="title_branches">Branches</string>
+    <string name="title_commits">Commits</string>
+    <string name="title_settings">Settings</string>
     <string name="title_timer">Timer</string>
     <string name="timerStart">Start</string>
     <string name="titleReset">Reset</string>
     <string name="title_activity_updates">UpdatesActivity</string>
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
-
-    <color name="black">#000000</color>
-    <color name="white">#FFFFFF</color>
 
     <string name="api_key">e01be97648f84ce72522bb58b69dbe95af5cb94d</string>
 

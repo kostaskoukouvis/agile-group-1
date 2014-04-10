@@ -3,13 +3,12 @@ package se.chalmers.agile.fragments;
 import android.app.Activity;
 import android.app.ListFragment;
 import android.content.Context;
-import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.ListView;
 import android.widget.TextView;
 
 import org.eclipse.egit.github.core.Commit;
@@ -21,9 +20,13 @@ import java.util.Collection;
 import se.chalmers.agile.R;
 import se.chalmers.agile.tasks.OnPostExecuteCallback;
 import se.chalmers.agile.tasks.UpdatesFetcher;
+
 import uk.co.senab.actionbarpulltorefresh.library.ActionBarPullToRefresh;
 import uk.co.senab.actionbarpulltorefresh.library.PullToRefreshLayout;
 import uk.co.senab.actionbarpulltorefresh.library.listeners.OnRefreshListener;
+
+import se.chalmers.agile.utils.AppPreferences;
+
 
 /**
  * Displays the last updates from the selected repositories.
@@ -38,6 +41,8 @@ public class LastUpdatesFragment extends ListFragment
     private PullToRefreshLayout mPullToRefreshLayout;
     private String branchName;
     private String repositoryName;
+
+    private AppPreferences appPref = null;
 
     /**
      * Builds a instance once provided the correct parameters.
@@ -55,6 +60,7 @@ public class LastUpdatesFragment extends ListFragment
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        appPref = AppPreferences.getInstance();
 
         branchName = getBranchFromPreferences();
         repositoryName = getRepoFromPreferences();
@@ -100,21 +106,19 @@ public class LastUpdatesFragment extends ListFragment
         super.onResume();
         new UpdatesFetcher(getActivity().getApplicationContext(), this).execute(repositoryName, branchName);
     }
-
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        ListView l = (ListView) inflater.inflate(R.layout.app_list_view, container, false);
+        return l;
+    }
 
     private String getBranchFromPreferences() {
-        SharedPreferences sp = getActivity().getApplication().getApplicationContext().getSharedPreferences("Application", Context.MODE_PRIVATE);
-        String str = sp.getString(BranchFragment.BRANCH_STR, "");
-        String[] arr = str.split(BranchFragment.BRANCH_SEPARATOR);
-        Log.d("BranchFtched", arr[arr.length - 1]);
+        String[] arr = appPref.getBranches();
         return arr[arr.length - 1];
     }
 
     private String getRepoFromPreferences() {
-        SharedPreferences sp = getActivity().getApplication().getApplicationContext().getSharedPreferences("Application", Context.MODE_PRIVATE);
-        String str = sp.getString(RepositoryFragment.REPOSITORY_STR, "");
-        String[] arr = str.split(RepositoryFragment.REPOSITORY_SEPARATOR);
-        Log.d("RepoFtched", arr[arr.length - 1]);
+        String[] arr = appPref.getRepositories();
         return arr[arr.length - 1];
 
     }
@@ -166,7 +170,7 @@ public class LastUpdatesFragment extends ListFragment
             Commit commit = data[position].getCommit();
 
             TextView branch = (TextView) row.findViewById(R.id.commit_branch);
-            branch.setText("~");
+            branch.setText(repositoryName + "/" + branchName);
 
             TextView date = (TextView) row.findViewById(R.id.commit_date);
             date.setText(dateFormat.format(commit.getCommitter().getDate()));
@@ -175,7 +179,7 @@ public class LastUpdatesFragment extends ListFragment
             message.setText(commit.getMessage());
 
             TextView author = (TextView) row.findViewById(R.id.commit_user);
-            author.setText(commit.getCommitter().getName());
+            author.setText("by " + commit.getCommitter().getName());
 
             return row;
         }

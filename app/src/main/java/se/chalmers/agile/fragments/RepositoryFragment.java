@@ -3,7 +3,6 @@ package se.chalmers.agile.fragments;
 import android.app.Activity;
 import android.app.ListFragment;
 import android.content.Context;
-import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
@@ -23,7 +22,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import se.chalmers.agile.R;
-import se.chalmers.agile.activities.LoginActivity;
+import se.chalmers.agile.utils.AppPreferences;
 
 /**
  */
@@ -95,6 +94,13 @@ public class RepositoryFragment extends ListFragment implements Serializable {
     }
 
 
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        ListView l = (ListView) inflater.inflate(R.layout.app_list_view, container, false);
+        return l;
+    }
+
+
 
 
     @Override
@@ -131,15 +137,16 @@ public class RepositoryFragment extends ListFragment implements Serializable {
         @Override
         protected List<Repository> doInBackground(Void... voids) {
             List<Repository> result = new ArrayList<Repository>();
-            SharedPreferences sharedPref = getActivity().getApplication().getBaseContext().getSharedPreferences("Application", Context.MODE_PRIVATE);
+            AppPreferences appPreferences = AppPreferences.getInstance();
 
-            String un = sharedPref.getString(LoginActivity.USERNAME_STR, LoginActivity.NOT_LOGGED_IN);
-            String pwd = sharedPref.getString(LoginActivity.PASSWORD_STR, LoginActivity.NOT_LOGGED_IN);
+            String un = appPreferences.getUser();
+            String pwd = appPreferences.getPassword();
 
             RepositoryService service = new RepositoryService();
             service.getClient().setCredentials(un, pwd);
             try {
                 result = service.getRepositories();
+                Log.d("REPOSIZE", result.size()+"");
             } catch (IOException e) {
                 Log.e("Error", e.getMessage());
                 this.cancel(true);

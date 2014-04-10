@@ -109,10 +109,10 @@ public class NavigationDrawerFragment extends Fragment implements Serializable {
                 android.R.layout.simple_list_item_activated_1,
                 android.R.id.text1,
                 new String[]{
-                        getString(R.string.title_section1),
-                        "Branches",
-                        "Commits",
-                        "Settings"
+                        getString(R.string.title_repos),
+                        getString(R.string.title_branches),
+                        getString(R.string.title_commits),
+                        getString(R.string.title_settings)
                 }));
         mDrawerListView.setItemChecked(mCurrentSelectedPosition, true);
         return mDrawerListView;

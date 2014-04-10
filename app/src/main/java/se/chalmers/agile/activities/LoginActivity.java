@@ -53,7 +53,8 @@ public class LoginActivity extends ActionBarActivity {
         setContentView(R.layout.login_screen);
 
 
-        prefs = new AppPreferences(getApplicationContext());
+        prefs = AppPreferences.getInstance();
+
         String user = prefs.getUser();
         String pwd = prefs.getPassword();
 

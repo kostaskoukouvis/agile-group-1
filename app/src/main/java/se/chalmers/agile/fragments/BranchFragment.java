@@ -25,12 +25,15 @@ import java.util.List;
 
 import se.chalmers.agile.R;
 import se.chalmers.agile.activities.LoginActivity;
+import se.chalmers.agile.utils.AppPreferences;
 
 
 public class BranchFragment extends ListFragment {
 
     public final static String BRANCH_STR = "branch";
     public final static String BRANCH_SEPARATOR = "###";
+
+    private AppPreferences appPref = null;
 
     private String repositoryName;
     private OnBranchFragmentInteractionListener mListener;
@@ -58,9 +61,11 @@ public class BranchFragment extends ListFragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        repositoryName = getRepoFromPreferences();
+
         branchTask = new BranchTask();
 
+        appPref = AppPreferences.getInstance();
+        repositoryName = getRepoFromPreferences();
 
         if (getArguments() != null) {
             repositoryName = getArguments().getString(BRANCH_STR);
@@ -95,6 +100,12 @@ public class BranchFragment extends ListFragment {
 
 
     @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        ListView l = (ListView) inflater.inflate(R.layout.app_list_view, container, false);
+        return l;
+    }
+
+    @Override
     public void onListItemClick(ListView l, View v, int position, long id) {
         super.onListItemClick(l, v, position, id);
         ArrayAdapter<RepositoryBranch> adapter = (ArrayAdapter<RepositoryBranch>) l.getAdapter();
@@ -110,10 +121,8 @@ public class BranchFragment extends ListFragment {
     }
 
     private String getRepoFromPreferences() {
-        SharedPreferences sp = getActivity().getApplication().getApplicationContext().getSharedPreferences("Application", Context.MODE_PRIVATE);
-        String str = sp.getString(RepositoryFragment.REPOSITORY_STR, "");
-        String[] arr = str.split(RepositoryFragment.REPOSITORY_SEPARATOR);
-        Log.d("RepoFtched", arr[arr.length - 1]);
+        Log.d("appPfre", (appPref == null)+"");
+        String[] arr = appPref.getRepositories();
         return arr[arr.length - 1];
     }
 
@@ -142,16 +151,13 @@ public class BranchFragment extends ListFragment {
         @Override
         protected List<RepositoryBranch> doInBackground(Void... voids) {
             List<RepositoryBranch> result = new ArrayList<RepositoryBranch>();
-            SharedPreferences sharedPref = getActivity().getApplication().getBaseContext().getSharedPreferences("Application", Context.MODE_PRIVATE);
 
-            String un = sharedPref.getString(LoginActivity.USERNAME_STR, LoginActivity.NOT_LOGGED_IN);
-            String pwd = sharedPref.getString(LoginActivity.PASSWORD_STR, LoginActivity.NOT_LOGGED_IN);
+            String un = appPref.getUser();
+            String pwd = appPref.getPassword();
 
             RepositoryService rs = new RepositoryService();
             rs.getClient().setCredentials(un, pwd);
             IRepositoryIdProvider repositoryId = RepositoryId.createFromId(repositoryName);
-            Log.d("BRANCHTASK", repositoryId.generateId());
-
             try {
                 result = rs.getBranches(repositoryId);
             } catch (IOException e) {
