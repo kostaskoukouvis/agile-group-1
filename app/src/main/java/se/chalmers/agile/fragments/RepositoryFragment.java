@@ -18,7 +18,6 @@ import org.eclipse.egit.github.core.Repository;
 import org.eclipse.egit.github.core.service.RepositoryService;
 
 import java.io.IOException;
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -27,7 +26,7 @@ import se.chalmers.agile.utils.AppPreferences;
 
 /**
  */
-public class RepositoryFragment extends ListFragment implements Serializable {
+public class RepositoryFragment extends ListFragment  {
 
     private RepositoryTask repoTask = null;
     private RepositoryArrayAdapter repoAdapter = null;
@@ -86,7 +85,6 @@ public class RepositoryFragment extends ListFragment implements Serializable {
     @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-        outState.putSerializable("test", repoAdapter);
     }
 
     @Override
@@ -193,7 +191,7 @@ public class RepositoryFragment extends ListFragment implements Serializable {
     /**
      * Custom adapter for the repository list
      */
-    private class RepositoryArrayAdapter extends ArrayAdapter<Repository> implements Serializable {
+    private class RepositoryArrayAdapter extends ArrayAdapter<Repository> {
 
         private List<Repository> repos = null;
         private Context context = null;

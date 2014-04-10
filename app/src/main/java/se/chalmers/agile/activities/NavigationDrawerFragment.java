@@ -32,7 +32,7 @@ import se.chalmers.agile.R;
  * See the <a href="https://developer.android.com/design/patterns/navigation-drawer.html#Interaction">
  * design guidelines</a> for a complete explanation of the behaviors implemented here.
  */
-public class NavigationDrawerFragment extends Fragment implements Serializable {
+public class NavigationDrawerFragment extends Fragment {
 
     //03e5ced6c8d2d5298dbeca3a861128eb59d6aa0f
 
