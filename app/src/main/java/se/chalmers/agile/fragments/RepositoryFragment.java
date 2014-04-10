@@ -223,10 +223,12 @@ public class RepositoryFragment extends ListFragment implements Serializable {
         }
 
 
-
-
-
         
+
+
+
+
+
         @Override
         public Repository getItem(int position) {
             return repos.get(position);
