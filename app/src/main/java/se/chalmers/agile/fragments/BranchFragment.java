@@ -122,7 +122,6 @@ public class BranchFragment extends ListFragment {
     }
 
     private String getRepoFromPreferences() {
-        Log.d("appPfre", (appPref == null)+"");
         String[] arr = appPref.getRepositories();
         return arr[arr.length - 1];
     }

@@ -31,6 +31,8 @@ public class MainActivity extends Activity
     RepositoryFragment repoFrag = null;
     AppPreferences appPreferences = null;
 
+    private static final String REPO_FRAG_STRING = "repositoyFragment";
+
     /**
      * Fragment managing the behaviors, interactions and presentation of the navigation drawer.
      */
@@ -77,14 +79,18 @@ public class MainActivity extends Activity
         // update the main content by replacing fragments
         Fragment f = null;
         FragmentManager fragmentManager = getFragmentManager();
+        FragmentManager fragmeapntManager = getFragmentManager();
         //TODO: if fragment already create avoid creating a new instance
         switch (position) {
             case 0:
+                repoFrag = (RepositoryFragment) fragmentManager.findFragmentByTag(REPO_FRAG_STRING);
                 if (repoFrag == null) {
                     Log.d("repoFrag", "created from fragmentManager");
                     repoFrag = RepositoryFragment.createInstance();
+                    fragmentManager.beginTransaction().add(repoFrag, REPO_FRAG_STRING).commit();
                 }
                 f = repoFrag;
+
                 getActionBar().setSubtitle(getString(R.string.title_repos));
                 break;
             case 1:

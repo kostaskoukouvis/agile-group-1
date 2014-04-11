@@ -26,17 +26,18 @@ import se.chalmers.agile.utils.AppPreferences;
 
 /**
  */
-public class RepositoryFragment extends ListFragment  {
+public class RepositoryFragment extends ListFragment {
 
     private RepositoryTask repoTask = null;
     private RepositoryArrayAdapter repoAdapter = null;
 
-    public final static String REPOSITORY_STR = "project";
-    public final static String REPOSITORY_SEPARATOR = "###";
-
 
     private OnRepositoryFragmentInteractionListener mListener;
     private ListView mList = null;
+
+    private List<Repository> repositoryCollection;
+
+    private static final String TAG = "RepositoryFragment";
 
 
     /**
@@ -55,20 +56,19 @@ public class RepositoryFragment extends ListFragment  {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if(repoTask == null)
+        if (repoTask == null)
             repoTask = new RepositoryTask();
 
-        if(savedInstanceState != null)
-            repoAdapter = (RepositoryArrayAdapter)savedInstanceState.getSerializable("test");
-
+        //Flag for saving the state when rotating the screen
+        setRetainInstance(true);
     }
 
     @Override
     public void onStart() {
         super.onStart();
-        if(repoAdapter == null)
+        if (repositoryCollection == null)
             repoTask.execute();
-        else setListAdapter(repoAdapter);
+        else setListAdapter(new RepositoryArrayAdapter(getActivity(), R.id.repoName));
     }
 
     @Override
@@ -100,8 +100,6 @@ public class RepositoryFragment extends ListFragment  {
         mList = (ListView) ll.findViewById(android.R.id.list);
         return ll;
     }
-
-
 
 
     @Override
@@ -137,6 +135,7 @@ public class RepositoryFragment extends ListFragment  {
 
         @Override
         protected List<Repository> doInBackground(Void... voids) {
+            Log.d(TAG, "fetching repository from gitHub");
             List<Repository> result = new ArrayList<Repository>();
             AppPreferences appPreferences = AppPreferences.getInstance();
 
@@ -147,7 +146,7 @@ public class RepositoryFragment extends ListFragment  {
             service.getClient().setCredentials(un, pwd);
             try {
                 result = service.getRepositories();
-                Log.d("REPOSIZE", result.size()+"");
+                Log.d("REPOSIZE", result.size() + "");
             } catch (IOException e) {
                 Log.e("Error", e.getMessage());
                 this.cancel(true);
@@ -163,11 +162,12 @@ public class RepositoryFragment extends ListFragment  {
         @Override
         protected void onPostExecute(List<Repository> repositories) {
             //TODO: change R.layout.simple_list_item
-            if(repoAdapter == null)
-                repoAdapter = new RepositoryArrayAdapter(getActivity(), R.id.repoName, repositories);
+            if (repositoryCollection == null) {
+                repositoryCollection = repositories;
+                repoAdapter = new RepositoryArrayAdapter(getActivity(), R.id.repoName);
+            }
             setListAdapter(repoAdapter);
         }
-
 
 
         @Override
@@ -193,18 +193,18 @@ public class RepositoryFragment extends ListFragment  {
      */
     private class RepositoryArrayAdapter extends ArrayAdapter<Repository> {
 
-        private List<Repository> repos = null;
+
         private Context context = null;
 
-        public RepositoryArrayAdapter(Context context, int resource, List<Repository> repos) {
+        public RepositoryArrayAdapter(Context context, int resource) {
             super(context, resource);
             this.context = context;
-            this.repos = repos;
+
         }
 
         @Override
         public int getCount() {
-            return repos.size();
+            return repositoryCollection.size();
         }
 
 
@@ -215,21 +215,15 @@ public class RepositoryFragment extends ListFragment  {
                 convertView = inflater.inflate(R.layout.rows_repository, null);
             }
             TextView textView = (TextView) convertView.findViewById(R.id.repoName);
-            textView.setText(repos.get(position).getName());
+            textView.setText(repositoryCollection.get(position).getName());
             return convertView;
 
         }
 
 
-
-
-
-
-
-
         @Override
         public Repository getItem(int position) {
-            return repos.get(position);
+            return repositoryCollection.get(position);
         }
     }
 
