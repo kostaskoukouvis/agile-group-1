@@ -35,6 +35,7 @@ public class NeedForUpdateReceiver extends BroadcastReceiver
     public static final long UPDATE_TIME_MS = TimeUnit.SECONDS.toMillis(59);
     private final static String TAG = "UPDATE_FETCHING_TASK";
     private static AppPreferences prefs;
+    
     public Context context;
     private String repoName;
     private String branchName;
