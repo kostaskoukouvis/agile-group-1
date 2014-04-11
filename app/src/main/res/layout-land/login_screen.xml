@@ -33,7 +33,6 @@
             android:ems="15"
             android:hint="@string/password"
             android:id="@+id/passwordText"
-            android:singleLine="true"
             android:layout_below="@id/usernameText"
             android:layout_gravity="center_horizontal"
             style="@style/AppTheme" />

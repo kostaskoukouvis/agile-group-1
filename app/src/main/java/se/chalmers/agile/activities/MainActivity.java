@@ -97,6 +97,7 @@ public class MainActivity extends Activity
                 break;
             case 3:
                 f = SettingsFragment.createInstance();
+                getActionBar().setSubtitle(getString(R.string.title_settings));
                 break;
             default:
                 if (repoFrag == null) {

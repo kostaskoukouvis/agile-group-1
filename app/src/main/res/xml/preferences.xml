@@ -6,9 +6,9 @@
     <CheckBoxPreference android:title="Automatic updates"
         android:defaultValue="false"
         android:summary="This option if selected will allow the application to periodically check for new commits"
-        android:key="applicationUpdates" />h
+        android:key="applicationUpdates" />
     <ListPreference android:title="Countdown timer "
-        android:summary="Select the start time of the countdown timer"
+        android:summary="Select the duration of the countdown timer"
         android:key="countdownTime"
         android:entries="@array/listArray"
         android:entryValues="@array/listValues"
