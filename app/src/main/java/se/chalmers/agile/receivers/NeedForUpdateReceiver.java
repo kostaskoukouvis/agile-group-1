@@ -32,7 +32,7 @@ public class NeedForUpdateReceiver extends BroadcastReceiver
 
     public final static String ACTION = "START_ALARM";
     public static final int NOTIFICATION_ID = 10;
-    public static final long UPDATE_TIME_MS = TimeUnit.SECONDS.toMillis(30);
+    public static final long UPDATE_TIME_MS = TimeUnit.SECONDS.toMillis(59);
     private final static String TAG = "UPDATE_FETCHING_TASK";
     private static AppPreferences prefs;
     public Context context;
