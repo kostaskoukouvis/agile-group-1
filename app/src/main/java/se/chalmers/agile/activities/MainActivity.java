@@ -5,6 +5,7 @@ import android.app.Activity;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.widget.DrawerLayout;
@@ -96,6 +97,12 @@ public class MainActivity extends Activity
                 getActionBar().setSubtitle(getString(R.string.title_commits));
                 break;
             case 3:
+                f=null;
+                Intent i = new Intent(this, MyNotepad.class);
+                startActivity(i);
+                getActionBar().setSubtitle(getString(R.string.title_notepad));
+                break;
+            case 4:
                 f = SettingsFragment.createInstance();
                 getActionBar().setSubtitle(getString(R.string.title_settings));
                 break;
@@ -108,27 +115,15 @@ public class MainActivity extends Activity
                 getActionBar().setSubtitle(getString(R.string.title_repos));
                 break;
         }
-
-        FragmentTransaction transaction = fragmentManager.beginTransaction();
-                transaction.replace(R.id.container, f);
-                transaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
-                transaction.addToBackStack(null);
-                transaction.commit();
-    }
-
-    public void onSectionAttached(int number) {
-        switch (number) {
-            case 1:
-                mTitle = getString(R.string.title_repos);
-                break;
-            case 2:
-                mTitle = getString(R.string.title_branches);
-                break;
-            case 3:
-                mTitle = getString(R.string.title_commits);
-                break;
+        if (f!=null) {
+            FragmentTransaction transaction = fragmentManager.beginTransaction();
+            transaction.replace(R.id.container, f);
+            transaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
+            transaction.addToBackStack(null);
+            transaction.commit();
         }
     }
+
 
     public void restoreActionBar(Menu menu) {
         ActionBar actionBar = getActionBar();
