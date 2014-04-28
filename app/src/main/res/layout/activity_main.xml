@@ -25,6 +25,6 @@
         android:layout_width="@dimen/navigation_drawer_width"
         android:layout_height="match_parent"
         android:layout_gravity="start"
-        android:name="se.chalmers.agile.activities.NavigationDrawerFragment" />
+        android:name="se.chalmers.agile.fragments.NavigationDrawerFragment" />
 
 </android.support.v4.widget.DrawerLayout>

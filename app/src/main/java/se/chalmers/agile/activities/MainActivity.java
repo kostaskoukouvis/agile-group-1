@@ -6,6 +6,7 @@ import android.app.Fragment;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.widget.DrawerLayout;
@@ -20,6 +21,9 @@ import se.chalmers.agile.constants.Constants;
 import se.chalmers.agile.R;
 import se.chalmers.agile.fragments.BranchFragment;
 import se.chalmers.agile.fragments.LastUpdatesFragment;
+import se.chalmers.agile.fragments.NavigationDrawerFragment;
+import se.chalmers.agile.fragments.NoteEditFragment;
+import se.chalmers.agile.fragments.NotepadFragment;
 import se.chalmers.agile.fragments.RepositoryFragment;
 import se.chalmers.agile.fragments.SettingsFragment;
 import se.chalmers.agile.timer.CountDownTimer;
@@ -27,7 +31,7 @@ import se.chalmers.agile.utils.AppPreferences;
 
 public class MainActivity extends Activity
         implements NavigationDrawerFragment.NavigationDrawerCallbacks, RepositoryFragment.OnRepositoryFragmentInteractionListener,
-        BranchFragment.OnBranchFragmentInteractionListener {
+        BranchFragment.OnBranchFragmentInteractionListener, NotepadFragment.OnNoteSelectedListener {
 
     RepositoryFragment repoFrag = null;
     AppPreferences appPreferences = null;
@@ -39,6 +43,8 @@ public class MainActivity extends Activity
 
     //Countdowntimer
     private CountDownTimer countdownTimer;
+    private NotepadFragment notepadFragment;
+    private NoteEditFragment editor;
 
     //Handler to handle communication between threads
     final Handler handler = new Handler();
@@ -49,11 +55,9 @@ public class MainActivity extends Activity
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-
         setContentView(R.layout.activity_main);
 
         appPreferences = AppPreferences.getInstance();
-
 
         mNavigationDrawerFragment = (NavigationDrawerFragment)
                 getFragmentManager().findFragmentById(R.id.navigation_drawer);
@@ -64,7 +68,8 @@ public class MainActivity extends Activity
                 R.id.navigation_drawer,
                 (DrawerLayout) findViewById(R.id.drawer_layout));
 
-    }
+        notepadFragment = NotepadFragment.createInstance();
+        }
 
 
     @Override
@@ -97,9 +102,9 @@ public class MainActivity extends Activity
                 getActionBar().setSubtitle(getString(R.string.title_commits));
                 break;
             case 3:
-                f=null;
-                Intent i = new Intent(this, MyNotepad.class);
-                startActivity(i);
+            //    if (notepadFragment==null)
+            //    notepadFragment = NotepadFragment.createInstance();
+                f = notepadFragment;
                 getActionBar().setSubtitle(getString(R.string.title_notepad));
                 break;
             case 4:
@@ -164,6 +169,10 @@ public class MainActivity extends Activity
             case(R.id.timerReset):
                 countdownTimer.resetTimer();
                 break;
+            case R.id.insert:
+                Intent i = new Intent(this, NoteEdit.class);
+                startActivity(i);
+                break;
             default:
         }
 
@@ -182,5 +191,11 @@ public class MainActivity extends Activity
         appPreferences.appendBranch(repoName,branch.getName());
         //Switch to LastUpdatesFragment in NavigationDrawerFragment
         mNavigationDrawerFragment.selectItem(2);
+    }
+
+    @Override
+    public void onNoteSelected(Uri noteUri) {
+        editor = NoteEditFragment.createInstance();
+        editor.fillData(noteUri);
     }
 }

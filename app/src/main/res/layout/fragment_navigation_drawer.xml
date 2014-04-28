@@ -6,4 +6,4 @@
     android:divider="@android:color/transparent"
     android:dividerHeight="0dp"
     android:background="#222222"
-    tools:context="se.chalmers.agile.activities.NavigationDrawerFragment" />
+    tools:context="se.chalmers.agile.fragments.NavigationDrawerFragment" />
