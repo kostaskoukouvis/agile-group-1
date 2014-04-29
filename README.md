@@ -1,5 +1,7 @@
-agile-group-1
+agile-group-1 [![Build Status](https://magnum.travis-ci.com/MMMarcy/agile-group-1.svg?token=JdSu2xvmKYUWzpGDUmY7&branch=master)](https://magnum.travis-ci.com/MMMarcy/agile-group-1)
 =============
+
+
 
 ## Egit usage guide
 
