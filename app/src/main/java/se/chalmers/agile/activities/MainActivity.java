@@ -20,6 +20,8 @@ import se.chalmers.agile.constants.Constants;
 import se.chalmers.agile.R;
 import se.chalmers.agile.fragments.BranchFragment;
 import se.chalmers.agile.fragments.LastUpdatesFragment;
+import se.chalmers.agile.fragments.NavigationDrawerFragment;
+import se.chalmers.agile.fragments.NotepadFragment;
 import se.chalmers.agile.fragments.RepositoryFragment;
 import se.chalmers.agile.fragments.SettingsFragment;
 import se.chalmers.agile.timer.CountDownTimer;
@@ -36,8 +38,9 @@ public class MainActivity extends Activity
     private final int ENTRY_REPOSITORIES = 0;
     private final int ENTRY_BRANCHES = 1;
     private final int ENTRY_COMMITS = 2;
-    private final int ENTRY_SETTINGS = 3;
-    private final int ENTRY_LOGOUT= 4;
+    private final int ENTRY_NOTEPAD = 3;
+    private final int ENTRY_SETTINGS = 4;
+    private final int ENTRY_LOGOUT= 5;
 
     /**
      * Fragment managing the behaviors, interactions and presentation of the navigation drawer.
@@ -46,6 +49,7 @@ public class MainActivity extends Activity
 
     //Countdowntimer
     private CountDownTimer countdownTimer;
+    private NotepadFragment notepadFragment;
 
     //Handler to handle communication between threads
     final Handler handler = new Handler();
@@ -56,11 +60,9 @@ public class MainActivity extends Activity
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-
         setContentView(R.layout.activity_main);
 
         appPreferences = AppPreferences.getInstance();
-
 
         mNavigationDrawerFragment = (NavigationDrawerFragment)
                 getFragmentManager().findFragmentById(R.id.navigation_drawer);
@@ -71,7 +73,7 @@ public class MainActivity extends Activity
                 R.id.navigation_drawer,
                 (DrawerLayout) findViewById(R.id.drawer_layout));
 
-    }
+        }
 
 
     @Override
@@ -103,6 +105,12 @@ public class MainActivity extends Activity
                 f = LastUpdatesFragment.createInstance();
                 getActionBar().setSubtitle(getString(R.string.title_commits));
                 break;
+            case ENTRY_NOTEPAD:
+                if (notepadFragment==null)
+                    notepadFragment = NotepadFragment.createInstance();
+                f = notepadFragment;
+                getActionBar().setSubtitle(getString(R.string.title_notepad));
+                break;
             case ENTRY_SETTINGS:
                 f = SettingsFragment.createInstance();
                 getActionBar().setSubtitle(getString(R.string.title_settings));
@@ -120,27 +128,13 @@ public class MainActivity extends Activity
                 getActionBar().setSubtitle(getString(R.string.title_repos));
                 break;
         }
-
-        FragmentTransaction transaction = fragmentManager.beginTransaction();
-                transaction.replace(R.id.container, f);
-                transaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
-                transaction.addToBackStack(null);
-                transaction.commit();
+            FragmentTransaction transaction = fragmentManager.beginTransaction();
+            transaction.replace(R.id.container, f);
+            transaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
+            transaction.addToBackStack(null);
+            transaction.commit();
     }
 
-    public void onSectionAttached(int number) {
-        switch (number) {
-            case 1:
-                mTitle = getString(R.string.title_repos);
-                break;
-            case 2:
-                mTitle = getString(R.string.title_branches);
-                break;
-            case 3:
-                mTitle = getString(R.string.title_commits);
-                break;
-        }
-    }
 
     public void restoreActionBar(Menu menu) {
         ActionBar actionBar = getActionBar();
@@ -181,6 +175,10 @@ public class MainActivity extends Activity
             case(R.id.timerReset):
                 countdownTimer.resetTimer();
                 break;
+            case R.id.insert:
+                Intent i = new Intent(this, NoteEdit.class);
+                startActivity(i);
+                break;
             default:
         }
 
@@ -200,4 +198,5 @@ public class MainActivity extends Activity
         //Switch to LastUpdatesFragment in NavigationDrawerFragment
         mNavigationDrawerFragment.selectItem(2);
     }
+
 }

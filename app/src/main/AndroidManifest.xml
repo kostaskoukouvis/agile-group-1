@@ -32,6 +32,15 @@
             </intent-filter>
         </receiver>
 
+        <activity android:name="se.chalmers.agile.activities.NoteEdit"
+            android:windowSoftInputMode="stateVisible|adjustResize" >
+        </activity>
+
+        <provider
+            android:name="se.chalmers.agile.providers.MyNotesContentProvider"
+            android:authorities="se.chalmers.agile" >
+        </provider>
+
     </application>
 
 </manifest>
