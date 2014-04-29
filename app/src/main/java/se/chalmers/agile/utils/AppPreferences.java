@@ -50,6 +50,10 @@ public class AppPreferences extends Application {
         return raw.split(BRANCHES_SEPARATOR);
     }
 
+    public boolean logOut(){
+        return writeablePrefs.clear().commit();
+    }
+
     public String getUser() {
         return readOnlyPrefs.getString(USER_TAG, "");
     }

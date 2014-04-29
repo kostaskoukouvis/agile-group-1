@@ -23,6 +23,7 @@
     <string name="navigation_drawer_close">Close navigation drawer</string>
 
     <string name="api_key">e01be97648f84ce72522bb58b69dbe95af5cb94d</string>
+    <string name="title_logout">Log out</string>
 
 
 </resources>

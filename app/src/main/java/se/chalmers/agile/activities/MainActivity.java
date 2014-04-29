@@ -5,6 +5,7 @@ import android.app.Activity;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.widget.DrawerLayout;
@@ -30,6 +31,13 @@ public class MainActivity extends Activity
 
     RepositoryFragment repoFrag = null;
     AppPreferences appPreferences = null;
+
+    //Constants for the position of the positions of the items in the drawer menu
+    private final int ENTRY_REPOSITORIES = 0;
+    private final int ENTRY_BRANCHES = 1;
+    private final int ENTRY_COMMITS = 2;
+    private final int ENTRY_SETTINGS = 3;
+    private final int ENTRY_LOGOUT= 4;
 
     /**
      * Fragment managing the behaviors, interactions and presentation of the navigation drawer.
@@ -79,7 +87,7 @@ public class MainActivity extends Activity
         FragmentManager fragmentManager = getFragmentManager();
         //TODO: if fragment already create avoid creating a new instance
         switch (position) {
-            case 0:
+            case ENTRY_REPOSITORIES:
                 if (repoFrag == null) {
                     Log.d("repoFrag", "created from fragmentManager");
                     repoFrag = RepositoryFragment.createInstance();
@@ -87,18 +95,22 @@ public class MainActivity extends Activity
                 f = repoFrag;
                 getActionBar().setSubtitle(getString(R.string.title_repos));
                 break;
-            case 1:
+            case ENTRY_BRANCHES:
                 f = BranchFragment.createInstance();
                 getActionBar().setSubtitle(getString(R.string.title_branches));
                 break;
-            case 2:
+            case ENTRY_COMMITS:
                 f = LastUpdatesFragment.createInstance();
                 getActionBar().setSubtitle(getString(R.string.title_commits));
                 break;
-            case 3:
+            case ENTRY_SETTINGS:
                 f = SettingsFragment.createInstance();
                 getActionBar().setSubtitle(getString(R.string.title_settings));
                 break;
+            case ENTRY_LOGOUT:
+                Log.d("Debug",appPreferences.logOut()+"");
+                Intent intent = new Intent(this, LoginActivity.class);
+                startActivity(intent);
             default:
                 if (repoFrag == null) {
                     Log.d("repoFrag", "created from fragmentManager");
