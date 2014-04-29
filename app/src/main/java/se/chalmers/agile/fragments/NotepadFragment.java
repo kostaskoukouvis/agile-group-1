@@ -19,6 +19,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.CheckBox;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.SimpleCursorAdapter;
@@ -28,19 +29,14 @@ import se.chalmers.agile.activities.NoteEdit;
 import se.chalmers.agile.database.NotesTable;
 import se.chalmers.agile.providers.MyNotesContentProvider;
 
-/**
- * Created by iKotsos on 28/4/14.
- */
 public class NotepadFragment extends ListFragment implements
         LoaderManager.LoaderCallbacks<Cursor> {
     private static final int ACTIVITY_CREATE = 0;
     private static final int ACTIVITY_EDIT = 1;
     private static final int DELETE_ID = Menu.FIRST + 1;
+
     // private Cursor cursor;
     private SimpleCursorAdapter adapter;
-
-    OnNoteSelectedListener mListener;
-
 
     public static NotepadFragment createInstance() {
         NotepadFragment fragment = new NotepadFragment();
@@ -72,11 +68,6 @@ public class NotepadFragment extends ListFragment implements
     @Override
     public void onAttach(Activity activity) {
         super.onAttach(activity);
-        try {
-            mListener = (OnNoteSelectedListener) activity;
-        }catch (ClassCastException e){
-            throw new ClassCastException(activity.toString() + " must implement OnNoteSelectedListener");
-        }
     }
 
     // Reaction to the menu selection
@@ -119,29 +110,23 @@ public class NotepadFragment extends ListFragment implements
         i.putExtra(MyNotesContentProvider.CONTENT_ITEM_TYPE, todoUri);
 
         startActivity(i);
-  //      Uri noteUri = ContentUris.withAppendedId(MyNotesContentProvider.CONTENT_URI, id);
-  //      mListener.onNoteSelected(noteUri);
-    }
-
-
-    public interface OnNoteSelectedListener {
-        public void onNoteSelected(Uri noteUri);
     }
 
     private void fillData() {
 
         // Fields from the database (projection)
         // Must include the _id column for the adapter to work
-        String[] from = new String[] { NotesTable.KEY_TITLE };
+        String[] from = new String[] {NotesTable.KEY_ROWID, NotesTable.KEY_TITLE };
         // Fields on the UI to which we map
-        int[] to = new int[] { R.id.label };
+        int[] to = new int[] { R.id.label, R.id.label };
 
         getLoaderManager().initLoader(0, null, this);
         adapter = new SimpleCursorAdapter(getActivity(), R.layout.notes_row, null, from,
                 to, 0);
-
         setListAdapter(adapter);
     }
+
+
 
     @Override
     public void onCreateContextMenu(ContextMenu menu, View v,

@@ -1,9 +1,5 @@
 package se.chalmers.agile.providers;
 
-/**
- * Created by iKotsos on 25/4/14.
- */
-
 import android.content.ContentProvider;
 import java.util.Arrays;
 import java.util.HashSet;

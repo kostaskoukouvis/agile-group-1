@@ -1,19 +1,19 @@
 package se.chalmers.agile.activities;
 
-        import android.app.Activity;
-        import android.content.ContentValues;
-        import android.database.Cursor;
-        import android.net.Uri;
-        import android.os.Bundle;
-        import android.text.TextUtils;
-        import android.view.View;
-        import android.widget.Button;
-        import android.widget.EditText;
-        import android.widget.Toast;
+import android.app.Activity;
+import android.content.ContentValues;
+import android.database.Cursor;
+import android.net.Uri;
+import android.os.Bundle;
+import android.text.TextUtils;
+import android.view.View;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.Toast;
 
-        import se.chalmers.agile.R;
-        import se.chalmers.agile.database.NotesTable;
-        import se.chalmers.agile.providers.MyNotesContentProvider;
+import se.chalmers.agile.R;
+import se.chalmers.agile.database.NotesTable;
+import se.chalmers.agile.providers.MyNotesContentProvider;
 
 /*
  * NoteEdit allows to enter a new note

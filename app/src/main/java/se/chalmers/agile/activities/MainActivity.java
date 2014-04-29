@@ -6,7 +6,6 @@ import android.app.Fragment;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.widget.DrawerLayout;
@@ -22,7 +21,6 @@ import se.chalmers.agile.R;
 import se.chalmers.agile.fragments.BranchFragment;
 import se.chalmers.agile.fragments.LastUpdatesFragment;
 import se.chalmers.agile.fragments.NavigationDrawerFragment;
-import se.chalmers.agile.fragments.NoteEditFragment;
 import se.chalmers.agile.fragments.NotepadFragment;
 import se.chalmers.agile.fragments.RepositoryFragment;
 import se.chalmers.agile.fragments.SettingsFragment;
@@ -31,7 +29,7 @@ import se.chalmers.agile.utils.AppPreferences;
 
 public class MainActivity extends Activity
         implements NavigationDrawerFragment.NavigationDrawerCallbacks, RepositoryFragment.OnRepositoryFragmentInteractionListener,
-        BranchFragment.OnBranchFragmentInteractionListener, NotepadFragment.OnNoteSelectedListener {
+        BranchFragment.OnBranchFragmentInteractionListener {
 
     RepositoryFragment repoFrag = null;
     AppPreferences appPreferences = null;
@@ -44,7 +42,6 @@ public class MainActivity extends Activity
     //Countdowntimer
     private CountDownTimer countdownTimer;
     private NotepadFragment notepadFragment;
-    private NoteEditFragment editor;
 
     //Handler to handle communication between threads
     final Handler handler = new Handler();
@@ -68,7 +65,6 @@ public class MainActivity extends Activity
                 R.id.navigation_drawer,
                 (DrawerLayout) findViewById(R.id.drawer_layout));
 
-        notepadFragment = NotepadFragment.createInstance();
         }
 
 
@@ -102,8 +98,8 @@ public class MainActivity extends Activity
                 getActionBar().setSubtitle(getString(R.string.title_commits));
                 break;
             case 3:
-            //    if (notepadFragment==null)
-            //    notepadFragment = NotepadFragment.createInstance();
+                if (notepadFragment==null)
+                notepadFragment = NotepadFragment.createInstance();
                 f = notepadFragment;
                 getActionBar().setSubtitle(getString(R.string.title_notepad));
                 break;
@@ -193,9 +189,4 @@ public class MainActivity extends Activity
         mNavigationDrawerFragment.selectItem(2);
     }
 
-    @Override
-    public void onNoteSelected(Uri noteUri) {
-        editor = NoteEditFragment.createInstance();
-        editor.fillData(noteUri);
-    }
 }

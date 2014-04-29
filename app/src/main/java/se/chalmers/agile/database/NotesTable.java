@@ -1,9 +1,5 @@
 package se.chalmers.agile.database;
 
-/**
- * Created by iKotsos on 25/4/14.
- */
-
 import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
 
@@ -21,8 +17,7 @@ public class NotesTable {
             + "("
             + KEY_ROWID + " integer primary key autoincrement, "
             + KEY_TITLE + " text not null,"
-            + KEY_BODY
-            + " text not null"
+            + KEY_BODY  + " text not null"
             + ");";
 
     public static void onCreate(SQLiteDatabase db) {
