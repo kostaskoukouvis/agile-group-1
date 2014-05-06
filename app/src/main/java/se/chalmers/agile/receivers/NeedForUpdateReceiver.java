@@ -7,6 +7,7 @@ import android.app.TaskStackBuilder;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.os.Bundle;
 import android.support.v4.app.NotificationCompat;
 import android.util.Log;
 import android.widget.Toast;
@@ -33,6 +34,7 @@ public class NeedForUpdateReceiver extends BroadcastReceiver
     public final static String ACTION = "START_ALARM";
     public static final int NOTIFICATION_ID = 10;
     public static final long UPDATE_TIME_MS = TimeUnit.SECONDS.toMillis(30);
+    public static final String TAB_TO_OPEN = "tab_to_open";
     private final static String TAG = "UPDATE_FETCHING_TASK";
     private static AppPreferences prefs;
     public Context context;
@@ -54,14 +56,14 @@ public class NeedForUpdateReceiver extends BroadcastReceiver
 
             String[] branches = prefs.getBranches();
             if (branches.length == 0) return;
-            Log.d(TAG+" SOMETHING", branches[branches.length - 1]);
+            Log.d(TAG + " SOMETHING", branches[branches.length - 1]);
             try {
                 TimeUnit.SECONDS.sleep(1);
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
             String[] parts = branches[branches.length - 1].split(AppPreferences.REPO_BRANCH_SEPARATOR);
-            repoName = prefs.getRepositories()[prefs.getRepositories().length -1];
+            repoName = prefs.getRepositories()[prefs.getRepositories().length - 1];
             branchName = parts[0];
             if (!repoName.isEmpty() && !branchName.isEmpty()) {
                 new UpdatesFetcher(context, this).execute(repoName, branchName);
@@ -122,11 +124,14 @@ public class NeedForUpdateReceiver extends BroadcastReceiver
         NotificationCompat.Builder mBuilder =
                 new NotificationCompat.Builder(context)
                         .setSmallIcon(R.drawable.dogen)
-                        .setContentTitle("New updates for branch "+branchName+" in repository "+repoName)
+                        .setContentTitle("New updates for branch " + branchName + " in repository " + repoName)
                         .setContentText(news.size() + " new commits!").setAutoCancel(true);
 
         //TODO and select the correct tab!
+        Bundle b = new Bundle();
+        b.putInt(TAB_TO_OPEN, 2);
         Intent resultIntent = new Intent(context, MainActivity.class);
+        resultIntent.putExtras(b);
         TaskStackBuilder stackBuilder = TaskStackBuilder.create(context);
         stackBuilder.addParentStack(MainActivity.class);
         stackBuilder.addNextIntent(resultIntent);

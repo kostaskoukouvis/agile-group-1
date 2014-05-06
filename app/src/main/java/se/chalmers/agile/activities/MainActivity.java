@@ -72,6 +72,14 @@ public class MainActivity extends Activity
         mNavigationDrawerFragment.setUp(
                 R.id.navigation_drawer,
                 (DrawerLayout) findViewById(R.id.drawer_layout));
+        int tab = 0;
+        if (getIntent() != null) {
+            Bundle extras = getIntent().getExtras();
+            if (extras != null) {
+                tab = extras.getInt(NeedForUpdateReceiver.TAB_TO_OPEN, 0);
+            }
+        }
+        mNavigationDrawerFragment.selectItem(tab);
 
     }
 
@@ -201,14 +209,14 @@ public class MainActivity extends Activity
 
     //Methods for handling the broadcaster receiver lifecycle
     public void registerReceiver() {
-            this.registerReceiver(updateReceiver, new IntentFilter(
-                    "android.intent.action.TIME_TICK"));
-            //TODO: remove after testing that it works
-            Toast.makeText(this, "Registered broadcast receiver", Toast.LENGTH_SHORT)
-                    .show();
+        this.registerReceiver(updateReceiver, new IntentFilter(
+                "android.intent.action.TIME_TICK"));
+        //TODO: remove after testing that it works
+        Toast.makeText(this, "Registered broadcast receiver", Toast.LENGTH_SHORT)
+                .show();
     }
 
-    public void unregisterReceiver(){
+    public void unregisterReceiver() {
         this.unregisterReceiver(updateReceiver);
         //TODO: remove after testing that it works
         Toast.makeText(this, "Unregistered broadcast receiver", Toast.LENGTH_SHORT)
