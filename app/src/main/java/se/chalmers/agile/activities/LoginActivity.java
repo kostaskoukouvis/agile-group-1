@@ -65,8 +65,6 @@ public class LoginActivity extends ActionBarActivity {
 
         userName = (EditText) findViewById(R.id.usernameText);
         password = (EditText) findViewById(R.id.passwordText);
-
-
     }
 
     private void callReceiver() {

@@ -5,25 +5,29 @@ import android.app.Activity;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
+import android.content.BroadcastReceiver;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.widget.DrawerLayout;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.Toast;
 
 import org.eclipse.egit.github.core.Repository;
 import org.eclipse.egit.github.core.RepositoryBranch;
 
-import se.chalmers.agile.constants.Constants;
 import se.chalmers.agile.R;
+import se.chalmers.agile.constants.Constants;
 import se.chalmers.agile.fragments.BranchFragment;
 import se.chalmers.agile.fragments.LastUpdatesFragment;
 import se.chalmers.agile.fragments.NavigationDrawerFragment;
 import se.chalmers.agile.fragments.NotepadFragment;
 import se.chalmers.agile.fragments.RepositoryFragment;
 import se.chalmers.agile.fragments.SettingsFragment;
+import se.chalmers.agile.receivers.NeedForUpdateReceiver;
 import se.chalmers.agile.timer.CountDownTimer;
 import se.chalmers.agile.utils.AppPreferences;
 
@@ -31,29 +35,25 @@ public class MainActivity extends Activity
         implements NavigationDrawerFragment.NavigationDrawerCallbacks, RepositoryFragment.OnRepositoryFragmentInteractionListener,
         BranchFragment.OnBranchFragmentInteractionListener {
 
-    RepositoryFragment repoFrag = null;
-    AppPreferences appPreferences = null;
-
+    //Handler to handle communication between threads
+    final Handler handler = new Handler();
     //Constants for the position of the positions of the items in the drawer menu
     private final int ENTRY_REPOSITORIES = 0;
     private final int ENTRY_BRANCHES = 1;
     private final int ENTRY_COMMITS = 2;
     private final int ENTRY_NOTEPAD = 3;
     private final int ENTRY_SETTINGS = 4;
-    private final int ENTRY_LOGOUT= 5;
-
+    private final int ENTRY_LOGOUT = 5;
+    RepositoryFragment repoFrag = null;
+    AppPreferences appPreferences = null;
+    BroadcastReceiver updateReceiver = new NeedForUpdateReceiver();
     /**
      * Fragment managing the behaviors, interactions and presentation of the navigation drawer.
      */
     private NavigationDrawerFragment mNavigationDrawerFragment;
-
     //Countdowntimer
     private CountDownTimer countdownTimer;
     private NotepadFragment notepadFragment;
-
-    //Handler to handle communication between threads
-    final Handler handler = new Handler();
-
     private CharSequence mTitle;
 
     @Override
@@ -73,7 +73,7 @@ public class MainActivity extends Activity
                 R.id.navigation_drawer,
                 (DrawerLayout) findViewById(R.id.drawer_layout));
 
-        }
+    }
 
 
     @Override
@@ -106,7 +106,7 @@ public class MainActivity extends Activity
                 getActionBar().setSubtitle(getString(R.string.title_commits));
                 break;
             case ENTRY_NOTEPAD:
-                if (notepadFragment==null)
+                if (notepadFragment == null)
                     notepadFragment = NotepadFragment.createInstance();
                 f = notepadFragment;
                 getActionBar().setSubtitle(getString(R.string.title_notepad));
@@ -116,7 +116,7 @@ public class MainActivity extends Activity
                 getActionBar().setSubtitle(getString(R.string.title_settings));
                 break;
             case ENTRY_LOGOUT:
-                Log.d("Debug",appPreferences.logOut()+"");
+                Log.d("Debug", appPreferences.logOut() + "");
                 Intent intent = new Intent(this, LoginActivity.class);
                 startActivity(intent);
             default:
@@ -128,11 +128,11 @@ public class MainActivity extends Activity
                 getActionBar().setSubtitle(getString(R.string.title_repos));
                 break;
         }
-            FragmentTransaction transaction = fragmentManager.beginTransaction();
-            transaction.replace(R.id.container, f);
-            transaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
-            transaction.addToBackStack(null);
-            transaction.commit();
+        FragmentTransaction transaction = fragmentManager.beginTransaction();
+        transaction.replace(R.id.container, f);
+        transaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
+        transaction.addToBackStack(null);
+        transaction.commit();
     }
 
 
@@ -165,14 +165,14 @@ public class MainActivity extends Activity
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
-        switch(id){
-            case(R.id.timerPause):
+        switch (id) {
+            case (R.id.timerPause):
                 countdownTimer.pauseTimer();
                 break;
-            case(R.id.timerStart):
+            case (R.id.timerStart):
                 countdownTimer.resumeTimer();
                 break;
-            case(R.id.timerReset):
+            case (R.id.timerReset):
                 countdownTimer.resetTimer();
                 break;
             case R.id.insert:
@@ -194,9 +194,29 @@ public class MainActivity extends Activity
 
     @Override
     public void onBranchInteraction(String repoName, RepositoryBranch branch) {
-        appPreferences.appendBranch(repoName,branch.getName());
+        appPreferences.appendBranch(repoName, branch.getName());
         //Switch to LastUpdatesFragment in NavigationDrawerFragment
         mNavigationDrawerFragment.selectItem(2);
+    }
+
+    //Methods for handling the broadcaster receiver lifecycle
+    public void registerReceiver() {
+        if(appPreferences.isAutomaticUpdateEnabled()) {
+            this.registerReceiver(updateReceiver, new IntentFilter(
+                    "android.intent.action.TIME_TICK"));
+            //TODO: remove after testing that it works
+            Toast.makeText(this, "Registered broadcast receiver", Toast.LENGTH_SHORT)
+                    .show();
+        } else {
+            unregisterReceiver();
+        }
+    }
+
+    public void unregisterReceiver(){
+        this.unregisterReceiver(updateReceiver);
+        //TODO: remove after testing that it works
+        Toast.makeText(this, "Unregistered broadcast receiver", Toast.LENGTH_SHORT)
+                .show();
     }
 
 }

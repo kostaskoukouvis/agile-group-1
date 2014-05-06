@@ -21,6 +21,8 @@ public class AppPreferences extends Application {
     //BRANCHES CONSTANTS
     private final static String BRANCHES_TAG = "branch";
     private final static String LAST_UPDATE_TIME = "last_update_time";
+    //PREFERENCES CONSTANTS
+    private static final String AUTOMATIC_UPDATES = "auto-update";
     private static AppPreferences appPrefs;
     private SharedPreferences readOnlyPrefs;
     private SharedPreferences.Editor writeablePrefs;
@@ -50,7 +52,7 @@ public class AppPreferences extends Application {
         return raw.split(BRANCHES_SEPARATOR);
     }
 
-    public boolean logOut(){
+    public boolean logOut() {
         return writeablePrefs.clear().commit();
     }
 
@@ -83,11 +85,11 @@ public class AppPreferences extends Application {
         writeablePrefs.putString(REPO_TAG, builder.toString()).commit();
     }
 
-    public void clearRepository(){
+    public void clearRepository() {
         writeablePrefs.putString(REPO_TAG, "").commit();
     }
 
-    public String[]  getRepositories(){
+    public String[] getRepositories() {
         String raw = readOnlyPrefs.getString(REPO_TAG, "");
         if (raw.isEmpty()) {
             return new String[0];
@@ -118,5 +120,9 @@ public class AppPreferences extends Application {
 
     public void setLastUpdateTime(long time) {
         readOnlyPrefs.edit().putLong(LAST_UPDATE_TIME, time).commit();
+    }
+
+    public boolean isAutomaticUpdateEnabled() {
+        return readOnlyPrefs.getBoolean(AUTOMATIC_UPDATES, true);
     }
 }
