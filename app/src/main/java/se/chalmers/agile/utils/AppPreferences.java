@@ -122,7 +122,5 @@ public class AppPreferences extends Application {
         readOnlyPrefs.edit().putLong(LAST_UPDATE_TIME, time).commit();
     }
 
-    public boolean isAutomaticUpdateEnabled() {
-        return readOnlyPrefs.getBoolean(AUTOMATIC_UPDATES, true);
-    }
+
 }

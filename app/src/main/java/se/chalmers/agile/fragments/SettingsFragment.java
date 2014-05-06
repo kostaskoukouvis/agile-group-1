@@ -32,7 +32,12 @@ public class SettingsFragment extends PreferenceFragment implements SharedPrefer
     @Override
     public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String s) {
         if (s.equals("auto-update")){
-            ((MainActivity) getActivity()).registerReceiver();
+            if (sharedPreferences.getBoolean(s, false)) {
+                ((MainActivity) getActivity()).registerReceiver();
+            }
+            else {
+                ((MainActivity) getActivity()).unregisterReceiver();
+            }
         }
     }
 

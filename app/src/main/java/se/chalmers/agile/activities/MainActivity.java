@@ -201,15 +201,11 @@ public class MainActivity extends Activity
 
     //Methods for handling the broadcaster receiver lifecycle
     public void registerReceiver() {
-        if(appPreferences.isAutomaticUpdateEnabled()) {
             this.registerReceiver(updateReceiver, new IntentFilter(
                     "android.intent.action.TIME_TICK"));
             //TODO: remove after testing that it works
             Toast.makeText(this, "Registered broadcast receiver", Toast.LENGTH_SHORT)
                     .show();
-        } else {
-            unregisterReceiver();
-        }
     }
 
     public void unregisterReceiver(){
