@@ -1,16 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
-    <EditTextPreference android:title="Your Name"
+    <EditTextPreference
         android:key="username"
-        android:summary="Please provide your username"></EditTextPreference>
-    <CheckBoxPreference android:title="Automatic updates"
+        android:summary="Please provide your username"
+        android:title="Your Name"/>
+    <CheckBoxPreference
         android:defaultValue="false"
+        android:key="auto-update"
         android:summary="This option if selected will allow the application to periodically check for new commits"
-        android:key="applicationUpdates" />
-    <ListPreference android:title="Countdown timer "
-        android:summary="Select the duration of the countdown timer"
-        android:key="countdownTime"
+        android:title="Automatic updates" />
+    <ListPreference
+        android:defaultValue="1800000"
         android:entries="@array/listArray"
         android:entryValues="@array/listValues"
-        android:defaultValue="1800000"/>
+        android:key="countdownTime"
+        android:summary="Select the duration of the countdown timer"
+        android:title="Countdown timer " />
 </PreferenceScreen>
