@@ -1,6 +1,7 @@
 package se.chalmers.agile.receivers;
 
 import android.app.AlarmManager;
+import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.app.TaskStackBuilder;
@@ -125,7 +126,9 @@ public class NeedForUpdateReceiver extends BroadcastReceiver
                 new NotificationCompat.Builder(context)
                         .setSmallIcon(R.drawable.dogen)
                         .setContentTitle("New updates for branch " + branchName + " in repository " + repoName)
-                        .setContentText(news.size() + " new commits!").setAutoCancel(true);
+                        .setContentText(news.size() + " new commits!")
+                        .setAutoCancel(true)
+                        .setLights(0xff0000ff, 1000, 1000);
 
         //TODO and select the correct tab!
         Bundle b = new Bundle();
