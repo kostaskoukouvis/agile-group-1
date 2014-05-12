@@ -1,24 +1,29 @@
 package se.chalmers.agile.fragments;
 
 import android.app.Activity;
+import android.app.FragmentManager;
 import android.app.ListFragment;
 import android.content.Context;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 
 import org.eclipse.egit.github.core.Commit;
+import org.eclipse.egit.github.core.CommitFile;
 import org.eclipse.egit.github.core.RepositoryCommit;
 
 import java.text.DateFormat;
 import java.util.Collection;
 
 import se.chalmers.agile.R;
+import se.chalmers.agile.activities.MainActivity;
 import se.chalmers.agile.tasks.OnPostExecuteCallback;
 import se.chalmers.agile.tasks.UpdatesFetcher;
 
@@ -139,6 +144,9 @@ public class LastUpdatesFragment extends ListFragment
         if(mPullToRefreshLayout.isRefreshing()){
             mPullToRefreshLayout.setRefreshComplete();
         }
+        for(RepositoryCommit rc : commits)
+
+
         updatesAdapter = new UpdatesAdapter(getActivity(),
                 R.layout.updates_list_item_layout,
                 commits.toArray(new RepositoryCommit[commits.size()]));
@@ -166,14 +174,14 @@ public class LastUpdatesFragment extends ListFragment
         }
 
         @Override
-        public View getView(int position, View convertView, ViewGroup parent) {
+        public View getView(final int position, View convertView, ViewGroup parent) {
             View row = convertView;
 
             if (row == null) {
                 LayoutInflater inflater = ((Activity) context).getLayoutInflater();
                 row = inflater.inflate(layoutResourceId, parent, false);
             }
-            Commit commit = data[position].getCommit();
+            final Commit commit = data[position].getCommit();
 
             TextView branch = (TextView) row.findViewById(R.id.commit_branch);
             branch.setText(repositoryName + "/" + branchName);
@@ -186,6 +194,21 @@ public class LastUpdatesFragment extends ListFragment
 
             TextView author = (TextView) row.findViewById(R.id.commit_user);
             author.setText("by " + commit.getCommitter().getName());
+
+
+            Button btn = (Button) row.findViewById(R.id.showFilesButton);
+            btn.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+
+                    //((MainActivity)getActivity()).fileList = data[position].getFiles();
+                    FragmentManager fm = getActivity().getFragmentManager();
+                    fm.beginTransaction()
+                            .replace(R.id.container, CommitFilesFragment.newInstance(repositoryName, branchName, data[position].getSha()))
+                            .addToBackStack(null)
+                            .commit();
+                }
+            });
 
             return row;
         }
