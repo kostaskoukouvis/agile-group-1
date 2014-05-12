@@ -3,6 +3,8 @@ package se.chalmers.agile.fragments;
 import android.app.Activity;
 import android.app.ListFragment;
 import android.content.Context;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -11,6 +13,7 @@ import android.widget.ArrayAdapter;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import org.eclipse.egit.github.core.Commit;
 import org.eclipse.egit.github.core.RepositoryCommit;
@@ -192,6 +195,18 @@ public class LastUpdatesFragment extends ListFragment
     }
 
     public PullToRefreshLayout getmPullToRefreshLayout() {
-        return mPullToRefreshLayout;
+
+
+        Context context = getActivity();
+        ConnectivityManager cm =
+                (ConnectivityManager)context.getSystemService(Context.CONNECTIVITY_SERVICE);
+
+        NetworkInfo activeNetwork = cm.getActiveNetworkInfo();
+        boolean isConnected = activeNetwork != null &&
+                activeNetwork.isConnectedOrConnecting();
+
+        if (!isConnected) {
+            Toast.makeText(getActivity(), R.string.connection_problem, Toast.LENGTH_SHORT).show();
+        }return mPullToRefreshLayout;
     }
 }
