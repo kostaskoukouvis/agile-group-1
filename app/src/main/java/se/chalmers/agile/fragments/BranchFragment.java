@@ -4,6 +4,8 @@ import android.app.Activity;
 import android.app.ListFragment;
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
@@ -14,6 +16,7 @@ import android.widget.ArrayAdapter;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import org.eclipse.egit.github.core.IRepositoryIdProvider;
 import org.eclipse.egit.github.core.RepositoryBranch;
@@ -171,6 +174,17 @@ public class BranchFragment extends ListFragment {
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
+            Context context = getActivity();
+            ConnectivityManager cm =
+                    (ConnectivityManager)context.getSystemService(Context.CONNECTIVITY_SERVICE);
+
+            NetworkInfo activeNetwork = cm.getActiveNetworkInfo();
+            boolean isConnected = activeNetwork != null &&
+                    activeNetwork.isConnectedOrConnecting();
+
+            if (!isConnected) {
+                Toast.makeText(getActivity(), R.string.connection_problem, Toast.LENGTH_SHORT).show();
+            }
         }
 
         @Override
