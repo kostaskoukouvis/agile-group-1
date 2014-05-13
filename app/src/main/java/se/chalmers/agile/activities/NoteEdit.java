@@ -21,6 +21,7 @@ import java.util.Map;
 import se.chalmers.agile.R;
 import se.chalmers.agile.database.NotesTable;
 import se.chalmers.agile.providers.MyNotesContentProvider;
+import se.chalmers.agile.utils.AppPreferences;
 
 /*
  * NoteEdit allows to enter a new note
@@ -71,6 +72,7 @@ public class NoteEdit extends Activity implements View.OnKeyListener {
                 }
             }
         }
+        macros.putAll(AppPreferences.getInstance().getMacros());
         return macros;
     }
 
@@ -84,7 +86,6 @@ public class NoteEdit extends Activity implements View.OnKeyListener {
         mBodyText = (EditText) findViewById(R.id.body);
         mBodyText.setOnKeyListener(this);
         Button confirmButton = (Button) findViewById(R.id.confirm);
-
         macros = getMacros();
         Bundle extras = getIntent().getExtras();
 

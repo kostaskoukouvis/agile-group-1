@@ -4,6 +4,9 @@ import android.app.Application;
 import android.content.Context;
 import android.content.SharedPreferences;
 
+import java.util.HashMap;
+import java.util.Map;
+
 /**
  * Singleton class useful to retrieve and save data used through all the app.
  */
@@ -17,6 +20,10 @@ public class AppPreferences extends Application {
     //REPOSITORY CONSTANTS
     private final static String REPO_TAG = "repo";
     private final static String REPO_SEPARATOR = "###";
+
+    //MACROS CONSTANTS
+    private final static String MACRO_SEPARATOR = ";";
+    private final static String MACRO_MAPPER = "->";
 
     //BRANCHES CONSTANTS
     private final static String BRANCHES_TAG = "branch";
@@ -122,5 +129,30 @@ public class AppPreferences extends Application {
         readOnlyPrefs.edit().putLong(LAST_UPDATE_TIME, time).commit();
     }
 
+    /**
+     * Returns all the defined macros.
+     */
+    public Map<String, String> getMacros() {
+        String rawMacros = readOnlyPrefs.getString("macros", "");
+        if (rawMacros.isEmpty()) {
+            return new HashMap<String, String>();
+        }
+        String macros[] = rawMacros.split(MACRO_SEPARATOR);
+        Map<String, String> result = new HashMap<String, String>();
+        for (int i = 0; i < macros.length; i++) {
+            String[] keyValue = macros[i].split(MACRO_MAPPER);
+            result.put(keyValue[0], keyValue[1]);
+        }
+        return result;
+    }
 
+    /**
+     * Adds a macro to the list.
+     */
+    public void addMacro(String key, String value) {
+        String macros = readOnlyPrefs.getString("macros", "");
+        String separator = macros.length() == 0 ? "" : MACRO_SEPARATOR;
+        macros = macros.concat(separator + key + MACRO_MAPPER + value);
+        writeablePrefs.putString("macros", macros).commit();
+    }
 }
