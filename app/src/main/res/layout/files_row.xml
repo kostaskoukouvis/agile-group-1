@@ -28,7 +28,8 @@
             android:id="@+id/diffContainer"
             android:orientation="vertical"
             android:layout_width="fill_parent"
-            android:layout_height="fill_parent">
+            android:layout_height="fill_parent"
+            android:padding="5dp">
 
             <TextView
                 android:layout_width="wrap_content"
@@ -42,7 +43,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:id="@+id/diffBody"
-                android:visibility="gone" />
+                android:visibility="gone"
+                android:background="@android:color/white"/>
         </LinearLayout>
 
 

@@ -4,8 +4,13 @@ import android.app.Activity;
 import android.app.Fragment;
 import android.app.ListFragment;
 import android.content.Context;
+import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.text.Spannable;
+import android.text.SpannableString;
+import android.text.style.BackgroundColorSpan;
+import android.text.style.ForegroundColorSpan;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -141,6 +146,17 @@ public class CommitFilesFragment extends ListFragment {
                         title.setVisibility(View.VISIBLE);
                         body.setText(file.getPatch());
                         body.setVisibility(View.VISIBLE);
+                        body.setText("");
+                        for(String str :file.getPatch().split("\n")){
+                            SpannableString span = new SpannableString(str+"\n");
+                            if(str.startsWith("+")){
+                                span.setSpan(new BackgroundColorSpan(Color.GREEN), 0, span.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+                            } else if (str.startsWith("-")){
+                                span.setSpan(new BackgroundColorSpan(Color.RED), 0, span.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+                            }
+                            body.append(span);
+                        }
+
                     } else {
                         title.setVisibility(View.GONE);
                         body.setVisibility(View.GONE);
@@ -148,7 +164,6 @@ public class CommitFilesFragment extends ListFragment {
 
                 }
             });
-
             return row;
         }
     }
