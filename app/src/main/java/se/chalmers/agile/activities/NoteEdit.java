@@ -13,6 +13,8 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import java.lang.reflect.Field;
+import java.lang.reflect.Modifier;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -29,7 +31,7 @@ public class NoteEdit extends Activity implements View.OnKeyListener {
 
     private EditText mTitleText;
     private EditText mBodyText;
-
+    private Map<String, String> macros;
     private Uri noteUri;
 
     /**
@@ -41,19 +43,35 @@ public class NoteEdit extends Activity implements View.OnKeyListener {
         if ((keyEvent.getAction() == KeyEvent.ACTION_DOWN) &&
                 (keyCode == KeyEvent.KEYCODE_ENTER)) {
             String text = noteView.getText().toString();
-            try {
-                Resources res = getResources();
-                String key = getString(R.string.macro_prefix) + text.substring(Math.max(text.length() - 2, 0));
-                int id = res.getIdentifier(key, "string", getBaseContext().getPackageName());
-                text = text.substring(0, text.length() - 2).concat(res.getString(id) + " ");
+            String key = text.substring(Math.max(text.length() - 2, 0));
+            if (macros.containsKey(key)) {
+                text = text.substring(0, text.length() - 2).concat(macros.get(key));
                 noteView.setText(text);
                 noteView.setSelection(text.length());
                 return true;
-            } catch (Exception e) {
-                return false;
             }
         }
         return false;
+    }
+
+    /**
+     * Finds all the macros.
+     */
+    private Map<String, String> getMacros() {
+        Map<String, String> macros = new HashMap<String, String>();
+        String macroPrefix = getString(R.string.macro_prefix);
+        for (Field field : R.string.class.getDeclaredFields()) {
+            if (Modifier.isStatic(field.getModifiers()) && !Modifier.isPrivate(field.getModifiers()) && field.getType().equals(int.class)) {
+                try {
+                    if (field.getName().startsWith(macroPrefix)) {
+                        int id = field.getInt(null);
+                        macros.put(field.getName().substring(2), getString(id));
+                    }
+                } catch (Exception e) {
+                }
+            }
+        }
+        return macros;
     }
 
     @Override
@@ -61,13 +79,13 @@ public class NoteEdit extends Activity implements View.OnKeyListener {
         super.onCreate(bundle);
         setContentView(R.layout.note_edit);
 
-
         mTitleText = (EditText) findViewById(R.id.title);
         mTitleText.setOnKeyListener(this);
         mBodyText = (EditText) findViewById(R.id.body);
         mBodyText.setOnKeyListener(this);
         Button confirmButton = (Button) findViewById(R.id.confirm);
 
+        macros = getMacros();
         Bundle extras = getIntent().getExtras();
 
         // check from the saved Instance
