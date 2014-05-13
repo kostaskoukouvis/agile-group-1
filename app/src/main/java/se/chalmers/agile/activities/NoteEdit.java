@@ -43,7 +43,7 @@ public class NoteEdit extends Activity implements View.OnKeyListener {
             String text = noteView.getText().toString();
             try {
                 Resources res = getResources();
-                String key = text.substring(Math.max(text.length() - 2, 0));
+                String key = getString(R.string.macro_prefix) + text.substring(Math.max(text.length() - 2, 0));
                 int id = res.getIdentifier(key, "string", getBaseContext().getPackageName());
                 text = text.substring(0, text.length() - 2).concat(res.getString(id) + " ");
                 noteView.setText(text);

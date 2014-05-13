@@ -35,9 +35,10 @@
     <string name="button_show_files">Show files modified</string>
 
     <!-- Macros for the notepad -->
-    <string name="nf">new file</string>
-    <string name="df">deleted file</string>
-    <string name="bf">bug fix</string>
+    <string name="macro_prefix">m_</string>
+    <string name="m_nf">new file</string>
+    <string name="m_df">deleted file</string>
+    <string name="m_bf">bug fix</string>
 
 
 </resources>
