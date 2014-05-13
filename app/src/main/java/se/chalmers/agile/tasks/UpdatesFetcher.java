@@ -1,7 +1,6 @@
 package se.chalmers.agile.tasks;
 
 import android.content.Context;
-import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.util.Log;
 
@@ -11,12 +10,11 @@ import org.eclipse.egit.github.core.RepositoryId;
 import org.eclipse.egit.github.core.client.PageIterator;
 import org.eclipse.egit.github.core.service.CommitService;
 
-import java.util.Date;
+import java.io.IOException;
 import java.util.Collection;
 import java.util.LinkedList;
 
 import se.chalmers.agile.R;
-import se.chalmers.agile.fragments.LastUpdatesFragment;
 
 /**
  * Performs the commit fetching in background.
@@ -34,14 +32,21 @@ public class UpdatesFetcher extends AsyncTask<String, Void, Collection<Repositor
 
     @Override
     protected Collection<RepositoryCommit> doInBackground(String... args) {
-        Log.d(TAG, "Downloading updates");
         CommitService cs = new CommitService();
+
         cs.getClient().setOAuth2Token(context.getString(R.string.api_key));
+
+
         String[] project = args[0].split("/");
+
         IRepositoryIdProvider repositoryId = RepositoryId.create(project[0], project[1]);
         PageIterator<RepositoryCommit> commitPages = cs.pageCommits(repositoryId, args[1], null, 10);
-        Log.d(TAG, args[0]);
-        Log.d(TAG, args[1]);
+        /*try {
+            for (RepositoryCommit rc : cs.getCommits(repositoryId))
+                Log.d("TEST", ""+(cs.getCommit(repositoryId, rc.getSha()).getFiles()==null));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }*/
         if (commitPages.hasNext()) {
             return commitPages.next();
         } else {

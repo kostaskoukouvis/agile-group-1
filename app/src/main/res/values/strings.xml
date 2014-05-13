@@ -7,8 +7,8 @@
     <string name="introduce_user_name">Username</string>
     <string name="password">Password</string>
     <string name="login">Log in</string>
-    <string name="login_error">Wrong Credentials!</string>
-    <string name="connection_problem">There was a connection problem</string>
+    <string name="login_error">Wrong Credentials! Please try again!</string>
+    <string name="connection_problem">There seems to be a problem with the Internet, Please check your connection status!</string>
     <string name="empty_input">Please, fill the input.</string>
     <string name="title_activity_container">ContainerActivity</string>
     <string name="title_repos">Repositories</string>
@@ -22,7 +22,7 @@
     <string name="title_activity_updates">UpdatesActivity</string>
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
-    <string name="no_notes">No Notes Yet</string>
+    <string name="no_notes">There are no Notes yet!</string>
     <string name="menu_insert">Add Note</string>
     <string name="menu_delete">Delete Note</string>
     <string name="title">Title</string>
@@ -32,6 +32,7 @@
 
     <string name="api_key">e01be97648f84ce72522bb58b69dbe95af5cb94d</string>
     <string name="title_logout">Log out</string>
+    <string name="button_show_files">Show files modified</string>
 
     <!-- Macros for the notepad -->
     <string name="nf">new file</string>

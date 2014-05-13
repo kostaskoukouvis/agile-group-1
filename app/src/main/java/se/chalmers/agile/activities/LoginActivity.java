@@ -6,6 +6,8 @@ import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
@@ -47,6 +49,8 @@ public class LoginActivity extends ActionBarActivity {
     private AppPreferences prefs;
 
 
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -65,6 +69,7 @@ public class LoginActivity extends ActionBarActivity {
 
         userName = (EditText) findViewById(R.id.usernameText);
         password = (EditText) findViewById(R.id.passwordText);
+
     }
 
     private void callReceiver() {
@@ -122,6 +127,21 @@ public class LoginActivity extends ActionBarActivity {
      * Async task to check credentials.
      */
     private class LoginTask extends AsyncTask<String, Void, Boolean> {
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            Context context = LoginActivity.this;
+            ConnectivityManager cm =
+                    (ConnectivityManager)context.getSystemService(Context.CONNECTIVITY_SERVICE);
+
+            NetworkInfo activeNetwork = cm.getActiveNetworkInfo();
+            boolean isConnected = activeNetwork != null &&
+                    activeNetwork.isConnectedOrConnecting();
+
+            if (!isConnected) {
+                Toast.makeText(LoginActivity.this, R.string.connection_problem, Toast.LENGTH_SHORT).show();
+            }
+        }
 
         @Override
         protected Boolean doInBackground(String... args) {
@@ -144,7 +164,6 @@ public class LoginActivity extends ActionBarActivity {
         @Override
         protected void onCancelled() {
             super.onCancelled();
-            Toast.makeText(LoginActivity.this, R.string.connection_problem, Toast.LENGTH_SHORT).show();
         }
 
         /**
