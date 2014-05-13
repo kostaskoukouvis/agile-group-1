@@ -70,7 +70,7 @@
                 style="@style/AppTheme" />
 
             <Button
-                style="@style/ButtonStyle"
+                style="@style/AppTheme"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/button_show_files"

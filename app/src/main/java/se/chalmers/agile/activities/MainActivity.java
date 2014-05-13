@@ -72,14 +72,16 @@ public class MainActivity extends Activity
         mNavigationDrawerFragment.setUp(
                 R.id.navigation_drawer,
                 (DrawerLayout) findViewById(R.id.drawer_layout));
-        int tab = 0;
         if (getIntent() != null) {
+            int tab = 0;
             Bundle extras = getIntent().getExtras();
             if (extras != null) {
                 tab = extras.getInt(NeedForUpdateReceiver.TAB_TO_OPEN, 0);
+                mNavigationDrawerFragment.selectItem(tab);
             }
+
         }
-        mNavigationDrawerFragment.selectItem(tab);
+
 
     }
 

@@ -11,6 +11,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.LinearLayout;
+import android.widget.ListView;
 import android.widget.TextView;
 
 import org.eclipse.egit.github.core.CommitFile;
@@ -52,8 +54,13 @@ public class CommitFilesFragment extends ListFragment {
 
         // TODO: Change Adapter to display your content
         new FileFetcher().execute(repositoryName, branchName, sha);
-    }
 
+    }
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        LinearLayout ll = (LinearLayout) inflater.inflate(R.layout.app_list_view, container, false);
+        ListView mList = (ListView) ll.findViewById(android.R.id.list);
+        return ll;
+    }
 
     private class FileFetcher extends AsyncTask<String, Void, Collection<CommitFile>>{
 
