@@ -4,7 +4,9 @@
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_margin="15dp">
+    android:layout_margin="15dp"
+    android:onClick="showDiff"
+    android:longClickable="false">
 
     <LinearLayout
         android:orientation="vertical"
@@ -17,16 +19,31 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textAppearance="?android:attr/textAppearanceLarge"
-            android:text="Large Text"
             android:id="@+id/fileTitle"
             style="@style/AppTheme"
             android:ellipsize="end"
             android:gravity="center" />
 
         <LinearLayout
+            android:id="@+id/diffContainer"
             android:orientation="vertical"
             android:layout_width="fill_parent"
-            android:layout_height="fill_parent"></LinearLayout>
+            android:layout_height="fill_parent">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:text="@string/diff_title"
+                android:id="@+id/diffTitle"
+                android:visibility="gone" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/diffBody"
+                android:visibility="gone" />
+        </LinearLayout>
 
 
     </LinearLayout>

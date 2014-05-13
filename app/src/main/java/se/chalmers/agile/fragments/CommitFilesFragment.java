@@ -44,6 +44,7 @@ public class CommitFilesFragment extends ListFragment {
 
 
 
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -118,14 +119,35 @@ public class CommitFilesFragment extends ListFragment {
         @Override
         public View getView(int position, View convertView, ViewGroup parent) {
             View row = convertView;
+            final CommitFile file = commitFiles[position];
             if (row == null) {
                 LayoutInflater inflater = ((Activity) getActivity()).getLayoutInflater();
                 row = inflater.inflate(R.layout.files_row, parent, false);
             }
 
             TextView title = (TextView) row.findViewById(R.id.fileTitle);
-            String s  = commitFiles[position].getFilename();
+            String s  = file.getFilename();
             title.setText(s.substring(s.lastIndexOf("/")+1));
+            final View tmpRow = row;
+
+            row.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    final LinearLayout diffContainer = (LinearLayout) tmpRow.findViewById(R.id.diffContainer);
+                    final TextView title = (TextView) tmpRow.findViewById(R.id.diffTitle);
+                    final TextView body = (TextView) tmpRow.findViewById(R.id.diffBody);
+
+                    if(title.getVisibility() == View.GONE){
+                        title.setVisibility(View.VISIBLE);
+                        body.setText(file.getPatch());
+                        body.setVisibility(View.VISIBLE);
+                    } else {
+                        title.setVisibility(View.GONE);
+                        body.setVisibility(View.GONE);
+                    }
+
+                }
+            });
 
             return row;
         }

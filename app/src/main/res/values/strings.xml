@@ -33,6 +33,7 @@
     <string name="api_key">e01be97648f84ce72522bb58b69dbe95af5cb94d</string>
     <string name="title_logout">Log out</string>
     <string name="button_show_files">View modified files</string>
+    <string name="diff_title">DIfferences</string>
 
 
 </resources>
