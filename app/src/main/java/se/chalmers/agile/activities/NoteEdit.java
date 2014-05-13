@@ -2,14 +2,19 @@ package se.chalmers.agile.activities;
 
 import android.app.Activity;
 import android.content.ContentValues;
+import android.content.res.Resources;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.view.KeyEvent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
+
+import java.util.HashMap;
+import java.util.Map;
 
 import se.chalmers.agile.R;
 import se.chalmers.agile.database.NotesTable;
@@ -20,20 +25,47 @@ import se.chalmers.agile.providers.MyNotesContentProvider;
  * or to change an existing
  */
 
-public class NoteEdit extends Activity {
+public class NoteEdit extends Activity implements View.OnKeyListener {
 
     private EditText mTitleText;
     private EditText mBodyText;
 
     private Uri noteUri;
 
+    /**
+     * Checks if any macro is applicable.
+     */
+    @Override
+    public boolean onKey(View view, int keyCode, KeyEvent keyEvent) {
+        EditText noteView = ((EditText) view);
+        if ((keyEvent.getAction() == KeyEvent.ACTION_DOWN) &&
+                (keyCode == KeyEvent.KEYCODE_ENTER)) {
+            String text = noteView.getText().toString();
+            try {
+                Resources res = getResources();
+                String key = text.substring(Math.max(text.length() - 2, 0));
+                int id = res.getIdentifier(key, "string", getBaseContext().getPackageName());
+                text = text.substring(0, text.length() - 2).concat(res.getString(id) + " ");
+                noteView.setText(text);
+                noteView.setSelection(text.length());
+                return true;
+            } catch (Exception e) {
+                return false;
+            }
+        }
+        return false;
+    }
+
     @Override
     protected void onCreate(Bundle bundle) {
         super.onCreate(bundle);
         setContentView(R.layout.note_edit);
 
+
         mTitleText = (EditText) findViewById(R.id.title);
+        mTitleText.setOnKeyListener(this);
         mBodyText = (EditText) findViewById(R.id.body);
+        mBodyText.setOnKeyListener(this);
         Button confirmButton = (Button) findViewById(R.id.confirm);
 
         Bundle extras = getIntent().getExtras();
@@ -64,7 +96,7 @@ public class NoteEdit extends Activity {
     }
 
     private void fillData(Uri uri) {
-        String[] projection = { NotesTable.KEY_TITLE,
+        String[] projection = {NotesTable.KEY_TITLE,
                 NotesTable.KEY_BODY,};
         Cursor cursor = getContentResolver().query(uri, projection, null, null,
                 null);

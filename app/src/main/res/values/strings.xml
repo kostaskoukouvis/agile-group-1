@@ -33,5 +33,10 @@
     <string name="api_key">e01be97648f84ce72522bb58b69dbe95af5cb94d</string>
     <string name="title_logout">Log out</string>
 
+    <!-- Macros for the notepad -->
+    <string name="nf">new file</string>
+    <string name="df">deleted file</string>
+    <string name="bf">bug fix</string>
+
 
 </resources>
