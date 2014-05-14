@@ -9,7 +9,10 @@ import android.content.res.Resources;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
+import android.text.Editable;
 import android.text.TextUtils;
+import android.text.TextWatcher;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.widget.Button;
@@ -34,32 +37,12 @@ import se.chalmers.agile.utils.AppPreferences;
  * or to change an existing
  */
 
-public class NoteEdit extends Activity implements View.OnKeyListener {
+public class NoteEdit extends Activity implements TextWatcher {
 
     private EditText mTitleText;
     private EditText mBodyText;
     private Map<String, String> macros;
     private Uri noteUri;
-
-    /**
-     * Checks if any macro is applicable.
-     */
-    @Override
-    public boolean onKey(View view, int keyCode, KeyEvent keyEvent) {
-        EditText noteView = ((EditText) view);
-        if ((keyEvent.getAction() == KeyEvent.ACTION_DOWN) &&
-                (keyCode == KeyEvent.KEYCODE_ENTER)) {
-            String text = noteView.getText().toString();
-            String key = text.substring(Math.max(text.length() - 2, 0));
-            if (macros.containsKey(key)) {
-                text = text.substring(0, text.length() - 2).concat(macros.get(key));
-                noteView.setText(text);
-                noteView.setSelection(text.length());
-                return true;
-            }
-        }
-        return false;
-    }
 
     /**
      * Finds all the macros.
@@ -88,9 +71,8 @@ public class NoteEdit extends Activity implements View.OnKeyListener {
         setContentView(R.layout.note_edit);
 
         mTitleText = (EditText) findViewById(R.id.title);
-        mTitleText.setOnKeyListener(this);
         mBodyText = (EditText) findViewById(R.id.body);
-        mBodyText.setOnKeyListener(this);
+        mBodyText.addTextChangedListener(this);
         Button confirmButton = (Button) findViewById(R.id.confirm);
         macros = getMacros();
         Bundle extras = getIntent().getExtras();
@@ -103,7 +85,6 @@ public class NoteEdit extends Activity implements View.OnKeyListener {
         if (extras != null) {
             noteUri = extras
                     .getParcelable(MyNotesContentProvider.CONTENT_ITEM_TYPE);
-
             fillData(noteUri);
         }
 
@@ -225,5 +206,31 @@ public class NoteEdit extends Activity implements View.OnKeyListener {
     private void makeToast() {
         Toast.makeText(NoteEdit.this, "Please enter a Title",
                 Toast.LENGTH_LONG).show();
+    }
+
+    @Override
+    public void beforeTextChanged(CharSequence charSequence, int i, int i2, int i3) {
+
+    }
+
+    /**
+     * Looks for macros and performs the substitution.
+     */
+    @Override
+    public void onTextChanged(CharSequence charSequence, int i, int i2, int count) {
+        if (count == 2) {
+            int length = charSequence.length();
+            String key = charSequence.subSequence(length - 2, length).toString();
+            if (macros.containsKey(key)) {
+                String newText = charSequence.subSequence(0, length - 2) + macros.get(key).toString() + " ";
+                mBodyText.setText(newText);
+                mBodyText.setSelection(newText.length());
+            }
+        }
+    }
+
+    @Override
+    public void afterTextChanged(Editable editable) {
+
     }
 }
