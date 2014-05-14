@@ -43,6 +43,14 @@
             android:background="@drawable/border_box" />
 
         <Button
+            android:id="@+id/add_macro"
+            android:text="@string/add_macro"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:background="@drawable/border_box" />
+
+        <Button
             android:id="@+id/confirm"
             android:text="@string/edit_confirm"
             android:layout_width="wrap_content"

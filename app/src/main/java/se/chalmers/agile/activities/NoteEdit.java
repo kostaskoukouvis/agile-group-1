@@ -1,6 +1,7 @@
 package se.chalmers.agile.activities;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.ContentValues;
 import android.content.Context;
@@ -121,7 +122,7 @@ public class NoteEdit extends Activity implements View.OnKeyListener {
             public void onClick(View view) {
                 final Dialog dialog = new Dialog(NoteEdit.this);
                 dialog.setContentView(R.layout.macro_dialog);
-                dialog.setTitle("Defined macros");
+                dialog.setTitle(R.string.defined_macros);
                 TableLayout table = (TableLayout) dialog.findViewById(R.id.macro_table);
                 for (Map.Entry<String, String> keyValue : macros.entrySet()) {
                     TableRow row = (TableRow) getLayoutInflater().inflate(R.layout.macro_row, null, false);
@@ -136,6 +137,31 @@ public class NoteEdit extends Activity implements View.OnKeyListener {
                     value.setLayoutParams(new TableRow.LayoutParams(1));
                     row.addView(value);
                 }
+                dialog.show();
+            }
+        });
+
+        findViewById(R.id.add_macro).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                final Dialog dialog = new Dialog(NoteEdit.this);
+                dialog.setContentView(R.layout.add_macro_dialog);
+                dialog.setTitle(R.string.add_macro_title);
+                dialog.findViewById(R.id.add_macro_button).setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        String key = ((EditText) dialog.findViewById(R.id.editText_shortcut)).getText().toString();
+                        String value = ((EditText) dialog.findViewById(R.id.editText_result)).getText().toString();
+                        if (!key.isEmpty() && !value.isEmpty() && key.length() == 2) {
+                            AppPreferences.getInstance().addMacro(key, value);
+                            macros.put(key, value);
+                            dialog.dismiss();
+                        } else {
+                            Toast.makeText(NoteEdit.this, R.string.not_valid_macro, Toast.LENGTH_SHORT).show();
+                        }
+
+                    }
+                });
                 dialog.show();
             }
         });
