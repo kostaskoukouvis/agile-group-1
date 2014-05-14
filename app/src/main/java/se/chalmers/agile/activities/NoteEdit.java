@@ -1,7 +1,9 @@
 package se.chalmers.agile.activities;
 
 import android.app.Activity;
+import android.app.Dialog;
 import android.content.ContentValues;
+import android.content.Context;
 import android.content.res.Resources;
 import android.database.Cursor;
 import android.net.Uri;
@@ -11,6 +13,9 @@ import android.view.KeyEvent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TableLayout;
+import android.widget.TableRow;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import java.lang.reflect.Field;
@@ -110,7 +115,29 @@ public class NoteEdit extends Activity implements View.OnKeyListener {
                     finish();
                 }
             }
+        });
+        findViewById(R.id.macros_info).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                final Dialog dialog = new Dialog(NoteEdit.this);
+                dialog.setContentView(R.layout.macro_dialog);
+                dialog.setTitle("Defined macros");
+                TableLayout table = (TableLayout) dialog.findViewById(R.id.macro_table);
+                for (Map.Entry<String, String> keyValue : macros.entrySet()) {
+                    TableRow row = (TableRow) getLayoutInflater().inflate(R.layout.macro_row, null, false);
+                    table.addView(row);
+                    TextView key = (TextView) getLayoutInflater().inflate(R.layout.macro_element, null, false);
+                    key.setLayoutParams(new TableRow.LayoutParams(0));
+                    key.setText(keyValue.getKey());
+                    row.addView(key);
 
+                    TextView value = (TextView) getLayoutInflater().inflate(R.layout.macro_element, null, false);
+                    value.setText(keyValue.getValue());
+                    value.setLayoutParams(new TableRow.LayoutParams(1));
+                    row.addView(value);
+                }
+                dialog.show();
+            }
         });
     }
 

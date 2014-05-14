@@ -1,35 +1,56 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-	android:orientation="vertical" android:layout_width="match_parent"
-	android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
     android:background="#222222">
 
-    <LinearLayout android:orientation="horizontal"
-		android:layout_width="match_parent"
-		android:layout_height="wrap_content"
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
         style="@style/AppContainerStyle">
 
-        <EditText android:id="@+id/title"
-		  android:layout_width="wrap_content"
-			android:layout_height="wrap_content"
-			android:layout_weight="1"
+        <EditText
+            android:id="@+id/title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
             android:hint="Set a Note Title" />
-	</LinearLayout>
+    </LinearLayout>
 
-    <EditText android:id="@+id/body" android:layout_width="match_parent"
-		android:layout_height="wrap_content"
-		android:layout_weight="4"
-		android:scrollbars="vertical"
+    <EditText
+        android:id="@+id/body"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="4"
+        android:scrollbars="vertical"
         android:hint="Note Body"
-        style="@style/AppContainerStyle"/>
+        style="@style/AppContainerStyle" />
 
-	<Button android:id="@+id/confirm"
-	  android:text="@string/edit_confirm"
-		android:layout_width="wrap_content"
-		android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal"
-        android:background="@drawable/border_box"
-    />
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal">
 
+        <Button
+            android:id="@+id/macros_info"
+            android:text="@string/macros"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="15dp"
+            android:background="@drawable/border_box" />
+
+        <Button
+            android:id="@+id/confirm"
+            android:text="@string/edit_confirm"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_marginRight="15dp"
+            android:background="@drawable/border_box" />
+
+
+    </RelativeLayout>
 </LinearLayout>
