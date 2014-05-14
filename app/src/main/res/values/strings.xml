@@ -35,5 +35,19 @@
     <string name="button_show_files">View modified files</string>
     <string name="diff_title">DIfferences</string>
 
+    <!-- Macros for the notepad -->
+    <string name="macro_prefix">m_</string>
+    <string name="m_nf">new file</string>
+    <string name="m_df">deleted file</string>
+    <string name="m_bf">bug fix</string>
+    <string name="macros">Macros</string>
+    <string name="shortcut">Shortcut</string>
+    <string name="result">Result</string>
+    <string name="add_macro">Add macro</string>
+    <string name="add">Add</string>
+    <string name="not_valid_macro">Shortcut have to contain exactly two characters. Result cannot be empty.</string>
+    <string name="add_macro_title">Add macro</string>
+    <string name="defined_macros">Defined macros</string>
+
 
 </resources>
