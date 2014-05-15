@@ -29,7 +29,6 @@
     <string name="body">Body</string>
     <string name="edit_confirm">Done</string>
     <string name="edit_note">Edit Note</string>
-
     <string name="api_key">e01be97648f84ce72522bb58b69dbe95af5cb94d</string>
     <string name="title_logout">Log out</string>
     <string name="button_show_files">View modified files</string>
@@ -48,6 +47,7 @@
     <string name="not_valid_macro">Shortcut have to contain exactly two characters. Result cannot be empty.</string>
     <string name="add_macro_title">Add macro</string>
     <string name="defined_macros">Defined macros</string>
-
+    <string name="title_activity_timer_test">TimerTest</string>
+    <string name="hello_world">Hello world!</string>
 
 </resources>
