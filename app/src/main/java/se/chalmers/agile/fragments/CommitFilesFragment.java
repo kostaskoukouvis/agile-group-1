@@ -135,35 +135,41 @@ public class CommitFilesFragment extends ListFragment {
             title.setText(s.substring(s.lastIndexOf("/")+1));
             final View tmpRow = row;
 
-            row.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    final LinearLayout diffContainer = (LinearLayout) tmpRow.findViewById(R.id.diffContainer);
-                    final TextView title = (TextView) tmpRow.findViewById(R.id.diffTitle);
-                    final TextView body = (TextView) tmpRow.findViewById(R.id.diffBody);
 
-                    if(title.getVisibility() == View.GONE){
-                        title.setVisibility(View.VISIBLE);
-                        body.setText(file.getPatch());
-                        body.setVisibility(View.VISIBLE);
-                        body.setText("");
-                        for(String str :file.getPatch().split("\n")){
-                            SpannableString span = new SpannableString(str+"\n");
-                            if(str.startsWith("+")){
-                                span.setSpan(new BackgroundColorSpan(Color.GREEN), 0, span.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-                            } else if (str.startsWith("-")){
-                                span.setSpan(new BackgroundColorSpan(Color.RED), 0, span.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+            if(file.getPatch() != null && !file.getPatch().equals("")) {
+
+                row.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        final LinearLayout diffContainer = (LinearLayout) tmpRow.findViewById(R.id.diffContainer);
+                        final TextView title = (TextView) tmpRow.findViewById(R.id.diffTitle);
+                        final TextView body = (TextView) tmpRow.findViewById(R.id.diffBody);
+
+                        if (title.getVisibility() == View.GONE) {
+                            title.setVisibility(View.VISIBLE);
+                            body.setText(file.getPatch());
+                            body.setVisibility(View.VISIBLE);
+                            body.setText("");
+                            for (String str : file.getPatch().split("\n")) {
+                                SpannableString span = new SpannableString(str + "\n");
+                                if (str.startsWith("+")) {
+                                    span.setSpan(new BackgroundColorSpan(Color.GREEN), 0, span.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+                                } else if (str.startsWith("-")) {
+                                    span.setSpan(new BackgroundColorSpan(Color.RED), 0, span.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+                                }
+                                body.append(span);
                             }
-                            body.append(span);
+
+                        } else {
+                            title.setVisibility(View.GONE);
+                            body.setVisibility(View.GONE);
                         }
 
-                    } else {
-                        title.setVisibility(View.GONE);
-                        body.setVisibility(View.GONE);
                     }
-
-                }
-            });
+                });
+            } else {
+                row.setOnClickListener(null);
+            }
             return row;
         }
     }
