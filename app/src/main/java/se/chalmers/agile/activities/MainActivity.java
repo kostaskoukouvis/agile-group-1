@@ -157,6 +157,8 @@ public class MainActivity extends Activity
         countdownTimer.startTimer(menu.findItem(R.id.timer_button));
     }
 
+    public CountDownTimer getCountdownTimer(){return countdownTimer;}
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
 

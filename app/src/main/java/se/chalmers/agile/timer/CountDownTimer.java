@@ -152,11 +152,15 @@ public class CountDownTimer extends Thread {
         running = true;
     }
 
+    public long getTimeLeft(){
+        return millisUntilFinished;
+    }
+
 
     /**
      *Check if the se.chalmers.agile.timer is running
      */
-    private boolean isRunning(){
+    public boolean isRunning(){
         return running;
     }
 
@@ -190,5 +194,13 @@ public class CountDownTimer extends Thread {
             }
         };
         handler.post(myRunnable);
+    }
+
+    public boolean isFinished() {
+        return finished;
+    }
+
+    public long getStartTime() {
+        return millis;
     }
 }
