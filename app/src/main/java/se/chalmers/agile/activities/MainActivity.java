@@ -35,6 +35,7 @@ public class MainActivity extends Activity
         implements NavigationDrawerFragment.NavigationDrawerCallbacks, RepositoryFragment.OnRepositoryFragmentInteractionListener,
         BranchFragment.OnBranchFragmentInteractionListener {
 
+
     //Handler to handle communication between threads
     final Handler handler = new Handler();
     //Constants for the position of the positions of the items in the drawer menu
