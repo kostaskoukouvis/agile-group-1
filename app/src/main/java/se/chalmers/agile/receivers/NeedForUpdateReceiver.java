@@ -149,6 +149,7 @@ public class NeedForUpdateReceiver extends BroadcastReceiver
         mNotificationManager.notify(NOTIFICATION_ID, mBuilder.build());
     }
 
+
     /**
      * Useful for keeping track of the last update's date. In this way, we can know if we actually
      * have news.
