@@ -146,6 +146,7 @@ public class AppPreferences extends Application {
         return result;
     }
 
+
     /**
      * Adds a macro to the list.
      */
