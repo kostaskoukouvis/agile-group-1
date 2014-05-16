@@ -150,6 +150,7 @@ public class CommitFilesFragment extends ListFragment {
                             body.setText(file.getPatch());
                             body.setVisibility(View.VISIBLE);
                             body.setText("");
+
                             for (String str : file.getPatch().split("\n")) {
                                 final int width = str.length();
                                 SpannableString span = new SpannableString(str + "\n");
