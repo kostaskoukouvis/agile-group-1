@@ -151,11 +151,12 @@ public class CommitFilesFragment extends ListFragment {
                             body.setVisibility(View.VISIBLE);
                             body.setText("");
                             for (String str : file.getPatch().split("\n")) {
+                                final int width = str.length();
                                 SpannableString span = new SpannableString(str + "\n");
                                 if (str.startsWith("+")) {
-                                    span.setSpan(new BackgroundColorSpan(Color.GREEN), 0, span.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+                                    span.setSpan(new BackgroundColorSpan(Color.GREEN), 0, width, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
                                 } else if (str.startsWith("-")) {
-                                    span.setSpan(new BackgroundColorSpan(Color.RED), 0, span.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+                                    span.setSpan(new BackgroundColorSpan(Color.RED), 0, width, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
                                 }
                                 body.append(span);
                             }
