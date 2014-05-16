@@ -130,6 +130,7 @@ public class NeedForUpdateReceiver extends BroadcastReceiver
                         .setAutoCancel(true)
                         .setLights(0xff0000ff, 1000, 1000);
 
+
         //TODO and select the correct tab!
         Bundle b = new Bundle();
         b.putInt(TAB_TO_OPEN, 2);
